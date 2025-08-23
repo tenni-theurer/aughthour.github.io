@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aught Hour - Because great ideas start with curiosity</title>
+    <title>Aught Hour — where ideas at zero become anything</title>
     <style>
         * {
             margin: 0;
@@ -11,18 +11,160 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            line-height: 1.6;
-            color: #1a1a1a;
-            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-            min-height: 100vh;
+        :root {
+            --bg-primary: #0a0a0e;
+            --bg-secondary: #111118;
+            --bg-gradient: linear-gradient(135deg, #0a0a0e 0%, #0f0f1a 50%, #0a0a0e 100%);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --accent: #00d4ff;
+            --accent-hover: #00b8e6;
+            --accent-glow: rgba(0, 212, 255, 0.4);
+            --section-padding: 120px 0;
         }
 
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;900&display=swap');
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Typography with mixed weights */
+        h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 100;
+            line-height: 1.2;
+            letter-spacing: 0.02em;
+            margin-bottom: 2rem;
+        }
+
+        h2.heavy {
+            font-weight: 900;
+            letter-spacing: -0.02em;
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .large-text {
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            line-height: 1.5;
+            font-weight: 300;
+        }
+
+        /* Big numbers/stats with better spacing */
+        .stat-highlight {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 900;
+            color: var(--accent);
+            text-shadow: 0 0 15px var(--accent-glow);
+            vertical-align: baseline;
+            line-height: 1;
+            margin: 0 0.2rem;
+        }
+
+        /* Color pops for key words */
+        .highlight {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Container */
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 2rem;
+        }
+
+        /* Geometric Hero Background */
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            opacity: 0.1;
+        }
+
+        .geometric-shape {
+            position: absolute;
+            border: 2px solid var(--accent);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .geometric-shape:nth-child(1) {
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .geometric-shape:nth-child(2) {
+            width: 150px;
+            height: 150px;
+            top: 60%;
+            right: 15%;
+            animation-delay: 2s;
+            border-radius: 0;
+            transform: rotate(45deg);
+        }
+
+        .geometric-shape:nth-child(3) {
+            width: 80px;
+            height: 80px;
+            top: 40%;
+            left: 70%;
+            animation-delay: 4s;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            border: none;
+            background: linear-gradient(45deg, transparent, var(--accent));
+        }
+
+        .geometric-shape:nth-child(4) {
+            width: 200px;
+            height: 2px;
+            top: 30%;
+            left: 30%;
+            background: var(--accent);
+            border: none;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scaleX(1); }
+            50% { opacity: 1; transform: scaleX(1.5); }
         }
 
         /* Navigation */
@@ -31,12 +173,11 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(15, 15, 35, 0.9);
-            backdrop-filter: blur(20px);
             z-index: 1000;
+            background: rgba(10, 10, 14, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
             padding: 1rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
         }
 
         .nav-content {
@@ -47,9 +188,9 @@
 
         .logo {
             font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            text-decoration: none;
+            font-weight: 900;
+            color: var(--accent);
+            text-shadow: 0 0 10px var(--accent-glow);
         }
 
         .nav-links {
@@ -59,43 +200,59 @@
         }
 
         .nav-links a {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--text-secondary);
             text-decoration: none;
-            transition: color 0.3s ease;
+            font-weight: 300;
+            transition: all 0.3s ease;
+            position: relative;
         }
 
         .nav-links a:hover {
-            color: #a78bfa;
+            color: var(--accent);
+            text-shadow: 0 0 5px var(--accent-glow);
         }
 
-        .hamburger {
-            display: none;
-            flex-direction: column;
+        /* Magnetic buttons with glitch effect */
+        .cta-button {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--bg-primary);
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 0;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
             cursor: pointer;
-            padding: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
         }
 
-        .hamburger span {
-            width: 25px;
-            height: 3px;
-            background: white;
-            margin: 3px 0;
-            transition: 0.3s;
+        .cta-button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px var(--accent-glow);
+            animation: glitch 0.3s ease-in-out;
         }
 
-        .hamburger.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
+        @keyframes glitch {
+            0%, 100% { transform: translateY(-3px) scale(1.05); }
+            20% { transform: translateY(-3px) scale(1.05) skew(2deg); }
+            40% { transform: translateY(-3px) scale(1.05) skew(-2deg); }
+            60% { transform: translateY(-3px) scale(1.05) skew(1deg); }
+            80% { transform: translateY(-3px) scale(1.05) skew(-1deg); }
         }
 
-        .hamburger.active span:nth-child(2) {
-            opacity: 0;
+        /* Sections with offset layouts */
+        section {
+            padding: var(--section-padding);
+            position: relative;
         }
 
-        .hamburger.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
-
-        /* Hero Section */
         .hero {
             min-height: 100vh;
             display: flex;
@@ -104,617 +261,258 @@
             overflow: hidden;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 30% 20%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
-            z-index: 1;
-            animation: gradientShift 8s ease-in-out infinite;
-        }
-
-        /* Animated particles and geometric shapes */
-        .particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .particle {
-            position: absolute;
-            background: rgba(139, 92, 246, 0.3);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .particle:nth-child(1) { width: 4px; height: 4px; top: 20%; left: 10%; animation-delay: 0s; }
-        .particle:nth-child(2) { width: 6px; height: 6px; top: 60%; left: 20%; animation-delay: 1s; }
-        .particle:nth-child(3) { width: 3px; height: 3px; top: 40%; left: 70%; animation-delay: 2s; }
-        .particle:nth-child(4) { width: 5px; height: 5px; top: 80%; left: 80%; animation-delay: 3s; }
-        .particle:nth-child(5) { width: 4px; height: 4px; top: 30%; left: 90%; animation-delay: 4s; }
-        .particle:nth-child(6) { width: 7px; height: 7px; top: 70%; left: 60%; animation-delay: 5s; }
-
-        /* Geometric shapes */
-        .geometric-shape {
-            position: absolute;
-            border: 1px solid rgba(167, 139, 250, 0.4);
-            animation: geometricFloat 8s ease-in-out infinite;
-        }
-
-        .triangle {
-            width: 0;
-            height: 0;
-            border-style: solid;
-            background: none !important;
-        }
-
-        .triangle:nth-child(7) {
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-bottom: 10px solid rgba(236, 72, 153, 0.3);
-            top: 15%; left: 25%; 
-            animation-delay: 1.5s;
-        }
-
-        .triangle:nth-child(8) {
-            border-left: 4px solid transparent;
-            border-right: 4px solid transparent;
-            border-bottom: 7px solid rgba(139, 92, 246, 0.4);
-            top: 75%; left: 15%; 
-            animation-delay: 3.5s;
-        }
-
-        .square {
-            background: rgba(167, 139, 250, 0.2);
-            border-radius: 2px;
-        }
-
-        .square:nth-child(9) { 
-            width: 8px; height: 8px; 
-            top: 35%; left: 85%; 
-            animation-delay: 2s; 
-            animation: geometricSpin 10s linear infinite;
-        }
-
-        .square:nth-child(10) { 
-            width: 6px; height: 6px; 
-            top: 65%; left: 75%; 
-            animation-delay: 4s;
-            animation: geometricSpin 12s linear infinite reverse;
-        }
-
-        .diamond {
-            width: 8px;
-            height: 8px;
-            background: rgba(236, 72, 153, 0.3);
-            transform: rotate(45deg);
-            animation: diamondFloat 7s ease-in-out infinite;
-        }
-
-        .diamond:nth-child(11) { top: 25%; left: 60%; animation-delay: 0.5s; }
-        .diamond:nth-child(12) { top: 85%; left: 40%; animation-delay: 2.5s; }
-
-        .hexagon {
-            width: 10px;
-            height: 5.77px;
-            background: rgba(139, 92, 246, 0.3);
-            position: relative;
-            margin: 2.89px 0;
-        }
-
-        .hexagon:before,
-        .hexagon:after {
-            content: "";
-            position: absolute;
-            width: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-        }
-
-        .hexagon:before {
-            bottom: 100%;
-            border-bottom: 2.89px solid rgba(139, 92, 246, 0.3);
-        }
-
-        .hexagon:after {
-            top: 100%;
-            border-top: 2.89px solid rgba(139, 92, 246, 0.3);
-        }
-
-        .hexagon:nth-child(13) { 
-            top: 45%; left: 5%; 
-            animation: hexagonPulse 6s ease-in-out infinite;
-            animation-delay: 1s;
-        }
-
-        .hexagon:nth-child(14) { 
-            top: 55%; left: 95%; 
-            animation: hexagonPulse 8s ease-in-out infinite;
-            animation-delay: 3s;
-        }
-
-        /* Line elements */
-        .line {
-            position: absolute;
-            background: linear-gradient(90deg, rgba(139, 92, 246, 0.1), rgba(167, 139, 250, 0.4), rgba(139, 92, 246, 0.1));
-            animation: lineStretch 5s ease-in-out infinite;
-        }
-
-        .line:nth-child(15) {
-            width: 30px;
-            height: 1px;
-            top: 30%;
-            left: 40%;
-            transform: rotate(25deg);
-            animation-delay: 1.5s;
-        }
-
-        .line:nth-child(16) {
-            width: 25px;
-            height: 1px;
-            top: 70%;
-            left: 10%;
-            transform: rotate(-15deg);
-            animation-delay: 3.5s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
-            25% { transform: translateY(-20px) rotate(90deg); opacity: 0.6; }
-            50% { transform: translateY(-40px) rotate(180deg); opacity: 0.3; }
-            75% { transform: translateY(-20px) rotate(270deg); opacity: 0.6; }
-        }
-
-        @keyframes geometricFloat {
-            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); opacity: 0.4; }
-            25% { transform: translateY(-15px) translateX(10px) rotate(90deg); opacity: 0.7; }
-            50% { transform: translateY(-30px) translateX(-5px) rotate(180deg); opacity: 0.4; }
-            75% { transform: translateY(-15px) translateX(-10px) rotate(270deg); opacity: 0.7; }
-        }
-
-        @keyframes geometricSpin {
-            0% { transform: rotate(0deg) scale(1); opacity: 0.3; }
-            25% { transform: rotate(90deg) scale(1.2); opacity: 0.6; }
-            50% { transform: rotate(180deg) scale(1); opacity: 0.3; }
-            75% { transform: rotate(270deg) scale(0.8); opacity: 0.6; }
-            100% { transform: rotate(360deg) scale(1); opacity: 0.3; }
-        }
-
-        @keyframes diamondFloat {
-            0%, 100% { transform: rotate(45deg) translateY(0px); opacity: 0.3; }
-            50% { transform: rotate(45deg) translateY(-25px); opacity: 0.7; }
-        }
-
-        @keyframes hexagonPulse {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.3); opacity: 0.6; }
-        }
-
-        @keyframes lineStretch {
-            0%, 100% { transform: scaleX(1) rotate(25deg); opacity: 0.2; }
-            50% { transform: scaleX(1.5) rotate(25deg); opacity: 0.5; }
-        }
-
-        @keyframes gradientShift {
-            0%, 100% { 
-                background: radial-gradient(circle at 30% 20%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
-                           radial-gradient(circle at 80% 80%, rgba(255, 119, 198, 0.15) 0%, transparent 50%);
-            }
-            50% { 
-                background: radial-gradient(circle at 60% 70%, rgba(120, 119, 198, 0.2) 0%, transparent 50%),
-                           radial-gradient(circle at 20% 30%, rgba(255, 119, 198, 0.2) 0%, transparent 50%);
-            }
-        }
-
         .hero-content {
             position: relative;
             z-index: 2;
-            color: white;
-            animation: fadeInUp 1s ease-out;
         }
 
-        .hero-title {
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, #ec4899 100%);
+        .hero h1 {
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 70%, var(--text-primary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .hero-subtitle {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            margin-bottom: 2rem;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-
-        .typing-text {
-            display: inline-block;
-            border-right: 3px solid #a78bfa;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 50% { border-color: #a78bfa; }
-            51%, 100% { border-color: transparent; }
-        }
-
-        .hero-description {
-            font-size: 1.1rem;
+        .hero .large-text {
             margin-bottom: 3rem;
-            opacity: 0.8;
-            max-width: 600px;
+            color: var(--text-secondary);
+            max-width: 70%;
         }
 
-        .cta-buttons {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
+        /* Staggered/offset sections */
+        .offset-left {
+            text-align: left;
+            max-width: 60%;
         }
 
-        .btn {
-            padding: 12px 30px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            color: white;
-            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        /* Sections */
-        .section {
-            padding: 5rem 0;
-            background: white;
-        }
-
-        .section-dark {
-            background: #1a1a2e;
-            color: white;
-        }
-
-        .section-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .section-subtitle {
-            font-size: 1.2rem;
-            text-align: center;
-            margin-bottom: 4rem;
-            opacity: 0.8;
-            max-width: 600px;
+        .offset-right {
+            text-align: right;
+            max-width: 60%;
             margin-left: auto;
-            margin-right: auto;
         }
 
-        /* About Section */
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
-            margin-bottom: 4rem;
+        .offset-center {
+            text-align: center;
+            max-width: 80%;
+            margin: 0 auto;
         }
 
-        .about-text {
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .service-card {
-            background: rgba(255, 255, 255, 0.05);
+        /* Cards with mixed border treatments */
+        .card {
+            background: var(--bg-secondary);
             padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
         }
 
-        .service-card:hover {
+        .card.glow-border {
+            border: 2px solid transparent;
+            background: linear-gradient(var(--bg-secondary), var(--bg-secondary)) padding-box,
+                        linear-gradient(45deg, transparent, var(--accent), transparent) border-box;
+            border-radius: 8px;
+        }
+
+        .card.brutal-border {
+            border: 4px solid var(--text-primary);
+            border-radius: 0;
+            transform: rotate(-1deg);
+        }
+
+        .card.brutal-border:hover {
+            transform: rotate(0deg) scale(1.02);
+            border-color: var(--accent);
+        }
+
+        .card.clean-border {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+        }
+
+        .card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
         }
 
-        .service-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #8b5cf6, #ec4899);
-            border-radius: 12px;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        /* Approach Section */
-        .approach-grid {
+        /* Grid layouts */
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            gap: 3rem;
+            margin: 3rem 0;
         }
 
-        .approach-item {
-            text-align: center;
-            padding: 2rem;
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
         }
 
-        .approach-item h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #8b5cf6;
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
         }
 
-        /* Stats Section */
-        .stats {
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
-            color: white;
-            text-align: center;
+        .grid-asymmetric {
+            grid-template-columns: 2fr 1fr;
+            gap: 4rem;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
+        /* Vertical text labels */
+        .vertical-label {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: rotate(90deg) translateX(50%);
+            font-size: 0.875rem;
+            font-weight: 300;
+            color: var(--accent);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
         }
 
-        .stat-item h3 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
+        /* Section styling with gradient shifts */
+        .section-alt {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
         }
 
-        .stat-item p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+        .proof-section {
+            background: linear-gradient(45deg, var(--bg-primary) 0%, #1a1a2e 50%, var(--bg-primary) 100%);
+            position: relative;
         }
 
-        .success-stories {
-            margin-top: 4rem;
+        /* Lists with custom styling */
+        .highlight-list {
+            list-style: none;
+            margin: 2rem 0;
+            max-width: 600px;
         }
 
-        .story-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .story-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .highlight-list li {
+            padding: 1.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            padding-left: 3rem;
+            font-weight: 300;
             text-align: left;
         }
 
-        .story-card h4 {
-            color: #a78bfa;
-            margin-bottom: 1rem;
-        }
-
-        .story-card p {
-            margin-bottom: 1rem;
-            opacity: 0.9;
-        }
-
-        .story-card p:last-child {
-            font-weight: 600;
-            margin-bottom: 0;
-        }
-
-        /* Pricing Section */
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 4rem;
-        }
-
-        .pricing-card {
-            background: white;
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
-            border: 1px solid #f0f0f0;
-            transition: transform 0.3s ease;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
-        }
-
-        .pricing-header {
-            border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .pricing-category {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1a1a1a;
-            margin-bottom: 0.5rem;
-        }
-
-        .service-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            padding: 1rem 0;
-            border-bottom: 1px solid #f0f0f0;
-        }
-
-        .service-item:last-child {
-            border-bottom: none;
-        }
-
-        .service-details h4 {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .service-details p {
-            font-size: 0.9rem;
-            opacity: 0.7;
-        }
-
-        .service-price {
-            font-weight: 700;
-            color: #8b5cf6;
-            white-space: nowrap;
-            margin-left: 1rem;
-        }
-
-        .service-btn {
-            background: linear-gradient(135deg, #8b5cf6, #ec4899);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            cursor: pointer;
-        }
-
-        /* Contact Section */
-        .contact {
-            background: #0f0f23;
-            color: white;
-            text-align: center;
-        }
-
-        .contact-info {
+        .highlight-list li:before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 900;
             font-size: 1.2rem;
-            margin-bottom: 2rem;
         }
 
-        .footer {
-            background: #000;
-            color: rgba(255, 255, 255, 0.6);
-            padding: 2rem 0;
-            text-align: center;
-            font-size: 0.9rem;
+        /* Text reveal animations */
+        .slide-in-left {
+            opacity: 0;
+            transform: translateX(-50px);
+            animation: slideInLeft 0.8s ease forwards;
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
+        .slide-in-right {
+            opacity: 0;
+            transform: translateX(50px);
+            animation: slideInRight 0.8s ease forwards;
+        }
+
+        .slide-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: slideInUp 0.8s ease forwards;
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
+        }
+
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInUp {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
 
-        .fade-in {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: all 0.6s ease;
+        /* Delay classes for staggered animations */
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.3s; }
+        .delay-3 { animation-delay: 0.5s; }
+        .delay-4 { animation-delay: 0.7s; }
+
+        /* Floating background elements */
+        .bg-element {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.05;
         }
 
-        .fade-in.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .bg-circle {
+            width: 300px;
+            height: 300px;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+            top: 20%;
+            right: -100px;
+            animation: rotate 20s linear infinite;
         }
 
-        /* Mobile Responsiveness */
+        .bg-triangle {
+            width: 0;
+            height: 0;
+            border-left: 100px solid transparent;
+            border-right: 100px solid transparent;
+            border-bottom: 170px solid var(--accent);
+            bottom: 10%;
+            left: -50px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Mobile responsiveness */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: rgba(15, 15, 35, 0.95);
-                backdrop-filter: blur(20px);
-                flex-direction: column;
-                padding: 2rem;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
 
-            .nav-links.active {
-                display: flex;
-            }
-
-            .hamburger {
-                display: flex;
-            }
-
-            .about-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .pricing-grid {
+            .grid-2, .grid-3, .grid-asymmetric {
                 grid-template-columns: 1fr;
             }
 
-            .service-item {
-                flex-direction: column;
-                align-items: flex-start;
+            .container {
+                padding: 0 1rem;
             }
 
-            .service-price {
-                margin-left: 0;
-                margin-top: 0.5rem;
+            .offset-left, .offset-right {
+                max-width: 100%;
+                text-align: center;
+                margin: 0 auto;
             }
 
-            .particles {
+            .hero .large-text {
+                max-width: 100%;
+            }
+
+            .vertical-label {
                 display: none;
             }
 
-            .story-grid {
-                grid-template-columns: 1fr;
+            :root {
+                --section-padding: 80px 0;
             }
         }
     </style>
@@ -724,295 +522,190 @@
     <nav class="nav">
         <div class="container">
             <div class="nav-content">
-                <a href="#" class="logo">Aught Hour</a>
+                <div class="logo">Aught Hour</div>
                 <ul class="nav-links">
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#story">Story</a></li>
+                    <li><a href="#work">What We Do</a></li>
+                    <li><a href="#proof">Experience</a></li>
+                    <li><a href="#projects">Projects</a></li>
                 </ul>
-                <div class="hamburger" id="hamburger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="particles">
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="particle"></div>
-            <div class="geometric-shape triangle"></div>
-            <div class="geometric-shape triangle"></div>
-            <div class="geometric-shape square"></div>
-            <div class="geometric-shape square"></div>
-            <div class="geometric-shape diamond"></div>
-            <div class="geometric-shape diamond"></div>
-            <div class="geometric-shape hexagon"></div>
-            <div class="geometric-shape hexagon"></div>
-            <div class="line"></div>
-            <div class="line"></div>
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
         </div>
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">Aught Hour</h1>
-                <p class="hero-subtitle">Because great ideas start with <span class="typing-text" id="typing-text">curiosity</span></p>
-                <div class="hero-description">
-                    Rooted in the dual meaning of <em>aught</em> - both nothing and anything - Aught Hour embraces the idea that every breakthrough begins at zero.
-                </div>
-                <div class="cta-buttons">
-                    <a href="#services" class="btn btn-primary">View Services</a>
-                    <a href="#contact" class="btn btn-secondary">Contact Us</a>
-                </div>
+                <h1 class="slide-in-left">Aught Hour — where ideas at <span class="highlight">zero</span> become <span class="highlight">anything</span></h1>
+                <p class="large-text slide-in-left delay-1">AI, product strategy, and voice-first innovation, built at the intersection of technology and human connection.</p>
+                <a href="#contact" class="cta-button slide-in-left delay-2">Work with us</a>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="section section-dark">
+    <!-- Brand Story -->
+    <section id="story" class="section-alt">
         <div class="container">
-            <h2 class="section-title fade-in">About Aught Hour</h2>
-            <div class="about-grid fade-in">
-                <div class="about-text">
-                    <p>Aught Hour is an innovation platform for launching ventures, advising leaders, and building AI-powered systems that move ideas from concept to impact.</p>
-                    <p>We operate through a flexible model - drawing on a trusted network of entrepreneurs, technologists, and industry experts when projects demand scale - while keeping the agility of a founder-led studio.</p>
-                </div>
-                <div>
-                    <div class="services-grid">
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                                </svg>
-                            </div>
-                            <h3>Strategic Advisory & Consulting</h3>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M20,15.5C18.25,15.5 16.6,16.3 15.4,17.5C14.2,16.3 12.55,15.5 10.8,15.5C7.93,15.5 5.5,17.93 5.5,20.8C5.5,21.46 6.04,22 6.7,22H18.3C18.96,22 19.5,21.46 19.5,20.8C19.5,17.93 17.07,15.5 14.2,15.5M12,14C15.31,14 18,11.31 18,8C18,4.69 15.31,2 12,2C8.69,2 6,4.69 6,8C6,11.31 8.69,14 12,14Z"/>
-                                </svg>
-                            </div>
-                            <h3>AI Agent Design & Deployment</h3>
-                        </div>
-                        <div class="service-card">
-                            <div class="service-icon">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M5,4V7H10.5V19H13.5V7H19V4H5Z"/>
-                                </svg>
-                            </div>
-                            <h3>Venture Creation & Incubation</h3>
-                        </div>
-                    </div>
-                </div>
+            <div class="offset-right">
+                <div class="vertical-label">Origin</div>
+                <h2 class="slide-in-right">Brand Story</h2>
+                <p class="large-text slide-in-right delay-1"><span class="highlight">Aught</span> means zero or anything. <span class="highlight">Hour</span> is the moment to start. Together, they represent a starting point — a place where new ideas can scale.</p>
+                <p class="slide-in-right delay-2">Aught Hour is where we bring together our corporate, startup, and advisory experience to test, build, and share what's next in AI.</p>
             </div>
         </div>
     </section>
 
-    <!-- Approach Section -->
-    <section class="section">
+    <!-- What I Do -->
+    <section id="work">
+        <div class="bg-element bg-circle"></div>
         <div class="container">
-            <h2 class="section-title fade-in">Our Approach</h2>
-            <div class="approach-grid fade-in">
-                <div class="approach-item">
-                    <h3>Intentional</h3>
-                    <p>Every project begins with clarity on purpose and outcomes.</p>
-                </div>
-                <div class="approach-item">
-                    <h3>Experimental</h3>
-                    <p>We prototype quickly to learn, adapt, and accelerate.</p>
-                </div>
-                <div class="approach-item">
-                    <h3>Connected</h3>
-                    <p>A network of specialists, advisors, and partners expands capabilities on demand.</p>
-                </div>
+            <div class="offset-left">
+                <h2 class="heavy slide-in-left">What We Do</h2>
+                <p class="large-text slide-in-left delay-1">We work at the <span class="highlight">frontier of AI</span> and product. That takes many forms:</p>
             </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="section stats">
-        <div class="container">
-            <h2 class="section-title fade-in">Proven Impact</h2>
-            <p class="section-subtitle fade-in">Advising founders, executives, and teams across technology, fintech, AI, mobility, and creative industries.</p>
-            <div class="stats-grid fade-in">
-                <div class="stat-item">
-                    <h3 class="counter" data-target="20">0</h3>
-                    <p>Years building and scaling</p>
+                
+            <div class="grid grid-2">
+                <div class="card glow-border slide-in-up delay-1">
+                    <h3>Advisory</h3>
+                    <p>Guiding startups, boards, and corporates on AI, growth, and product strategy</p>
                 </div>
-                <div class="stat-item">
-                    <h3 class="counter" data-target="72">0</h3>
-                    <p>Hour typical scheduling window</p>
+                
+                <div class="card brutal-border slide-in-up delay-2">
+                    <h3>Interim Leadership</h3>
+                    <p>Stepping in as <span class="highlight">CPO</span>, <span class="highlight">CTO</span>, or growth operator</p>
                 </div>
-                <div class="stat-item">
-                    <h3 class="counter" data-target="7">0</h3>
-                    <p>Day max turnaround on deliverables</p>
+                
+                <div class="card clean-border slide-in-up delay-3">
+                    <h3>Workshops & Talks</h3>
+                    <p>Design thinking, AI adoption, voice-first strategy</p>
+                </div>
+                
+                <div class="card glow-border slide-in-up delay-4">
+                    <h3>Collaboration</h3>
+                    <p>Partnering on <span class="highlight">new ventures</span> and prototypes</p>
                 </div>
             </div>
             
-            <!-- Client Success Stories -->
-            <div class="success-stories fade-in">
-                <div class="story-grid">
-                    <div class="story-card">
-                        <h4>AI Voice Agent Deployment</h4>
-                        <p>Built and integrated a voice-first assistant for a services business.</p>
-                        <p>Result: Lead response time dropped from days to minutes.</p>
-                    </div>
-                    <div class="story-card">
-                        <h4>Market Entry Strategy</h4>
-                        <p>Identified a defensible niche for a fintech founder and structured early GTM.</p>
-                        <p>Result: Validated demand and faster capital formation.</p>
-                    </div>
-                    <div class="story-card">
-                        <h4>Process Automation</h4>
-                        <p>Designed a lightweight automation system for a consulting firm.</p>
-                        <p>Result: Administrative time reduced and throughput increased.</p>
-                    </div>
-                </div>
-                <p style="text-align: center; margin-top: 2rem; opacity: 0.7; font-style: italic;">Many engagements are in stealth or early-market stages. Details are shared privately under NDA.</p>
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="#contact" class="cta-button">Work with us</a>
             </div>
         </div>
     </section>
 
-    <!-- Services & Pricing Section -->
-    <section id="services" class="section">
+    <!-- Proof & Credibility -->
+    <section id="proof" class="proof-section">
+        <div class="bg-element bg-triangle"></div>
         <div class="container">
-            <h2 class="section-title fade-in">Services and Pricing</h2>
-            <p class="section-subtitle fade-in">A clear path from discovery to partnership</p>
+            <div class="offset-center">
+                <div class="vertical-label">Proof</div>
+                <h2 class="slide-in-up">Experience & Credibility</h2>
+                
+                <p class="slide-in-up delay-1">Based in <span class="highlight">Silicon Valley</span>, our team has lived and built through <span class="highlight">every wave</span> of modern technology — from dot com internet, search, mobile, cloud, fintech, and now AI. </p>
+                
+                <p class="slide-in-up delay-2">We know how to spot what <span class="highlight">lasts</span> and what <span class="highlight">fades</span>.</p>
+                
+                <div class="slide-in-up delay-3">
+                    <p>Our team consists of engineers and designers who became product managers and executives.</p>
+                    
+                    <p>We have scaled consumer businesses reaching <span class="stat-highlight">500M+</span> monthly active users, directly managed <span class="stat-highlight">130+</span> reports and <span class="stat-highlight">$1.6B</span> in annual revenue.</p>
+                    
+                    <p>We built and scaled core developer platforms — from pre-IPO to today’s global scale — including identity, APIs, and SaaS products used by millions. We also pioneered credit card tokenization and modern digital payments during the height of the “wallet wars.”</p>
+                    
+                    <p>Then we moved from scale to entrepreneurship. We raised <span class="stat-highlight">$31M+</span>, created a new financing model, and put <span class="stat-highlight">500+</span> electric vehicles on the road, avoiding over <span class="stat-highlight">9,000</span> metric tons of CO₂.</p>
+                    
+                    <p>Today, through the <a href="#" style="color: var(--accent);">Bell AI Fellowship</a>, we bring technologists and creators together to explore the future of human-AI interaction. In parallel, we are building <a href="#" style="color: var(--accent);">Zarû</a>, AI-native infrastructure designed for a new class of entrepreneurs. We are also exploring <a href="#" style="color: var(--accent);">TaskCloud</a>, a next-generation platform for learning and productivity
+                                        
+                </div>
+                
+                <div class="slide-in-up delay-4">
+                    <p>That mix is what makes us different:</p>
+                    
+                    <ul class="highlight-list">
+                        <li><span class="highlight">Operators</span> of billion-dollar businesses</li>
+                        <li><span class="highlight">Entrepreneurs</span> building from zero</li>
+                        <li><span class="highlight">Advisors</span> helping others shape what's next</li>
+                        <li><span class="highlight">Technologists</span> who've lived through every era of modern computing</li>
+                    </ul>
+                    
+                    <p>This is the foundation of Aught Hour: a platform for building new AI ideas and guiding others through the opportunities — and risks — of this era of change.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects" class="section-alt">
+        <div class="container">
+            <div class="offset-left">
+                <div class="vertical-label">Build</div>
+                <h2 class="slide-in-left">Projects</h2>
+                <p class="slide-in-left delay-1">Inside Aught Hour, we're exploring projects that push the boundaries of how humans connect with AI. A few flavors:</p>
+            </div>
+                
+            <div class="grid grid-3">
+                <div class="card clean-border slide-in-up delay-1">
+                    <p>Tools that help <span class="highlight">students</span> manage tasks and learning with AI</p>
+                </div>
+                
+                <div class="card brutal-border slide-in-up delay-2">
+                    <p>Platforms reimagining <span class="highlight">internships</span> and career transitions</p>
+                </div>
+                
+                <div class="card glow-border slide-in-up delay-3">
+                    <p><span class="highlight">Voice-first agents</span> for self-care, gratitude, and human connection</p>
+                </div>
+                
+                <div class="card glow-border slide-in-up delay-1">
+                    <p>Data-driven systems for <span class="highlight">finance</span> and investing</p>
+                </div>
+                
+                <div class="card clean-border slide-in-up delay-2">
+                    <p>Experiments in <span class="highlight">marketplaces</span>, automation, and AI-driven decision-making</p>
+                </div>
+            </div>
             
-            <div class="pricing-grid fade-in">
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <div class="pricing-category">Discovery</div>
-                        <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.5rem;">Low-friction entry points for new clients</p>
-                    </div>
-                    
-                    <div class="service-item">
-                        <div class="service-details">
-                            <h4>90 Minute Strategy Session</h4>
-                            <p>Written summary with recommendations. Schedule within 72h, summary within 48h after call.</p>
-                            <p style="font-style: italic; color: #8b5cf6; font-size: 0.85rem; margin-top: 0.5rem;">Can prevent costly missteps and accelerate your roadmap by weeks.</p>
-                        </div>
-                        <div class="service-price">$500</div>
-                    </div>
-                    
-                    <div class="service-item">
-                        <div class="service-details">
-                            <h4>Pitch and Deck Review</h4>
-                            <p>Marked up deck plus summary feedback doc. Turnaround: 3 business days.</p>
-                            <p style="font-style: italic; color: #8b5cf6; font-size: 0.85rem; margin-top: 0.5rem;">Sharpen your story before critical investor meetings.</p>
-                        </div>
-                        <div class="service-price">$750</div>
-                    </div>
-                </div>
+                            <p class="slide-in-up delay-3">Each project is an <span class="highlight">experiment</span>. Some grow into companies, some stay as prototypes. All are built to learn, test, and push what's possible.</p>
+        </div>
+    </section>
 
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <div class="pricing-category">Engagement</div>
-                        <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.5rem;">Deep analysis and strategic planning</p>
-                    </div>
-                    
-                    <div class="service-item">
-                        <div class="service-details">
-                            <h4>AI Agent Audit</h4>
-                            <p>Findings and recommendations report. Turnaround: 5 business days.</p>
-                            <p style="font-style: italic; color: #8b5cf6; font-size: 0.85rem; margin-top: 0.5rem;">Identify automation opportunities worth 10x the investment.</p>
-                        </div>
-                        <div class="service-price">$1,000</div>
-                    </div>
-                    
-                    <div class="service-item">
-                        <div class="service-details">
-                            <h4>Market Fit Assessment</h4>
-                            <p>Research report plus action recommendations. Turnaround: 7 business days.</p>
-                            <p style="font-style: italic; color: #8b5cf6; font-size: 0.85rem; margin-top: 0.5rem;">Validate demand before you build and scale.</p>
-                        </div>
-                        <div class="service-price">$2,000</div>
-                    </div>
-                    
-                    <div class="service-item">
-                        <div class="service-details">
-                            <h4>Competitive Landscape Map</h4>
-                            <p>Landscape map plus key takeaways. Turnaround: 5 business days.</p>
-                            <p style="font-style: italic; color: #8b5cf6; font-size: 0.85rem; margin-top: 0.5rem;">Find your defensible niche in crowded markets.</p>
-                        </div>
-                        <div class="service-price">$1,500</div>
-                    </div>
-
-                    <div class="service-item">
-                        <div class="service-details">
-                            <h4>Go To Market Starter Plan</h4>
-                            <p>Step by step GTM playbook. Turnaround: 7 business days.</p>
-                            <p style="font-style: italic; color: #8b5cf6; font-size: 0.85rem; margin-top: 0.5rem;">Clear roadmap from launch to first revenue milestones.</p>
-                        </div>
-                        <div class="service-price">$3,500</div>
-                    </div>
-                </div>
-
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <div class="pricing-category">Partnership</div>
-                        <p style="font-size: 0.9rem; opacity: 0.7; margin-top: 0.5rem;">High-commitment builds and ongoing relationships</p>
-                    </div>
-                    
-                    <div class="service-item">
-                        <div class="service-details">
-                            <h4>Rapid Prototype Build</h4>
-                            <p>Working prototype plus setup docs. Ready for testing in 10 business days or less.</p>
-                            <p style="font-style: italic; color: #8b5cf6; font-size: 0.85rem; margin-top: 0.5rem;">Ready for investor or user testing — compressing a 3-month cycle into 2 weeks.</p>
-                        </div>
-                        <div class="service-price">$6,500</div>
-                    </div>
-                    
-                    <div class="service-item">
-                        <div class="service-details">
-                            <h4>Custom Voice or Chat Agent</h4>
-                            <p>Fully deployed agent plus integration support. Timeline set during consultation.</p>
-                            <p style="font-style: italic; color: #8b5cf6; font-size: 0.85rem; margin-top: 0.5rem;">Turn-key solution that scales with your business growth.</p>
-                        </div>
-                        <div class="service-price">Custom</div>
-                    </div>
-                    
-                    <div class="service-item">
-                        <div class="service-details">
-                            <h4>Monthly Advisory Retainer</h4>
-                            <p>Priority access, strategic guidance, and execution support. Start within 5 business days.</p>
-                            <p style="font-style: italic; color: #8b5cf6; font-size: 0.85rem; margin-top: 0.5rem;">Your trusted strategic partner for sustained growth and innovation.</p>
-                        </div>
-                        <div class="service-price">from $3,500</div>
-                    </div>
+    <!-- Services -->
+    <section>
+        <div class="container">
+            <div class="offset-right">
+                <div class="card brutal-border slide-in-right">
+                    <h3>Services</h3>
+                    <p>Advisory, interim leadership, and workshops are available <span class="highlight">selectively</span>. We tailor engagements to high-leverage opportunities where our experience can accelerate impact.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="section contact">
+    <!-- Closing CTA -->
+    <section id="contact" class="section-alt">
         <div class="container">
-            <h2 class="section-title fade-in">Get Started</h2>
-            <p class="section-subtitle fade-in">Ready to explore a project, partnership, or consultation?</p>
-            <div class="contact-info fade-in">
-                <p><strong>Email:</strong> contact@aughthour.com</p>
-                <p>Based in San Francisco Bay Area - serving clients worldwide</p>
-            </div>
-            <div class="cta-buttons fade-in">
-                <a href="mailto:contact@aughthour.com" class="btn btn-primary">Contact Us</a>
+            <div class="offset-center" style="text-align: center;">
+                <h2 class="heavy slide-in-up">Let's Work Together</h2>
+                <p class="large-text slide-in-up delay-1">If you're an investor, collaborator, or company exploring what's next in AI, let's work together.</p>
+                <a href="mailto:hello@aughthour.com" class="cta-button slide-in-up delay-2" style="margin: 2rem 0;">Work with us</a>
+                
+                <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+                    <p style="font-style: italic; color: var(--accent); font-weight: 100; font-size: 1.25rem;" class="slide-in-up delay-3">We've spent the last <span class="stat-highlight">25</span> years building at every scale. Aught Hour is where we share that experience — and where the next chapter begins.</p>
+                    
+                    <div style="margin-top: 2rem; font-size: 0.875rem; color: var(--text-secondary);">
+                        <a href="terms.html" style="color: var(--text-secondary); text-decoration: none; margin-right: 2rem;">Terms of Service</a>
+                        <a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>© 2025 Aught Hour, LLC. All rights reserved. | <a href="#" style="color: inherit;">Terms of Service</a> | <a href="#" style="color: inherit;">Privacy Policy</a></p>
-        </div>
-    </footer>
 
     <script>
         // Smooth scrolling for navigation links
@@ -1029,78 +722,22 @@
             });
         });
 
-        // Typing animation
-        const words = ['curiosity', 'innovation', 'collaboration', 'zero'];
-        let currentWord = 0;
-        let currentChar = 0;
-        let isDeleting = false;
-        const typingElement = document.getElementById('typing-text');
-        
-        function typeWriter() {
-            const current = words[currentWord];
-            
-            if (isDeleting) {
-                typingElement.textContent = current.substring(0, currentChar - 1);
-                currentChar--;
-            } else {
-                typingElement.textContent = current.substring(0, currentChar + 1);
-                currentChar++;
-            }
-            
-            let typeSpeed = 150;
-            if (isDeleting) typeSpeed /= 2;
-            
-            if (!isDeleting && currentChar === current.length) {
-                typeSpeed = 2000;
-                isDeleting = true;
-            } else if (isDeleting && currentChar === 0) {
-                isDeleting = false;
-                currentWord = (currentWord + 1) % words.length;
-                typeSpeed = 500;
-            }
-            
-            setTimeout(typeWriter, typeSpeed);
-        }
-        
-        // Start typing animation after a delay
-        setTimeout(typeWriter, 2000);
-
-        // Animated counter
-        let countersAnimated = false;
-        
-        function animateCounters() {
-            if (countersAnimated) return;
-            
-            const counters = document.querySelectorAll('.counter');
-            
-            counters.forEach(counter => {
-                const target = parseInt(counter.getAttribute('data-target'));
-                let count = 0;
-                const increment = target / 50;
+        // Magnetic button effect
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('mousemove', (e) => {
+                const rect = button.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
                 
-                const updateCounter = () => {
-                    if (count < target) {
-                        count += increment;
-                        counter.innerText = Math.ceil(count);
-                        setTimeout(updateCounter, 30);
-                    } else {
-                        counter.innerText = target + '+';
-                    }
-                };
-                
-                updateCounter();
+                button.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px) scale(1.05)`;
             });
             
-            countersAnimated = true;
-        }
-
-        // Hamburger menu toggle
-        document.getElementById('hamburger').addEventListener('click', function() {
-            this.classList.toggle('active');
-            document.querySelector('.nav-links').classList.toggle('active');
+            button.addEventListener('mouseleave', () => {
+                button.style.transform = '';
+            });
         });
 
-        // Fade in animation on scroll
+        // Intersection Observer for animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1109,29 +746,47 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    
-                    // Trigger counter animation when stats section becomes visible
-                    if (entry.target.querySelector('.counter')) {
-                        setTimeout(animateCounters, 500);
-                    }
+                    entry.target.style.animationPlayState = 'running';
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.fade-in').forEach(el => {
+        // Observe all animated elements
+        document.querySelectorAll('[class*="slide-in"]').forEach(el => {
+            el.style.animationPlayState = 'paused';
             observer.observe(el);
         });
 
-        // Add floating animation to service cards
-        document.querySelectorAll('.service-card, .pricing-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-10px)';
-                this.style.transition = 'transform 0.3s ease';
+        // Add active state to navigation
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
             });
             
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Parallax effect for background elements
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallaxElements = document.querySelectorAll('.bg-element');
+            
+            parallaxElements.forEach(element => {
+                const speed = 0.5;
+                element.style.transform = `translateY(${scrolled * speed}px)`;
             });
         });
     </script>
