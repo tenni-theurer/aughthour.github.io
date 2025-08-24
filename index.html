@@ -1,794 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aught Hour — where ideas at zero become anything</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0a0a0e;
-            --bg-secondary: #111118;
-            --bg-gradient: linear-gradient(135deg, #0a0a0e 0%, #0f0f1a 50%, #0a0a0e 100%);
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0b0;
-            --accent: #00d4ff;
-            --accent-hover: #00b8e6;
-            --accent-glow: rgba(0, 212, 255, 0.4);
-            --section-padding: 120px 0;
-        }
-
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;900&display=swap');
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-primary);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Typography with mixed weights */
-        h1 {
-            font-size: clamp(3rem, 8vw, 6rem);
-            font-weight: 900;
-            line-height: 1.1;
-            letter-spacing: -0.03em;
-        }
-
-        h2 {
-            font-size: clamp(2rem, 5vw, 3.5rem);
-            font-weight: 100;
-            line-height: 1.2;
-            letter-spacing: 0.02em;
-            margin-bottom: 2rem;
-        }
-
-        h2.heavy {
-            font-weight: 900;
-            letter-spacing: -0.02em;
-        }
-
-        h3 {
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-        }
-
-        p {
-            font-size: 1.125rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .large-text {
-            font-size: clamp(1.25rem, 3vw, 1.5rem);
-            line-height: 1.5;
-            font-weight: 300;
-        }
-
-        /* Big numbers/stats with better spacing */
-        .stat-highlight {
-            font-size: clamp(1.8rem, 4vw, 2.8rem);
-            font-weight: 900;
-            color: var(--accent);
-            text-shadow: 0 0 15px var(--accent-glow);
-            vertical-align: baseline;
-            line-height: 1;
-            margin: 0 0.2rem;
-        }
-
-        /* Color pops for key words */
-        .highlight {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        /* Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        /* Geometric Hero Background */
-        .hero-bg {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            opacity: 0.1;
-        }
-
-        .geometric-shape {
-            position: absolute;
-            border: 2px solid var(--accent);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .geometric-shape:nth-child(1) {
-            width: 100px;
-            height: 100px;
-            top: 20%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .geometric-shape:nth-child(2) {
-            width: 150px;
-            height: 150px;
-            top: 60%;
-            right: 15%;
-            animation-delay: 2s;
-            border-radius: 0;
-            transform: rotate(45deg);
-        }
-
-        .geometric-shape:nth-child(3) {
-            width: 80px;
-            height: 80px;
-            top: 40%;
-            left: 70%;
-            animation-delay: 4s;
-            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-            border: none;
-            background: linear-gradient(45deg, transparent, var(--accent));
-        }
-
-        .geometric-shape:nth-child(4) {
-            width: 200px;
-            height: 2px;
-            top: 30%;
-            left: 30%;
-            background: var(--accent);
-            border: none;
-            animation: pulse 4s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scaleX(1); }
-            50% { opacity: 1; transform: scaleX(1.5); }
-        }
-
-        /* Navigation */
-        .nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(10, 10, 14, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 212, 255, 0.2);
-            padding: 1rem 0;
-        }
-
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--accent);
-            text-shadow: 0 0 10px var(--accent-glow);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 300;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent);
-            text-shadow: 0 0 5px var(--accent-glow);
-        }
-
-        /* Magnetic buttons with glitch effect */
-        .cta-button {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--bg-primary);
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 0;
-            font-weight: 700;
-            font-size: 1rem;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-        }
-
-        .cta-button:hover {
-            background: var(--accent-hover);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px var(--accent-glow);
-            animation: glitch 0.3s ease-in-out;
-        }
-
-        @keyframes glitch {
-            0%, 100% { transform: translateY(-3px) scale(1.05); }
-            20% { transform: translateY(-3px) scale(1.05) skew(2deg); }
-            40% { transform: translateY(-3px) scale(1.05) skew(-2deg); }
-            60% { transform: translateY(-3px) scale(1.05) skew(1deg); }
-            80% { transform: translateY(-3px) scale(1.05) skew(-1deg); }
-        }
-
-        /* Sections with offset layouts */
-        section {
-            padding: var(--section-padding);
-            position: relative;
-        }
-
-        .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero h1 {
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 70%, var(--text-primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero .large-text {
-            margin-bottom: 3rem;
-            color: var(--text-secondary);
-            max-width: 70%;
-        }
-
-        /* Staggered/offset sections */
-        .offset-left {
-            text-align: left;
-            max-width: 60%;
-        }
-
-        .offset-right {
-            text-align: right;
-            max-width: 60%;
-            margin-left: auto;
-        }
-
-        .offset-center {
-            text-align: center;
-            max-width: 80%;
-            margin: 0 auto;
-        }
-
-        /* Cards with mixed border treatments */
-        .card {
-            background: var(--bg-secondary);
-            padding: 2rem;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
-        .card.glow-border {
-            border: 2px solid transparent;
-            background: linear-gradient(var(--bg-secondary), var(--bg-secondary)) padding-box,
-                        linear-gradient(45deg, transparent, var(--accent), transparent) border-box;
-            border-radius: 8px;
-        }
-
-        .card.brutal-border {
-            border: 4px solid var(--text-primary);
-            border-radius: 0;
-            transform: rotate(-1deg);
-        }
-
-        .card.brutal-border:hover {
-            transform: rotate(0deg) scale(1.02);
-            border-color: var(--accent);
-        }
-
-        .card.clean-border {
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 212, 255, 0.1);
-        }
-
-        /* Grid layouts */
-        .grid {
-            display: grid;
-            gap: 3rem;
-            margin: 3rem 0;
-        }
-
-        .grid-2 {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .grid-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        .grid-asymmetric {
-            grid-template-columns: 2fr 1fr;
-            gap: 4rem;
-        }
-
-        /* Vertical text labels */
-        .vertical-label {
-            position: absolute;
-            right: -20px;
-            top: 50%;
-            transform: rotate(90deg) translateX(50%);
-            font-size: 0.875rem;
-            font-weight: 300;
-            color: var(--accent);
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-        }
-
-        /* Section styling with gradient shifts */
-        .section-alt {
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-        }
-
-        .proof-section {
-            background: linear-gradient(45deg, var(--bg-primary) 0%, #1a1a2e 50%, var(--bg-primary) 100%);
-            position: relative;
-        }
-
-        /* Lists with custom styling */
-        .highlight-list {
-            list-style: none;
-            margin: 2rem 0;
-            max-width: 600px;
-        }
-
-        .highlight-list li {
-            padding: 1.5rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            padding-left: 3rem;
-            font-weight: 300;
-            text-align: left;
-        }
-
-        .highlight-list li:before {
-            content: '▶';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-weight: 900;
-            font-size: 1.2rem;
-        }
-
-        /* Text reveal animations */
-        .slide-in-left {
-            opacity: 0;
-            transform: translateX(-50px);
-            animation: slideInLeft 0.8s ease forwards;
-        }
-
-        .slide-in-right {
-            opacity: 0;
-            transform: translateX(50px);
-            animation: slideInRight 0.8s ease forwards;
-        }
-
-        .slide-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: slideInUp 0.8s ease forwards;
-        }
-
-        @keyframes slideInLeft {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInRight {
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes slideInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Delay classes for staggered animations */
-        .delay-1 { animation-delay: 0.1s; }
-        .delay-2 { animation-delay: 0.3s; }
-        .delay-3 { animation-delay: 0.5s; }
-        .delay-4 { animation-delay: 0.7s; }
-
-        /* Floating background elements */
-        .bg-element {
-            position: absolute;
-            pointer-events: none;
-            opacity: 0.05;
-        }
-
-        .bg-circle {
-            width: 300px;
-            height: 300px;
-            border: 1px solid var(--accent);
-            border-radius: 50%;
-            top: 20%;
-            right: -100px;
-            animation: rotate 20s linear infinite;
-        }
-
-        .bg-triangle {
-            width: 0;
-            height: 0;
-            border-left: 100px solid transparent;
-            border-right: 100px solid transparent;
-            border-bottom: 170px solid var(--accent);
-            bottom: 10%;
-            left: -50px;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Mobile responsiveness */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-
-            .grid-2, .grid-3, .grid-asymmetric {
-                grid-template-columns: 1fr;
-            }
-
-            .container {
-                padding: 0 1rem;
-            }
-
-            .offset-left, .offset-right {
-                max-width: 100%;
-                text-align: center;
-                margin: 0 auto;
-            }
-
-            .hero .large-text {
-                max-width: 100%;
-            }
-
-            .vertical-label {
-                display: none;
-            }
-
-            :root {
-                --section-padding: 80px 0;
-            }
-        }
-    </style>
-</head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Aught Hour – where ideas move from zero to one and one to scale</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  </head>
 <body>
-    <!-- Navigation -->
-    <nav class="nav">
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="index.html" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
+        <ul class="nav-links">
+          <li><a href="index.html#story">Story</a></li>
+          <li><a href="index.html#work">What We Do</a></li>
+          <li><a href="index.html#projects">Projects</a></li>
+          <li><a href="index.html#proof">Experience</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <div class="hero-bg">
+      <div class="geometric-shape"></div>
+      <div class="geometric-shape"></div>
+      <div class="geometric-shape"></div>
+      <div class="geometric-shape"></div>
+    </div>
+    <div class="container">
+      <div class="hero-content">
+        <h1 class="slide-in-left">Aught Hour - where ideas move from <span class="highlight">zero to one</span> and <span class="highlight">one to scale</span></h1>
+        <p class="large-text slide-in-left delay-1">AI and product strategy, built at the intersection of technology, people, and human connection.</p>
+
+        <!-- Primary CTA with progressive fallback -->
+        <div class="contact-cta" data-email="contact@aughthour.com">
+          <a href="mailto:contact@aughthour.com" target="_blank" rel="noopener" class="cta-button cta-email slide-in-left delay-2">Work with us</a>
+          <div class="contact-fallback" hidden>
+            <p>If your email app did not open:</p>
+            <p>
+              <a class="gmail-link" target="_blank" rel="noopener">Compose in Gmail</a>
+              or copy
+              <button type="button" class="copy-email">contact@aughthour.com</button>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Brand Story -->
+  <section id="story" class="section-alt">
+    <div class="container">
+      <div class="offset-right">
+        <div class="vertical-label">Origin</div>
+        <h2 class="slide-in-right">Our Story</h2>
+        <p class="large-text slide-in-right delay-1">
+          <span class="highlight">Aught Hour</span> is the starting point. Where ideas move from zero to one, and from one to scale.
+        </p>
+        <p class="slide-in-right delay-2">
+          We are a <span class="highlight">Silicon Valley</span> based firm focused on AI, product, and strategy. We help founders and executives build, scale, and hire the right teams.
+        </p>
+        <p class="slide-in-right delay-3">
+          We do not just advise - <span class="highlight">we incubate our own projects</span>. From new productivity platforms to human centered AI experiences and infrastructure for entrepreneurs, Aught Hour is where the next wave of ideas is tested, built, and launched.
+        </p>        
+        <p class="slide-in-right delay-4">
+          Whether you are looking for expertise, your next role, or your next collaboration, <span class="highlight">Aught Hour</span> is the starting point.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- What We Do -->
+  <section id="work">
+    <div class="bg-element bg-circle"></div>
+    <div class="container">
+      <div class="offset-left">
+        <h2 class="heavy slide-in-left">What We Do</h2>
+        <p class="large-text slide-in-left delay-1">We work at the <span class="highlight">frontier of AI</span> and product. That takes many forms:</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card glow-border slide-in-up delay-1">
+          <h3>Advisory</h3>
+          <p>Guiding startups, boards, and corporates on AI, growth, and product strategy</p>
+        </div>
+        <div class="card brutal-border slide-in-up delay-2">
+          <h3>Interim Leadership</h3>
+          <p>Stepping in as <span class="highlight">CPO</span>, <span class="highlight">CTO</span>, or growth operator</p>
+        </div>
+        <div class="card clean-border slide-in-up delay-3">
+          <h3>Workshops & Talks</h3>
+          <p>Design thinking, AI adoption, and product strategy</p>
+        </div>
+        <div class="card glow-border slide-in-up delay-4">
+          <h3>Collaboration</h3>
+          <p>Partnering on <span class="highlight">new ventures</span> and prototypes</p>
+        </div>
+      </div>
+
+      <div class="contact-cta" data-email="contact@aughthour.com" style="text-align:center; margin-top:3rem;">
+        <a href="mailto:contact@aughthour.com" target="_blank" rel="noopener" class="cta-button cta-email">Work with us</a>
+        <div class="contact-fallback" hidden>
+          <p>If your email app did not open:</p>
+          <p>
+            <a class="gmail-link" target="_blank" rel="noopener">Compose in Gmail</a>
+            or copy
+            <button type="button" class="copy-email">contact@aughthour.com</button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="section-alt">
+    <div class="container">
+      <div class="offset-left">
+        <div class="vertical-label">Build</div>
+        <h2 class="slide-in-left">Projects</h2>
+        <p class="slide-in-left delay-1">Inside Aught Hour, we are exploring projects that push how humans connect with AI. A few flavors:</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card glow-border slide-in-up delay-3">
+          <p><span class="highlight">Voice first agents</span> - a medium that feels more human, intuitive, and connective</p>
+        </div>
+        <div class="card clean-border slide-in-up delay-1">
+          <p>Tools that help <span class="highlight">students</span> turn chaos into clarity with AI powered task management</p>
+        </div>
+        <div class="card brutal-border slide-in-up delay-2">
+          <p>Platforms reimagining <span class="highlight">internships</span> and career transitions</p>
+        </div>
+        <div class="card glow-border slide-in-up delay-1">
+          <p>Data driven systems for <span class="highlight">finance</span> and investing</p>
+        </div>
+        <div class="card clean-border slide-in-up delay-2">
+          <p>Experiments in <span class="highlight">marketplaces</span>, automation, and AI driven decision making</p>
+        </div>
+        <div class="card brutal-border slide-in-up delay-3">
+            <p>A company that exists to create $1B in community-driven <span class="highlight">wealth</span> and <span class="highlight">entreprenuership</span> at scale</p>
+          </div>
+        </div>
+
+      <p class="slide-in-up delay-3">Each project is an <span class="highlight">experiment</span>. Some grow into companies. Some stay as prototypes. All are built to learn and push what is possible.</p>
+    </div>
+  </section>
+
+  <!-- Experience & Credibility -->
+  <section id="proof" class="proof-section">
+    <div class="bg-element bg-triangle"></div>
+    <div class="container">
+      <div class="offset-left">
+        <div class="vertical-label">Proof</div>
+        <h2 class="slide-in-up">Experience & Credibility</h2>
+        <div class="author-head slide-in-up">
+            <img src="/images/tenni-theurer.jpeg" alt="Tenni Theurer" class="author-avatar">
+            <div>
+              <div class="author-name">Tenni Theurer</div>
+              <a href="https://www.linkedin.com/in/tennitheurer/" target="_blank" rel="noopener" class="author-link">
+                LinkedIn
+              </a>
+            </div>
+          </div>
+          
+        <p class="slide-in-up delay-1">
+          <span class="highlight">Aught Hour</span> was founded by <span class="highlight">Tenni Theurer</span> to incubate new ideas in AI and product strategy - first as a home for her own projects, and now as a platform to help others build and scale.
+        </p>
+        </p>
+
+        <p class="slide-in-up delay-2">
+          Based in <span class="highlight">Silicon Valley</span>, Tenni has built through <span class="highlight">every wave</span> of modern technology - from dot com and search to mobile, cloud, fintech, and now AI.
+        </p>
+
+        <div class="slide-in-up delay-3 proof-block">
+          <p>Her career arc has been <span class="highlight">engineer</span> to product, <span class="highlight">product leader</span> to GM, and GM to <span class="highlight">founder</span>. Always at the front of major shifts, she focuses on what lasts and cuts what fades.</p>
+
+          <p>At Yahoo and Verizon Media, she ran Yahoo Homepage, Mail, Search, and a multi brand portfolio that included TechCrunch, AOL, HuffPost, and Engadget. She owned <span class="stat-highlight">$1.6B</span> in annual revenue across businesses reaching <span class="stat-highlight">500M+</span> monthly users and directly managed <span class="stat-highlight">130+</span> people</p>
+
+          <p>At Visa, she helped pioneer credit card tokenization and launched the company’s first digital wallet with more than <span class="stat-highlight">50</span> issuers and <span class="stat-highlight">35</span> merchants - setting the foundation for modern digital payments.</p>
+
+          <p>As Co-Founder and CPO of Spring Free EV, she played a key role in raising a <span class="stat-highlight">$31M Series A</span>, introduced a mileage linked financing model, and helped deploy 500+ electric vehicles with 23M+ electric miles driven, avoiding over 9,000 metric tons of CO₂.</p>
+
+          <p>Today, she is Co-Founder of the <a target="_blank" href="https://bellaifellow.com" class="bold-link">Bell AI Fellowship</a>, Co-Founder and CPTO at <a target="_blank" href="https://zarusystems.com" class="bold-link">Zarû</a>, and incubating <a target="_blank" href="https://taskcloud.ai" class="bold-link">TaskCloud</a> - building AI native infrastructure, productivity tools, and human AI experiences.</p>
+        </div>
+
+        <div class="slide-in-up delay-4" style="margin-top:1rem;">
+          <p>That mix is what makes Aught Hour different:</p>
+          <ul class="highlight-list">
+            <li><span class="highlight">Operator</span> of billion dollar businesses</li>
+            <li><span class="highlight">Entrepreneur</span> building from zero</li>
+            <li><span class="highlight">Advisor</span> helping others shape what is next</li>
+            <li><span class="highlight">Technologist</span> who has lived through every era of modern computing</li>
+          </ul>
+          <p>This is the foundation of Aught Hour. A platform for building new AI ideas and guiding others through the opportunities and risks of this era of change.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section>
+    <div class="container">
+      <div class="offset-right">
+        <div class="card brutal-border slide-in-right">
+          <h3>Services</h3>
+          <p>Advisory, interim leadership, and workshops are available <span class="highlight">selectively</span>. We tailor engagements to high leverage opportunities where our experience can accelerate impact.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Closing CTA -->
+  <section id="contact" class="section-alt">
+    <div class="container">
+      <div class="offset-center" style="text-align:center;">
+        <h2 class="heavy slide-in-up">Let’s Work Together</h2>
+        <p class="large-text slide-in-up delay-1">If you are an investor, collaborator, or company exploring what is next in AI, let’s work together.</p>
+
+        <div class="contact-cta" data-email="contact@aughthour.com" style="margin:2rem 0;">
+          <a href="mailto:contact@aughthour.com" target="_blank" rel="noopener" class="cta-button cta-email slide-in-up delay-2">Work with us</a>
+          <div class="contact-fallback" hidden>
+            <p>If your email app did not open:</p>
+            <p>
+              <a class="gmail-link" target="_blank" rel="noopener">Compose in Gmail</a>
+              or copy
+              <button type="button" class="copy-email">contact@aughthour.com</button>
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top:4rem; padding-top:2rem; border-top:1px solid rgba(255,255,255,0.1);">
+          <p style="font-style:italic; color:var(--accent); font-weight:100; font-size:1.25rem;" class="slide-in-up delay-3">
+            Built at every scale for <span class="stat-highlight">25</span> years. Aught Hour turns that experience into what’s next.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
         <div class="container">
-            <div class="nav-content">
-                <div class="logo">Aught Hour</div>
-                <ul class="nav-links">
-                    <li><a href="#story">Story</a></li>
-                    <li><a href="#work">What We Do</a></li>
-                    <li><a href="#proof">Experience</a></li>
-                    <li><a href="#projects">Projects</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero" id="hero">
-        <div class="hero-bg">
-            <div class="geometric-shape"></div>
-            <div class="geometric-shape"></div>
-            <div class="geometric-shape"></div>
-            <div class="geometric-shape"></div>
-        </div>
-        <div class="container">
-            <div class="hero-content">
-                <h1 class="slide-in-left">Aught Hour — where ideas at <span class="highlight">zero</span> become <span class="highlight">anything</span></h1>
-                <p class="large-text slide-in-left delay-1">AI, product strategy, and voice-first innovation, built at the intersection of technology and human connection.</p>
-                <a href="#contact" class="cta-button slide-in-left delay-2">Work with us</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Brand Story -->
-    <section id="story" class="section-alt">
-        <div class="container">
-            <div class="offset-right">
-                <div class="vertical-label">Origin</div>
-                <h2 class="slide-in-right">Brand Story</h2>
-                <p class="large-text slide-in-right delay-1"><span class="highlight">Aught</span> means zero or anything. <span class="highlight">Hour</span> is the moment to start. Together, they represent a starting point — a place where new ideas can scale.</p>
-                <p class="slide-in-right delay-2">Aught Hour is where we bring together our corporate, startup, and advisory experience to test, build, and share what's next in AI.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- What I Do -->
-    <section id="work">
-        <div class="bg-element bg-circle"></div>
-        <div class="container">
-            <div class="offset-left">
-                <h2 class="heavy slide-in-left">What We Do</h2>
-                <p class="large-text slide-in-left delay-1">We work at the <span class="highlight">frontier of AI</span> and product. That takes many forms:</p>
-            </div>
-                
-            <div class="grid grid-2">
-                <div class="card glow-border slide-in-up delay-1">
-                    <h3>Advisory</h3>
-                    <p>Guiding startups, boards, and corporates on AI, growth, and product strategy</p>
-                </div>
-                
-                <div class="card brutal-border slide-in-up delay-2">
-                    <h3>Interim Leadership</h3>
-                    <p>Stepping in as <span class="highlight">CPO</span>, <span class="highlight">CTO</span>, or growth operator</p>
-                </div>
-                
-                <div class="card clean-border slide-in-up delay-3">
-                    <h3>Workshops & Talks</h3>
-                    <p>Design thinking, AI adoption, voice-first strategy</p>
-                </div>
-                
-                <div class="card glow-border slide-in-up delay-4">
-                    <h3>Collaboration</h3>
-                    <p>Partnering on <span class="highlight">new ventures</span> and prototypes</p>
-                </div>
-            </div>
-            
-            <div style="text-align: center; margin-top: 3rem;">
-                <a href="#contact" class="cta-button">Work with us</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Proof & Credibility -->
-    <section id="proof" class="proof-section">
-        <div class="bg-element bg-triangle"></div>
-        <div class="container">
-            <div class="offset-center">
-                <div class="vertical-label">Proof</div>
-                <h2 class="slide-in-up">Experience & Credibility</h2>
-                
-                <p class="slide-in-up delay-1">Based in <span class="highlight">Silicon Valley</span>, our team has lived and built through <span class="highlight">every wave</span> of modern technology — from dot com internet, search, mobile, cloud, fintech, and now AI. </p>
-                
-                <p class="slide-in-up delay-2">We know how to spot what <span class="highlight">lasts</span> and what <span class="highlight">fades</span>.</p>
-                
-                <div class="slide-in-up delay-3">
-                    <p>Our team consists of engineers and designers who became product managers and executives.</p>
-                    
-                    <p>We have scaled consumer businesses reaching <span class="stat-highlight">500M+</span> monthly active users, directly managed <span class="stat-highlight">130+</span> reports and <span class="stat-highlight">$1.6B</span> in annual revenue.</p>
-                    
-                    <p>We built and scaled core developer platforms — from pre-IPO to today’s global scale — including identity, APIs, and SaaS products used by millions. We also pioneered credit card tokenization and modern digital payments during the height of the “wallet wars.”</p>
-                    
-                    <p>Then we moved from scale to entrepreneurship. We raised <span class="stat-highlight">$31M+</span>, created a new financing model, and put <span class="stat-highlight">500+</span> electric vehicles on the road, avoiding over <span class="stat-highlight">9,000</span> metric tons of CO₂.</p>
-                    
-                    <p>Today, through the <a href="#" style="color: var(--accent);">Bell AI Fellowship</a>, we bring technologists and creators together to explore the future of human-AI interaction. In parallel, we are building <a href="#" style="color: var(--accent);">Zarû</a>, AI-native infrastructure designed for a new class of entrepreneurs. We are also exploring <a href="#" style="color: var(--accent);">TaskCloud</a>, a next-generation platform for learning and productivity
-                                        
-                </div>
-                
-                <div class="slide-in-up delay-4">
-                    <p>That mix is what makes us different:</p>
-                    
-                    <ul class="highlight-list">
-                        <li><span class="highlight">Operators</span> of billion-dollar businesses</li>
-                        <li><span class="highlight">Entrepreneurs</span> building from zero</li>
-                        <li><span class="highlight">Advisors</span> helping others shape what's next</li>
-                        <li><span class="highlight">Technologists</span> who've lived through every era of modern computing</li>
-                    </ul>
-                    
-                    <p>This is the foundation of Aught Hour: a platform for building new AI ideas and guiding others through the opportunities — and risks — of this era of change.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects -->
-    <section id="projects" class="section-alt">
-        <div class="container">
-            <div class="offset-left">
-                <div class="vertical-label">Build</div>
-                <h2 class="slide-in-left">Projects</h2>
-                <p class="slide-in-left delay-1">Inside Aught Hour, we're exploring projects that push the boundaries of how humans connect with AI. A few flavors:</p>
-            </div>
-                
-            <div class="grid grid-3">
-                <div class="card clean-border slide-in-up delay-1">
-                    <p>Tools that help <span class="highlight">students</span> manage tasks and learning with AI</p>
-                </div>
-                
-                <div class="card brutal-border slide-in-up delay-2">
-                    <p>Platforms reimagining <span class="highlight">internships</span> and career transitions</p>
-                </div>
-                
-                <div class="card glow-border slide-in-up delay-3">
-                    <p><span class="highlight">Voice-first agents</span> for self-care, gratitude, and human connection</p>
-                </div>
-                
-                <div class="card glow-border slide-in-up delay-1">
-                    <p>Data-driven systems for <span class="highlight">finance</span> and investing</p>
-                </div>
-                
-                <div class="card clean-border slide-in-up delay-2">
-                    <p>Experiments in <span class="highlight">marketplaces</span>, automation, and AI-driven decision-making</p>
-                </div>
-            </div>
-            
-                            <p class="slide-in-up delay-3">Each project is an <span class="highlight">experiment</span>. Some grow into companies, some stay as prototypes. All are built to learn, test, and push what's possible.</p>
-        </div>
-    </section>
-
-    <!-- Services -->
-    <section>
-        <div class="container">
-            <div class="offset-right">
-                <div class="card brutal-border slide-in-right">
-                    <h3>Services</h3>
-                    <p>Advisory, interim leadership, and workshops are available <span class="highlight">selectively</span>. We tailor engagements to high-leverage opportunities where our experience can accelerate impact.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Closing CTA -->
-    <section id="contact" class="section-alt">
-        <div class="container">
-            <div class="offset-center" style="text-align: center;">
-                <h2 class="heavy slide-in-up">Let's Work Together</h2>
-                <p class="large-text slide-in-up delay-1">If you're an investor, collaborator, or company exploring what's next in AI, let's work together.</p>
-                <a href="mailto:hello@aughthour.com" class="cta-button slide-in-up delay-2" style="margin: 2rem 0;">Work with us</a>
-                
-                <div style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
-                    <p style="font-style: italic; color: var(--accent); font-weight: 100; font-size: 1.25rem;" class="slide-in-up delay-3">We've spent the last <span class="stat-highlight">25</span> years building at every scale. Aught Hour is where we share that experience — and where the next chapter begins.</p>
-                    
-                    <div style="margin-top: 2rem; font-size: 0.875rem; color: var(--text-secondary);">
-                        <a href="terms.html" style="color: var(--text-secondary); text-decoration: none; margin-right: 2rem;">Terms of Service</a>
-                        <a href="privacy.html" style="color: var(--text-secondary); text-decoration: none;">Privacy Policy</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <script>
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // Magnetic button effect
-        document.querySelectorAll('.cta-button').forEach(button => {
-            button.addEventListener('mousemove', (e) => {
-                const rect = button.getBoundingClientRect();
-                const x = e.clientX - rect.left - rect.width / 2;
-                const y = e.clientY - rect.top - rect.height / 2;
-                
-                button.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px) scale(1.05)`;
-            });
-            
-            button.addEventListener('mouseleave', () => {
-                button.style.transform = '';
-            });
-        });
-
-        // Intersection Observer for animations
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.style.animationPlayState = 'running';
-                }
-            });
-        }, observerOptions);
-
-        // Observe all animated elements
-        document.querySelectorAll('[class*="slide-in"]').forEach(el => {
-            el.style.animationPlayState = 'paused';
-            observer.observe(el);
-        });
-
-        // Add active state to navigation
-        window.addEventListener('scroll', () => {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav-links a');
-            
-            let current = '';
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - 100;
-                const sectionHeight = section.clientHeight;
-                if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-                    current = section.getAttribute('id');
-                }
-            });
-            
-            navLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href').substring(1) === current) {
-                    link.classList.add('active');
-                }
-            });
-        });
-
-        // Parallax effect for background elements
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallaxElements = document.querySelectorAll('.bg-element');
-            
-            parallaxElements.forEach(element => {
-                const speed = 0.5;
-                element.style.transform = `translateY(${scrolled * speed}px)`;
-            });
-        });
-    </script>
+          <a href="#hero" class="footer-home">Back to Top</a>
+          <nav class="footer-links">
+            <a href="terms.html">Terms of Service</a>
+            <a href="privacy.html">Privacy Policy</a>
+          </nav>
+          <div class="footer-meta">
+            © <span id="year"></span> Aught Hour LLC. All rights reserved.
+          </div> 
+        </div>    
+      </footer>  
+  <script src="app.js"></script>
 </body>
 </html>

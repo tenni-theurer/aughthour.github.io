@@ -2,120 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Aught Hour — Privacy Policy</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root{
-      --bg-primary:#0a0a0e;
-      --bg-secondary:#111118;
-      --bg-gradient:linear-gradient(135deg,#0a0a0e 0%,#0f0f1a 50%,#0a0a0e 100%);
-      --text-primary:#ffffff;
-      --text-secondary:#a0a0b0;
-      --accent:#00d4ff;
-      --accent-hover:#00b8e6;
-      --accent-glow:rgba(0,212,255,0.4);
-      --section-padding:120px 0;
-      --divider: rgba(255,255,255,0.12);
-    }
-
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;900&display=swap');
-
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg-gradient);
-      color: var(--text-primary);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* Typography (exact match to terms.html) */
-    h1 { font-size: clamp(2.5rem, 6vw, 4.75rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.08; }
-    h2 { font-size: clamp(1.6rem, 3.5vw, 2.35rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 1rem; }
-    h3 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 .25rem; }
-    p  { font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
-    ul { margin-left: 1.25rem; }
-    li { color: var(--text-secondary); margin: .5rem 0; }
-    .large-text { font-size: clamp(1.12rem, 2.6vw, 1.3rem); font-weight: 300; color: var(--text-secondary); }
-    .highlight { color: var(--accent); font-weight: 600; }
-
-    /* Container (exact) */
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-
-    /* Nav (exact) */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(10,10,14,.95); backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0,212,255,.2); padding: 1rem 0;
-    }
-    .nav-content { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 1.5rem; font-weight: 900; color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
-    .logo a{ color: inherit; text-decoration: none; }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 300; position: relative; }
-    .nav-links a:hover { color: var(--accent); text-shadow: 0 0 5px var(--accent-glow); }
-
-    /* Hero (exact) */
-    .hero { min-height: 48vh; display: flex; align-items: center; position: relative; overflow: hidden; padding: var(--section-padding); }
-    .hero h1 {
-      margin-bottom: 2rem;
-      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 70%, var(--text-primary) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .hero .large-text { max-width: 90%; margin-bottom: 1.5rem; }
-    .meta { font-size: .95rem; color: var(--text-secondary); margin-top: 1rem; margin-bottom: 2.5rem; }
-
-    .hero-bg { position: absolute; inset: 0; opacity: .1; overflow: hidden; }
-    .geometric-shape { position: absolute; border: 2px solid var(--accent); border-radius: 50%; animation: float 6s ease-in-out infinite; }
-    .geometric-shape:nth-child(1){ width:100px; height:100px; top:20%; left:10%; }
-    .geometric-shape:nth-child(2){ width:150px; height:150px; top:60%; right:15%; border-radius:0; transform:rotate(45deg); animation-delay:2s; }
-    .geometric-shape:nth-child(3){ width:80px; height:80px; top:40%; left:70%; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); border:none; background: linear-gradient(45deg, transparent, var(--accent)); animation-delay:4s; }
-    .geometric-shape:nth-child(4){ width:200px; height:2px; top:30%; left:30%; background: var(--accent); border:none; animation: pulse 4s ease-in-out infinite; }
-    @keyframes float { 0%,100%{transform: translateY(0) rotate(0)} 50%{transform: translateY(-20px) rotate(180deg)} }
-    @keyframes pulse { 0%,100%{opacity:.3; transform: scaleX(1)} 50%{opacity:1; transform: scaleX(1.5)} }
-
-    /* TOC (exact) */
-    .toc { margin: 2rem 0 0rem; display: flex; flex-wrap: wrap; gap: .5rem; }
-    .toc a {
-      color: var(--text-secondary); text-decoration: none;
-      border: 1px solid var(--divider); padding: .25rem 1rem; border-radius: 10px; font-size: .75rem;
-    }
-    .toc a:hover { color: var(--accent); border-color: var(--accent); }
-
-    /* Body (matches terms structure) */
-    .policy-wrap { padding: 0 0 100px; }
-    .policy-content { max-width: 1000px; }
-    .policy-section { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.15); }
-    .policy-section:first-of-type { border-top: 0; padding-top: 0; }
-    .policy-section h2 { margin-bottom: 1rem; }
-    .policy-section p, .policy-section ul { margin-bottom: 1.5rem; }
-
-    /* Footer (exact) */
-    footer { padding: 40px 0; border-top: 1px solid var(--divider); text-align: center; }
-    .footer-links a { color: var(--text-secondary); text-decoration: none; margin: 0 1rem; }
-
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .container { padding: 0 1rem; }
-      :root { --section-padding: 80px 0; }
-      .policy-content { max-width: none; }
-      .toc { gap: .75rem; }
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Aught Hour - Privacy Policy</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <!-- Fonts + shared styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <!-- Nav -->
+
+  <!-- Nav (identical to other pages) -->
   <nav class="nav">
     <div class="container">
       <div class="nav-content">
-        <div class="logo"><a href="index.html">Aught Hour</a></div>
+        <a href="index.html" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
         <ul class="nav-links">
           <li><a href="index.html#story">Story</a></li>
           <li><a href="index.html#work">What We Do</a></li>
-          <li><a href="index.html#proof">Experience</a></li>
           <li><a href="index.html#projects">Projects</a></li>
+          <li><a href="index.html#proof">Experience</a></li>
         </ul>
       </div>
     </div>
@@ -131,32 +38,34 @@
     </div>
     <div class="container">
       <div class="hero-content">
-        <h1>Privacy <span style="color:var(--accent)">Policy</span></h1>
+        <h1>Privacy <span class="highlight">Policy</span></h1>
         <p class="large-text">We care deeply about privacy. As AI rules evolve, we commit to handling your data with care, transparency, and respect.</p>
         <p class="meta"><strong>Effective:</strong> Mar 10, 2025 <span style="opacity:.6">|</span> <strong>Last update:</strong> Aug 23, 2025</p>
-        <div class="toc" aria-label="On this page">
-          <a href="#overview">Overview</a>
-          <a href="#collect">Data We Collect</a>
-          <a href="#use">How We Use Data</a>
-          <a href="#nosale">No Sale of Data</a>
-          <a href="#sharing">Sharing</a>
-          <a href="#voice">Voice, SMS & Phone Numbers</a>
-          <a href="#photos">Photos & Media</a>
-          <a href="#cookies">Cookies & Analytics</a>
-          <a href="#retention">Data Retention</a>
-          <a href="#security">Security</a>
-          <a href="#rights">Your Rights</a>
-          <a href="#thirdparty">Third-Party Services</a>
-          <a href="#intl">International Transfers</a>
-          <a href="#children">Children</a>
-          <a href="#changes">Changes</a>
-          <a href="#contact">Contact</a>
+
+        <!-- TOC chips (shared styles: .toc-chips .chip) -->
+        <div class="toc-chips" aria-label="On this page">
+          <a href="#overview" class="chip">Overview</a>
+          <a href="#collect" class="chip">Data We Collect</a>
+          <a href="#use" class="chip">How We Use Data</a>
+          <a href="#nosale" class="chip">No Sale of Data</a>
+          <a href="#sharing" class="chip">Sharing</a>
+          <a href="#voice" class="chip">Voice, SMS & Phone</a>
+          <a href="#photos" class="chip">Photos & Media</a>
+          <a href="#cookies" class="chip">Cookies & Analytics</a>
+          <a href="#retention" class="chip">Data Retention</a>
+          <a href="#security" class="chip">Security</a>
+          <a href="#rights" class="chip">Your Rights</a>
+          <a href="#thirdparty" class="chip">Third-Party Services</a>
+          <a href="#intl" class="chip">International Transfers</a>
+          <a href="#children" class="chip">Children</a>
+          <a href="#changes" class="chip">Changes</a>
+          <a href="#contact" class="chip">Contact</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Policy -->
+  <!-- Policy body -->
   <section class="policy-wrap section-alt">
     <div class="container">
       <div class="policy-content">
@@ -170,9 +79,9 @@
         <div id="collect" class="policy-section">
           <h2>2. Data We Collect</h2>
           <ul>
-            <li><strong>Identifiers:</strong> name, email, phone number (for voice/SMS features).</li>
+            <li><strong>Identifiers:</strong> name, email, phone number for voice or SMS features.</li>
             <li><strong>Interaction data:</strong> messages, call audio, transcripts, AI chat logs, feedback you provide.</li>
-            <li><strong>Usage data:</strong> device/browser info, general location (city/region), pages and features used, timestamps.</li>
+            <li><strong>Usage data:</strong> device or browser info, general location like city or region, pages and features used, timestamps.</li>
             <li><strong>Optional submissions:</strong> photos, documents, or other media you upload or share.</li>
           </ul>
           <p>We do not knowingly collect personal information from children under 13.</p>
@@ -191,36 +100,36 @@
 
         <div id="nosale" class="policy-section">
           <h2>4. No Sale of Data</h2>
-          <p>We do <strong>not</strong> sell your personal information.</p>
+          <p>We do not sell your personal information.</p>
         </div>
 
         <div id="sharing" class="policy-section">
           <h2>5. Sharing</h2>
-          <p>We do not share your personal information with other users unless it is <strong>aggregated or anonymized</strong>, or you have given us <strong>explicit permission</strong>. We may share limited data with service providers who help us operate the Services (see Third-Party Services) under contracts that restrict their use of your data to our instructions.</p>
+          <p>We do not share your personal information with other users unless it is aggregated or anonymized, or you have given us explicit permission. We may share limited data with service providers who help us operate the Services under contracts that restrict their use of your data to our instructions.</p>
         </div>
 
         <div id="voice" class="policy-section">
-          <h2>6. Voice, SMS & Phone Numbers</h2>
+          <h2>6. Voice, SMS and Phone Numbers</h2>
           <ul>
             <li>We use your phone number to enable calling and messaging features.</li>
             <li>Calls and messages may be processed by telecom and AI providers to route, transcribe, and generate responses.</li>
             <li>We may store call metadata, transcripts, or voicemail to improve functionality and for quality assurance.</li>
-            <li>You can request deletion of transcripts and associated identifiers (subject to legal requirements and system logs needed for security or fraud prevention).</li>
+            <li>You can request deletion of transcripts and associated identifiers, subject to legal requirements and security or fraud prevention logs.</li>
           </ul>
         </div>
 
         <div id="photos" class="policy-section">
-          <h2>7. Photos & Media</h2>
+          <h2>7. Photos and Media</h2>
           <ul>
             <li>You own the photos, audio, and media you upload.</li>
-            <li>By providing media, you grant us permission to process it to deliver the Services (e.g., analysis, transformation, or storage).</li>
+            <li>By providing media, you grant us permission to process it to deliver the Services like analysis, transformation, or storage.</li>
             <li>We do not sell your media. We will not publish your identifiable media without your permission.</li>
           </ul>
         </div>
 
         <div id="cookies" class="policy-section">
-          <h2>8. Cookies & Analytics</h2>
-          <p>We may use cookies or similar technologies to keep you signed in, remember preferences, and understand how the Services are used. You can control cookies in your browser settings; disabling some cookies may affect functionality.</p>
+          <h2>8. Cookies and Analytics</h2>
+          <p>We may use cookies or similar technologies to keep you signed in, remember preferences, and understand how the Services are used. You can control cookies in your browser settings. Disabling some cookies may affect functionality.</p>
         </div>
 
         <div id="retention" class="policy-section">
@@ -245,10 +154,10 @@
 
         <div id="thirdparty" class="policy-section">
           <h2>12. Third-Party Services</h2>
-          <p>We rely on trusted providers to operate the Services, such as <strong>OpenAI</strong> (AI processing), <strong>Twilio</strong> (voice/SMS), <strong>Make.com</strong> (automation), and infrastructure or data tools (e.g., Airtable, Supabase, Google). These processors handle data on our behalf and are bound by contracts to use it only as instructed by us.</p>
+          <p>We rely on trusted providers to operate the Services, such as OpenAI for AI processing, Twilio for voice or SMS, Make.com for automation, and infrastructure or data tools like Airtable, Supabase, and Google. These processors handle data on our behalf and are bound by contracts to use it only as instructed by us.</p>
           <ul>
-            <li>Your data may pass through or be stored by these providers to deliver features (transcription, routing, analytics, storage).</li>
-            <li>Providers have their own terms and privacy policies; we encourage you to review them.</li>
+            <li>Your data may pass through or be stored by these providers to deliver features like transcription, routing, analytics, or storage.</li>
+            <li>Providers have their own terms and privacy policies. We encourage you to review them.</li>
             <li>We minimize the data we share and use aggregation or anonymization where feasible.</li>
           </ul>
         </div>
@@ -265,12 +174,12 @@
 
         <div id="changes" class="policy-section">
           <h2>15. Changes to This Policy</h2>
-          <p>We may update this Policy from time to time. Updates are effective upon posting with the “Last update” date above. Your continued use of the Services means you accept the revised Policy.</p>
+          <p>We may update this Policy from time to time. Updates are effective upon posting with the Last update date above. Your continued use of the Services means you accept the revised Policy.</p>
         </div>
 
         <div id="contact" class="policy-section">
           <h2>16. Contact</h2>
-          <p><strong>Aught Hour LLC</strong><br/>2108 N St STE N Sacramento, CA 95816<br/><a href="mailto:contact@aughthour.com" class="highlight" style="text-decoration:none">contact@aughthour.com</a></p>
+          <p><strong>Aught Hour LLC</strong><br>2108 N St STE N Sacramento, CA 95816<br><a href="mailto:contact@aughthour.com" class="highlight" style="text-decoration:none">contact@aughthour.com</a></p>
         </div>
 
       </div>
@@ -278,14 +187,20 @@
   </section>
 
   <!-- Footer -->
-  <footer>
+  <footer class="site-footer">
     <div class="container">
-      <a href="index.html" class="highlight" style="text-decoration:none">Back to Home</a>
-      <div class="footer-links" style="margin-top:.75rem">
+      <a href="index.html" class="footer-home">Back to Home</a>
+      <nav class="footer-links">
         <a href="terms.html">Terms of Service</a>
         <a href="privacy.html">Privacy Policy</a>
-      </div>
+      </nav>
+      <div class="footer-meta">
+        © <span id="year"></span> Aught Hour LLC. All rights reserved.
+      </div> 
     </div>
-  </footer>
+  </footer>  
+
+  <!-- Shared scripts -->
+  <script src="app.js" defer></script>
 </body>
 </html>

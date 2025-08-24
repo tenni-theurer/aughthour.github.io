@@ -1,124 +1,31 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Aught Hour — Terms of Service</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    :root{
-      --bg-primary:#0a0a0e;
-      --bg-secondary:#111118;
-      --bg-gradient:linear-gradient(135deg,#0a0a0e 0%,#0f0f1a 50%,#0a0a0e 100%);
-      --text-primary:#ffffff;
-      --text-secondary:#a0a0b0;
-      --accent:#00d4ff;
-      --accent-hover:#00b8e6;
-      --accent-glow:rgba(0,212,255,0.4);
-      --section-padding:120px 0;
-      --divider: rgba(255,255,255,0.12);
-    }
-
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;900&display=swap');
-
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: var(--bg-gradient);
-      color: var(--text-primary);
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* Typography */
-    h1 { font-size: clamp(2.5rem, 6vw, 4.75rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.08; }
-    h2 { font-size: clamp(1.6rem, 3.5vw, 2.35rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 1rem; }
-    h3 { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 .25rem; }
-    p  { font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 1.25rem; }
-    ul { margin-left: 1.25rem; }
-    li { color: var(--text-secondary); margin: .5rem 0; }
-    .large-text { font-size: clamp(1.12rem, 2.6vw, 1.3rem); font-weight: 300; color: var(--text-secondary); }
-    .highlight { color: var(--accent); font-weight: 600; }
-
-    /* Container matches index.html */
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
-
-    /* Nav matches index.html */
-    .nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: rgba(10,10,14,.95); backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0,212,255,.2); padding: 1rem 0;
-    }
-    .nav-content { display: flex; justify-content: space-between; align-items: center; }
-    .logo { font-size: 1.5rem; font-weight: 900; color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
-    .logo a{ color: inherit; text-decoration: none; }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { color: var(--text-secondary); text-decoration: none; font-weight: 300; position: relative; }
-    .nav-links a:hover { color: var(--accent); text-shadow: 0 0 5px var(--accent-glow); }
-
-    /* Hero */
-    .hero { min-height: 48vh; display: flex; align-items: center; position: relative; overflow: hidden; padding: var(--section-padding); }
-    .hero h1 {
-      margin-bottom: 2rem;
-      background: linear-gradient(135deg, var(--text-primary) 0%, var(--accent) 70%, var(--text-primary) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-    }
-    .hero .large-text { max-width: 90%; margin-bottom: 1.5rem; }
-    .meta { font-size: .95rem; color: var(--text-secondary); margin-top: 1rem; margin-bottom: 2.5rem; }
-
-    .hero-bg { position: absolute; inset: 0; opacity: .1; overflow: hidden; }
-    .geometric-shape { position: absolute; border: 2px solid var(--accent); border-radius: 50%; animation: float 6s ease-in-out infinite; }
-    .geometric-shape:nth-child(1){ width:100px; height:100px; top:20%; left:10%; }
-    .geometric-shape:nth-child(2){ width:150px; height:150px; top:60%; right:15%; border-radius:0; transform:rotate(45deg); animation-delay:2s; }
-    .geometric-shape:nth-child(3){ width:80px; height:80px; top:40%; left:70%; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); border:none; background: linear-gradient(45deg, transparent, var(--accent)); animation-delay:4s; }
-    .geometric-shape:nth-child(4){ width:200px; height:2px; top:30%; left:30%; background: var(--accent); border:none; animation: pulse 4s ease-in-out infinite; }
-    @keyframes float { 0%,100%{transform: translateY(0) rotate(0)} 50%{transform: translateY(-20px) rotate(180deg)} }
-    @keyframes pulse { 0%,100%{opacity:.3; transform: scaleX(1)} 50%{opacity:1; transform: scaleX(1.5)} }
-
-    /* TOC chips */
-    .toc { margin: 2rem 0 0rem; display: flex; flex-wrap: wrap; gap: .5rem; }
-    .toc a {
-      color: var(--text-secondary); text-decoration: none;
-      border: 1px solid var(--divider); padding: .25rem 1rem; border-radius: 10px; font-size: .75rem;
-    }
-    .toc a:hover { color: var(--accent); border-color: var(--accent); }
-
-    /* Terms body */
-    .terms-wrap { padding: 0 0 100px; }
-    .terms-content { max-width: 1000px; }
-    .terms-section { padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.15); }
-    .terms-section:first-of-type { border-top: 0; padding-top: 0; }
-    .terms-section h2 { margin-bottom: 1rem; }
-    .terms-section p, .terms-section ul { margin-bottom: 1.5rem; }
-
-    footer { padding: 40px 0; border-top: 1px solid var(--divider); text-align: center; }
-    .footer-links a { color: var(--text-secondary); text-decoration: none; margin: 0 1rem; }
-
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      .container { padding: 0 1rem; }
-      :root { --section-padding: 80px 0; }
-      .terms-content { max-width: none; }
-      .toc { gap: .75rem; }
-    }
-  </style>
-</head>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  </head>
 <body>
-  <!-- Nav -->
+  <!-- Navigation -->
   <nav class="nav">
     <div class="container">
       <div class="nav-content">
-        <div class="logo"><a href="index.html">Aught Hour</a></div>
+        <a href="index.html" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
         <ul class="nav-links">
           <li><a href="index.html#story">Story</a></li>
           <li><a href="index.html#work">What We Do</a></li>
-          <li><a href="index.html#proof">Experience</a></li>
           <li><a href="index.html#projects">Projects</a></li>
+          <li><a href="index.html#proof">Experience</a></li>
         </ul>
       </div>
     </div>
   </nav>
+  
 
   <!-- Hero -->
   <section class="hero" id="hero">
@@ -130,60 +37,68 @@
     </div>
     <div class="container">
       <div class="hero-content">
-        <h1>Terms of <span style="color:var(--accent)">Service</span></h1>
-        <p class="large-text">These terms govern use of Aught Hour LLC and any programs or projects we operate, including but not limited to <a href="https://www.bellaifellow.com" class="highlight" style="text-decoration:none">Bell AI Fellowship</a> and <a href="https://www.taskcloud.ai" class="highlight" style="text-decoration:none">TaskCloud</a>.</p>
-        <p class="meta"><strong>Effective:</strong> Mar 10, 2025 <span style="opacity:.6">|</span> <strong>Last update:</strong> Aug 23, 2025</p>
-        <div class="toc" aria-label="On this page">
-          <a href="#eligibility">Eligibility</a>
-          <a href="#scope">Scope</a>
-          <a href="#programs">Programs</a>
-          <a href="#ip">IP</a>
-          <a href="#responsibilities">Responsibilities</a>
-          <a href="#confidentiality">Confidentiality</a>
-          <a href="#advisory">Advisory</a>
-          <a href="#experimental">Experimental</a>
-          <a href="#fellowships">Fellowships</a>
-          <a href="#privacy">Privacy</a>
-          <a href="#termination">Termination</a>
-          <a href="#thirdparty">Third Party</a>
-          <a href="#indemnification">Indemnification</a>
-          <a href="#liability">Liability</a>
-          <a href="#disclaimers">Disclaimers</a>
-          <a href="#arbitration">Arbitration</a>
-          <a href="#law">Governing Law</a>
-          <a href="#changes">Changes</a>
-          <a href="#contact">Contact</a>
-        </div>
+        <h1>Terms of <span class="highlight">Service</span></h1>
+        <p class="large-text">
+          These terms govern use of Aught Hour LLC and any programs or projects we operate, including but not limited to
+          <a href="https://www.bellaifellow.com" target="_blank" rel="noopener" class="highlight">Bell AI Fellowship</a>
+          and
+          <a href="https://www.taskcloud.ai" target="_blank" rel="noopener" class="highlight">TaskCloud</a>.
+        </p>
+        <p class="large-text" style="font-size:0.95rem; opacity:0.8;">
+          <strong>Effective:</strong> Mar 10, 2025 <span style="opacity:.6">|</span> <strong>Last update:</strong> Aug 23, 2025
+        </p>
+
+        <div class="toc-chips" aria-label="On this page">
+            <a href="#eligibility" class="chip">Eligibility</a>
+            <a href="#scope" class="chip">Scope</a>
+            <a href="#programs" class="chip">Programs</a>
+            <a href="#ip" class="chip">IP</a>
+            <a href="#responsibilities" class="chip">Responsibilities</a>
+            <a href="#confidentiality" class="chip">Confidentiality</a>
+            <a href="#advisory" class="chip">Advisory</a>
+            <a href="#experimental" class="chip">Experimental</a>
+            <a href="#fellowships" class="chip">Fellowships</a>
+            <a href="#privacy" class="chip">Privacy</a>
+            <a href="#termination" class="chip">Termination</a>
+            <a href="#thirdparty" class="chip">Third Party</a>
+            <a href="#indemnification" class="chip">Indemnification</a>
+            <a href="#liability" class="chip">Liability</a>
+            <a href="#disclaimers" class="chip">Disclaimers</a>
+            <a href="#arbitration" class="chip">Arbitration</a>
+            <a href="#law" class="chip">Governing Law</a>
+            <a href="#changes" class="chip">Changes</a>
+            <a href="#contact" class="chip">Contact</a>
+          </div>
+          
       </div>
     </div>
   </section>
 
   <!-- Terms -->
-  <section class="terms-wrap section-alt">
+  <section class="section-alt">
     <div class="container">
-      <div class="terms-content">
-
-        <div id="eligibility" class="terms-section">
+      <div class="offset-left" style="max-width: 72%;">
+        <div id="eligibility" style="padding: 24px 0;">
           <h2>1. Eligibility</h2>
           <p>You must be at least 18 years old and able to form a binding contract to use the Services.</p>
         </div>
 
-        <div id="scope" class="terms-section">
+        <div id="scope" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>2. Scope of Services</h2>
           <p>Aught Hour operates as a hub for innovation, advisory, and technology projects. Services may include strategic advisory and consulting, experimental software and prototypes, community programs and fellowships, and publications. We may add, modify, or discontinue Services at any time.</p>
         </div>
 
-        <div id="programs" class="terms-section">
+        <div id="programs" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>3. Programs and Projects</h2>
           <p>We may operate or host programs and platforms under different names or domains, including Bell AI Fellowship and TaskCloud. Unless otherwise specified, these Terms and the Aught Hour Privacy Policy apply to those programs and platforms.</p>
         </div>
 
-        <div id="ip" class="terms-section">
+        <div id="ip" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>4. Intellectual Property</h2>
           <p>All content and materials provided by Aught Hour including text, software, designs, graphics, logos, and code are owned by Aught Hour or our licensors and are protected by law. You may not copy, distribute, modify, or create derivative works without prior written consent. Feedback you provide may be used by Aught Hour without obligation.</p>
         </div>
 
-        <div id="responsibilities" class="terms-section">
+        <div id="responsibilities" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>5. User Responsibilities</h2>
           <ul>
             <li>Do not misuse or disrupt the Services.</li>
@@ -192,22 +107,22 @@
           </ul>
         </div>
 
-        <div id="confidentiality" class="terms-section">
+        <div id="confidentiality" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>6. Confidentiality</h2>
           <p>Some engagements may involve non public information. Separate agreements such as NDAs may apply. Unless otherwise agreed, you may not disclose or misuse confidential information received through the Services.</p>
         </div>
 
-        <div id="advisory" class="terms-section">
+        <div id="advisory" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>7. Advisory and Consulting</h2>
           <p>Advisory, consulting, or interim leadership services require a separate signed agreement that defines scope, deliverables, fees, IP, and confidentiality. Until such an agreement is executed, no advisory or consulting relationship is formed and any discussions are preliminary and non-binding. Information or feedback shared in that context is provided as is without guarantees of outcome.</p>
         </div>
 
-        <div id="experimental" class="terms-section">
+        <div id="experimental" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>8. Experimental Projects and Software</h2>
           <p>Some Services include prototypes or early stage software. These are provided as is, may be incomplete, and can change or be discontinued at any time. Use is at your own risk.</p>
         </div>
 
-        <div id="fellowships" class="terms-section">
+        <div id="fellowships" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>9. Fellowships and Community</h2>
           <ul>
             <li>Participation may require application and selection. We may accept, reject, or remove participants at our discretion.</li>
@@ -215,70 +130,74 @@
           </ul>
         </div>
 
-        <div id="privacy" class="terms-section">
+        <div id="privacy" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>10. Data and Privacy</h2>
           <p>We may collect personal data to operate and improve the Services. Data is handled per our Privacy Policy. We do not sell personal data. You may request deletion of your data by contacting us.</p>
         </div>
 
-        <div id="termination" class="terms-section">
+        <div id="termination" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>11. Termination</h2>
           <p>We may suspend or terminate access for misuse, violation of these Terms, or at our discretion. Upon termination, your right to use the Services ceases immediately.</p>
         </div>
 
-        <div id="thirdparty" class="terms-section">
+        <div id="thirdparty" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>12. Third Party Services</h2>
           <p>The Services may link to or integrate with third party platforms. We are not responsible for third party actions, content, or policies. You agree to comply with their terms.</p>
         </div>
 
-        <div id="indemnification" class="terms-section">
+        <div id="indemnification" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>13. Indemnification</h2>
           <p>You agree to indemnify and hold Aught Hour harmless from claims, liabilities, damages, and expenses including reasonable legal fees arising from your use of the Services or your violation of these Terms.</p>
         </div>
 
-        <div id="liability" class="terms-section">
+        <div id="liability" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>14. Limitation of Liability</h2>
           <p>To the maximum extent permitted by law, Aught Hour is not liable for indirect, incidental, consequential, punitive, or special damages or for loss of profits, data, or goodwill. Our total liability for any claim is limited to amounts you paid to us for the Services in the six months preceding the claim.</p>
         </div>
 
-        <div id="disclaimers" class="terms-section">
+        <div id="disclaimers" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>15. Disclaimers</h2>
           <p>The Services are provided as is and as available without warranties of any kind, express or implied. We do not warrant that the Services will be error free, uninterrupted, or fit for a particular purpose.</p>
         </div>
 
-        <div id="arbitration" class="terms-section">
+        <div id="arbitration" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>16. Arbitration</h2>
           <p>Any dispute arising out of or relating to these Terms or the Services will be resolved by binding arbitration in San Francisco, California, administered by a recognized provider such as Swift Dispute Resolution, LLC or the American Arbitration Association under applicable rules. Costs are shared equally unless the arbitrator decides otherwise. Either party may seek provisional relief in a court of competent jurisdiction in aid of arbitration. The parties will keep the arbitration and any award confidential except as required for enforcement or by law.</p>
         </div>
 
-        <div id="law" class="terms-section">
+        <div id="law" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>17. Governing Law and Venue</h2>
-          <p>These Terms are governed by California law, excluding conflict of law rules. For any claim not subject to arbitration, the parties consent to the non exclusive jurisdiction of state and federal courts in Santa Clara County, California and waive objections based on personal jurisdiction, venue, or forum non conveniens.</p>
+          <p>These Terms are governed by California law, excluding conflict of law rules. For any claim not subject to arbitration, the parties consent to the non-exclusive jurisdiction of state and federal courts in Santa Clara County, California and waive objections based on personal jurisdiction, venue, or forum non conveniens.</p>
           <p><strong>Jury Trial Waiver.</strong> To the fullest extent permitted by law, each party waives the right to a jury trial for any claim arising out of or relating to these Terms. This waiver survives termination.</p>
         </div>
 
-        <div id="changes" class="terms-section">
+        <div id="changes" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>18. Changes</h2>
           <p>We may update these Terms. Updates are effective upon posting. Continued use after updates constitutes acceptance.</p>
         </div>
 
-        <div id="contact" class="terms-section">
+        <div id="contact" style="padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.12);">
           <h2>19. Contact</h2>
-          <p><strong>Aught Hour LLC</strong><br>2108 N St STE N Sacramento, CA 95816<br>contact@aughthour.com</p>
+          <p><strong>Aught Hour LLC</strong><br />2108 N St STE N Sacramento, CA 95816<br /><a href="mailto:contact@aughthour.com" class="highlight">contact@aughthour.com</a></p>
         </div>
-
       </div>
     </div>
   </section>
 
   <!-- Footer -->
-  <footer>
+  <footer class="site-footer">
     <div class="container">
-      <a href="index.html" class="highlight" style="text-decoration:none">Back to Home</a>
-      <div class="footer-links" style="margin-top:.75rem">
+      <a href="index.html" class="footer-home">Back to Home</a>
+      <nav class="footer-links">
         <a href="terms.html">Terms of Service</a>
         <a href="privacy.html">Privacy Policy</a>
-      </div>
+      </nav>
+      <div class="footer-meta">
+        © <span id="year"></span> Aught Hour LLC. All rights reserved.
+        </div>      
     </div>
-  </footer>
+  </footer>  
+
+  <script src="app.js"></script>
 </body>
 </html>
