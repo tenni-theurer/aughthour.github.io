@@ -22,12 +22,12 @@ body{
 }
 
 /* Type */
-h1{font-size:clamp(3rem,8vw,6rem);font-weight:900;line-height:1.1;letter-spacing:-.03em}
+h1{font-size:clamp(3rem,8vw,5rem);font-weight:900;line-height:1.1;letter-spacing:-.03em}
 h2{font-size:clamp(2rem,5vw,3.5rem);font-weight:100;line-height:1.2;letter-spacing:.02em;margin-bottom:2rem}
 h2.heavy{font-weight:900;letter-spacing:-.02em}
 h3{font-size:clamp(1.5rem,3vw,2rem);font-weight:600;margin-bottom:1.5rem}
 p{font-size:1.125rem;color:var(--text-secondary);margin-bottom:1.5rem}
-.large-text{font-size:clamp(1.25rem,3vw,1.5rem);line-height:1.5;font-weight:300}
+.large-text{font-size:clamp(1.25rem,3vw,1.3rem);line-height:1.5;font-weight:300}
 
 .stat-highlight{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:var(--accent);text-shadow:0 0 15px var(--accent-glow);vertical-align:baseline;line-height:1;margin:0 .2rem}
 .highlight{color:var(--accent);font-weight:600}
