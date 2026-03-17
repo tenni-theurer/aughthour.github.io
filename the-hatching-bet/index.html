@@ -1356,7 +1356,7 @@ const MILESTONES = [
 ];
 
 // ── Initialize or load game data ──
-function getGameData() { if (window.__GAME_DATA__) return window.__GAME_DATA__;
+function getGameData() { if (window.__GAME_DATA__) return JSON.parse(JSON.stringify(window.__GAME_DATA__));
   const saved = localStorage.getItem("hatchingBetData");
   if (saved) {
     const data = JSON.parse(saved);
