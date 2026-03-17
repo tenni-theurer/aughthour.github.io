@@ -1,0 +1,2399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Hatching Bet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ── BASE ── */
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #fdf6ec;
+    color: #3d2c1e;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 28px 16px 20px;
+    background: linear-gradient(135deg, #5c3d2e 0%, #8b5e3c 50%, #c4935a 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #e8a849, #f0c860, #e8a849);
+  }
+
+  .header-egg {
+    margin-bottom: 6px;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.25));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .header-egg svg {
+    width: 55px;
+    height: 72px;
+  }
+
+  .header h1 {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  .header .subtitle {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    color: #f5deb3;
+    margin-top: 2px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    font-style: italic;
+  }
+
+  .header .prize-pool {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 20px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 16px;
+    color: #ffe082;
+    font-weight: 600;
+    backdrop-filter: blur(4px);
+  }
+
+  .header .day-banner {
+    margin-top: 8px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 13px;
+    color: #f5deb3;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── SCREENS ── */
+  .screen {
+    display: none;
+    padding: 24px 16px;
+    max-width: 920px;
+    margin: 0 auto;
+    animation: fadeIn 0.3s ease;
+  }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── LOGIN ── */
+  .login-box {
+    background: #fff;
+    border: 2px solid #e8d5b8;
+    border-radius: 20px;
+    padding: 40px 32px;
+    max-width: 420px;
+    margin: 30px auto;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(139,94,60,0.12);
+  }
+
+  .login-egg {
+    font-size: 56px;
+    margin-bottom: 8px;
+  }
+
+  .login-box h2 {
+    font-family: 'Fredoka', sans-serif;
+    color: #5c3d2e;
+    margin-bottom: 4px;
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  .login-box p {
+    color: #8b7355;
+    font-size: 14px;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .login-box select, .login-box input,
+  .admin-panel input, .admin-panel select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e8d5b8;
+    border-radius: 12px;
+    background: #fdf6ec;
+    color: #3d2c1e;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .login-box select:focus, .login-box input:focus,
+  .admin-panel input:focus, .admin-panel select:focus {
+    outline: none;
+    border-color: #c4935a;
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-block;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .btn:active { transform: translateY(0); box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+
+  .btn-gold {
+    background: linear-gradient(135deg, #e8a849, #d4913a);
+    color: #fff;
+  }
+  .btn-gold:hover { background: linear-gradient(135deg, #f0b85a, #e8a849); }
+
+  .btn-red {
+    background: linear-gradient(135deg, #e05c4d, #c94435);
+    color: #fff;
+  }
+  .btn-red:hover { background: linear-gradient(135deg, #f06b5c, #e05c4d); }
+
+  .btn-green {
+    background: linear-gradient(135deg, #5cb85c, #4a9d4a);
+    color: #fff;
+  }
+  .btn-green:hover { background: linear-gradient(135deg, #6fcf6f, #5cb85c); }
+
+  .btn-small {
+    padding: 6px 14px;
+    font-size: 12px;
+    border-radius: 8px;
+    box-shadow: none;
+  }
+
+  .btn-small:hover { transform: none; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+
+  /* ── PIN INPUTS ── */
+  .pin-input {
+    text-align: center;
+    letter-spacing: 10px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #5c3d2e;
+    padding-left: 20px;  /* offset for letter-spacing on last char */
+  }
+
+  .pin-input::placeholder {
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    font-weight: 400;
+    color: #b8a08a;
+    padding-left: 0;
+  }
+
+  .pin-input-small {
+    text-align: center;
+    letter-spacing: 5px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #5c3d2e;
+    width: 80px !important;
+    min-width: 80px !important;
+    padding-left: 10px;
+  }
+
+  .pin-input-small::placeholder {
+    letter-spacing: 0.5px;
+    font-weight: 400;
+    color: #b8a08a;
+    font-size: 11px;
+  }
+
+  /* ── NAV LINK ── */
+  .nav-link {
+    display: inline-block;
+    margin-top: 16px;
+    color: #8b7355;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: 1px dashed #c4a87a;
+    padding-bottom: 1px;
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover { color: #5c3d2e; }
+
+  /* ── LOGOUT ── */
+  .logout-btn {
+    position: fixed;
+    top: 12px;
+    right: 16px;
+    z-index: 10;
+    background: rgba(92,61,46,0.85);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s;
+  }
+
+  .logout-btn:hover { background: rgba(92,61,46,1); }
+
+  /* ── PAYMENT WALL ── */
+  .payment-wall {
+    text-align: center;
+    padding: 60px 20px;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+
+  .payment-wall .wall-icon { font-size: 64px; margin-bottom: 16px; }
+
+  .payment-wall h2 {
+    font-family: 'Fredoka', sans-serif;
+    color: #5c3d2e;
+    margin-bottom: 12px;
+    font-size: 24px;
+  }
+
+  .payment-wall p {
+    color: #8b7355;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── RACE TRACK ── */
+  .race-container { margin-top: 8px; }
+
+  .race-legend {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #8b7355;
+  }
+
+  .race-legend span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .race-track {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .race-lane {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 12px;
+    padding: 4px 12px;
+    gap: 10px;
+    border: 2px solid #e8d5b8;
+    position: relative;
+    transition: all 0.3s;
+    min-height: 44px;
+  }
+
+  .race-lane.unclaimed {
+    opacity: 0.35;
+    border-color: #e8d5b8;
+    background: #f9f3ea;
+    border-style: dashed;
+  }
+
+  .race-lane.is-mine {
+    border-color: #e8a849;
+    background: #fff9f0;
+    box-shadow: 0 0 0 3px rgba(232,168,73,0.2), 0 4px 12px rgba(232,168,73,0.15);
+  }
+
+  .race-lane.is-mine::before {
+    content: 'YOU';
+    position: absolute;
+    top: -9px;
+    left: 14px;
+    background: #e8a849;
+    color: #fff;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 1px 8px;
+    border-radius: 4px;
+    letter-spacing: 1px;
+  }
+
+  .race-lane.eliminated {
+    opacity: 0.45;
+    border-color: #e8c5b8;
+    background: #fef5f3;
+  }
+
+  .race-lane.hatched {
+    border-color: #7bc67b;
+    background: #f2faf2;
+    box-shadow: 0 2px 8px rgba(90,180,90,0.12);
+  }
+
+  .egg-label {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #f5ebe0;
+    color: #5c3d2e;
+    flex-shrink: 0;
+  }
+
+  .race-lane.eliminated .egg-label { background: #fce4e0; color: #c94435; }
+  .race-lane.hatched .egg-label { background: #dff5df; color: #3a8a3a; }
+
+  .track-bar {
+    flex: 1;
+    height: 28px;
+    background: #f0e6d6;
+    border-radius: 14px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .track-progress {
+    height: 100%;
+    border-radius: 14px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 34px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .egg-icon svg {
+    width: 22px;
+    height: 28px;
+  }
+
+  .egg-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.1));
+    position: relative;
+    top: -4px;
+  }
+
+  .track-progress.alive {
+    background: linear-gradient(90deg, #f5d78e, #e8a849);
+  }
+
+  .track-progress.eliminated {
+    background: linear-gradient(90deg, #e8b4a8, #d9766a);
+  }
+
+  .track-progress.hatched {
+    background: linear-gradient(90deg, #8fd18f, #5cb85c);
+  }
+
+
+  /* ── LANE INFO ── */
+  .lane-info {
+    width: 120px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .player-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: #5c3d2e;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .egg-nickname {
+    font-size: 10px;
+    color: #c4935a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  .status-tag {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 6px;
+    width: 80px;
+    text-align: center;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+  }
+
+  .status-tag.alive { background: #fef3d6; color: #b8860b; }
+  .status-tag.eliminated { background: #fce4e0; color: #c94435; }
+  .status-tag.hatched { background: #dff5df; color: #3a8a3a; }
+
+  /* ── FINISH LINE ── */
+  .finish-line-label {
+    text-align: right;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 11px;
+    color: #c4a87a;
+    margin-top: 6px;
+    padding-right: 94px;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+  }
+
+  /* ── WINNER SECTION ── */
+  .winners-section {
+    margin-top: 28px;
+    background: linear-gradient(135deg, #f2faf2, #e8f5e8);
+    border: 2px solid #7bc67b;
+    border-radius: 16px;
+    padding: 24px;
+  }
+
+  .winners-section h3 {
+    font-family: 'Fredoka', sans-serif;
+    color: #3a8a3a;
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 20px;
+  }
+
+  .winners-section .trophy { font-size: 32px; margin-bottom: 4px; text-align: center; }
+
+  .winner-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    background: #fff;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border: 1.5px solid #c8e6c8;
+    box-shadow: 0 2px 6px rgba(90,180,90,0.08);
+  }
+
+  .winner-card .egg-letter {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #3a8a3a;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #dff5df;
+    border-radius: 50%;
+  }
+
+  .winner-card .winner-info { flex: 1; }
+  .winner-card .winner-name { font-weight: 600; color: #3d2c1e; font-size: 15px; }
+  .winner-card .hatchling-name { font-size: 13px; color: #5cb85c; margin-top: 2px; font-style: italic; }
+
+  /* ── ADMIN PANEL ── */
+  .admin-panel {
+    max-width: 740px;
+    margin: 0 auto;
+  }
+
+  .admin-section {
+    background: #fff;
+    border: 2px solid #e8d5b8;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(139,94,60,0.06);
+  }
+
+  .admin-section h3 {
+    font-family: 'Fredoka', sans-serif;
+    color: #5c3d2e;
+    margin-bottom: 14px;
+    font-size: 17px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 2px solid #f0e6d6;
+    padding-bottom: 10px;
+  }
+
+  .admin-section h3 .section-icon { font-size: 20px; }
+
+  .admin-section .helper-text {
+    font-size: 13px;
+    color: #8b7355;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .admin-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0e6d6;
+    flex-wrap: wrap;
+  }
+
+  .admin-row:last-child { border-bottom: none; }
+
+  .admin-egg-label {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #c4935a, #e8a849);
+    flex-shrink: 0;
+  }
+
+  .admin-player-name {
+    flex: 1;
+    min-width: 80px;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .admin-badge {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  .admin-badge.paid { background: #dff5df; color: #3a8a3a; }
+  .admin-badge.unpaid { background: #fce4e0; color: #c94435; }
+
+  .admin-status-btns {
+    display: flex;
+    gap: 4px;
+  }
+
+  .status-btn {
+    padding: 5px 12px;
+    border: 2px solid #e8d5b8;
+    border-radius: 8px;
+    background: #fff;
+    color: #8b7355;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 11px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.15s;
+  }
+
+  .status-btn:hover { border-color: #c4935a; color: #5c3d2e; }
+  .status-btn.active-alive { border-color: #e8a849; color: #b8860b; background: #fef3d6; }
+  .status-btn.active-eliminated { border-color: #e05c4d; color: #c94435; background: #fce4e0; }
+  .status-btn.active-hatched { border-color: #5cb85c; color: #3a8a3a; background: #dff5df; }
+
+  .admin-add-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .admin-add-form input, .admin-add-form select {
+    flex: 1;
+    min-width: 120px;
+    margin-bottom: 0;
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+
+  /* ── DAY SLIDER ── */
+  .day-control {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .day-control label {
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    color: #5c3d2e;
+  }
+
+  .day-control input[type="range"] {
+    flex: 1;
+    min-width: 150px;
+    height: 8px;
+    accent-color: #e8a849;
+    border-radius: 4px;
+  }
+
+  .day-display {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #e8a849;
+    min-width: 50px;
+    text-align: center;
+  }
+
+  .day-milestones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .day-milestone {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: #f0e6d6;
+    color: #8b7355;
+    border: 1.5px solid #e8d5b8;
+    transition: all 0.2s;
+  }
+
+  .day-milestone.active {
+    border-color: #e8a849;
+    color: #5c3d2e;
+    background: #fef3d6;
+    font-weight: 600;
+  }
+
+  /* ── NICKNAME INPUT ── */
+  .nickname-input {
+    padding: 5px 10px;
+    border: 1.5px solid #e8d5b8;
+    border-radius: 8px;
+    background: #fdf6ec;
+    color: #c4935a;
+    font-size: 12px;
+    font-style: italic;
+    font-family: 'Inter', sans-serif;
+    width: 140px;
+    margin-bottom: 0;
+    transition: border-color 0.2s;
+  }
+
+  .nickname-input:focus { outline: none; border-color: #c4935a; }
+  .nickname-input::placeholder { color: #c4a87a; font-style: italic; }
+
+  /* ── MY EGG CARD ── */
+  .my-egg-card {
+    background: #fff;
+    border: 3px solid #e8a849;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 0 4px rgba(232,168,73,0.15), 0 8px 24px rgba(232,168,73,0.12);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .my-egg-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #e8a849, #f0c860, #e8a849);
+  }
+
+  .my-egg-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .my-egg-big-icon {
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.12));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .my-egg-details { text-align: left; }
+
+  .my-egg-label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    color: #8b7355;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+  }
+
+  .my-egg-name {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #5c3d2e;
+    line-height: 1.2;
+  }
+
+  .my-egg-nickname {
+    font-size: 15px;
+    color: #c4935a;
+    font-style: italic;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  .my-egg-status {
+    display: inline-block;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 6px 20px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  .my-egg-status.alive { background: #fef3d6; color: #b8860b; }
+  .my-egg-status.eliminated { background: #fce4e0; color: #c94435; }
+  .my-egg-status.hatched { background: #dff5df; color: #3a8a3a; }
+
+  .my-egg-message {
+    font-size: 14px;
+    color: #5c3d2e;
+    line-height: 1.6;
+    padding: 10px 16px;
+    background: #fdf6ec;
+    border-radius: 12px;
+    margin-top: 8px;
+  }
+
+  .my-egg-position {
+    margin-top: 12px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 13px;
+    color: #8b7355;
+    font-weight: 500;
+  }
+
+  .my-egg-position strong {
+    color: #5c3d2e;
+    font-size: 16px;
+  }
+
+  /* ── PROGRESS TIMELINE ── */
+  .timeline {
+    background: #fff;
+    border: 2px solid #e8d5b8;
+    border-radius: 16px;
+    padding: 18px 20px 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(139,94,60,0.06);
+  }
+
+  .timeline-title {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #5c3d2e;
+    text-align: center;
+    margin-bottom: 14px;
+  }
+
+  .timeline-bar-container {
+    position: relative;
+    padding: 0 10px;
+    margin-bottom: 6px;
+  }
+
+  .timeline-track {
+    height: 10px;
+    background: #f0e6d6;
+    border-radius: 5px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .timeline-fill {
+    height: 100%;
+    border-radius: 5px;
+    background: linear-gradient(90deg, #f5d78e, #e8a849);
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .timeline-markers {
+    position: relative;
+    height: 50px;
+    margin-top: 6px;
+  }
+
+  .timeline-marker {
+    position: absolute;
+    transform: translateX(-50%);
+    text-align: center;
+    transition: all 0.3s;
+  }
+
+  .timeline-marker-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #e8d5b8;
+    border: 2px solid #fff;
+    margin: 0 auto 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.3s;
+  }
+
+  .timeline-marker.reached .timeline-marker-dot {
+    background: #e8a849;
+    box-shadow: 0 0 0 3px rgba(232,168,73,0.2);
+  }
+
+  .timeline-marker.current .timeline-marker-dot {
+    background: #e8a849;
+    box-shadow: 0 0 0 4px rgba(232,168,73,0.3);
+    width: 14px;
+    height: 14px;
+  }
+
+  .timeline-marker-label {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 8px;
+    color: #b8a08a;
+    font-weight: 500;
+    white-space: nowrap;
+    letter-spacing: 0.2px;
+  }
+
+  .timeline-marker.reached .timeline-marker-label {
+    color: #5c3d2e;
+    font-weight: 600;
+  }
+
+  .timeline-marker-day {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 10px;
+    color: #b8a08a;
+    font-weight: 600;
+  }
+
+  .timeline-marker.reached .timeline-marker-day {
+    color: #e8a849;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .stat-card {
+    background: #fff;
+    border: 2px solid #e8d5b8;
+    border-radius: 12px;
+    padding: 10px 18px;
+    text-align: center;
+    min-width: 100px;
+    box-shadow: 0 2px 6px rgba(139,94,60,0.06);
+  }
+
+  .stat-card .stat-num {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #5c3d2e;
+  }
+
+  .stat-card .stat-label {
+    font-size: 10px;
+    color: #8b7355;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .stat-card.alive-stat { border-color: #e8a849; }
+  .stat-card.alive-stat .stat-num { color: #b8860b; }
+  .stat-card.eliminated-stat { border-color: #e05c4d; }
+  .stat-card.eliminated-stat .stat-num { color: #c94435; }
+  .stat-card.hatched-stat { border-color: #5cb85c; }
+  .stat-card.hatched-stat .stat-num { color: #3a8a3a; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes pulse-alive {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,168,73,0); }
+    50% { box-shadow: 0 0 0 4px rgba(232,168,73,0.12); }
+  }
+
+  .race-lane.alive:not(.unclaimed) {
+    animation: pulse-alive 3s ease-in-out infinite;
+  }
+
+  .race-lane.is-mine.alive {
+    animation: pulse-alive 2s ease-in-out infinite;
+  }
+
+  @keyframes shake-crack {
+    0% { transform: translateX(0); }
+    10% { transform: translateX(-4px) rotate(-1deg); }
+    20% { transform: translateX(4px) rotate(1deg); }
+    30% { transform: translateX(-3px) rotate(-0.5deg); }
+    40% { transform: translateX(3px) rotate(0.5deg); }
+    50% { transform: translateX(-2px); }
+    60% { transform: translateX(2px); }
+    70% { transform: translateX(0); opacity: 0.7; }
+    100% { transform: translateX(0); opacity: 0.45; }
+  }
+
+  .race-lane.eliminated.just-eliminated {
+    animation: shake-crack 0.6s ease-out forwards;
+  }
+
+  @keyframes hatch-celebrate {
+    0% { transform: scale(1); }
+    20% { transform: scale(1.03); }
+    40% { transform: scale(0.98); }
+    60% { transform: scale(1.02); }
+    80% { transform: scale(1); }
+    100% { transform: scale(1); }
+  }
+
+  .race-lane.hatched.just-hatched {
+    animation: hatch-celebrate 0.8s ease-out;
+  }
+
+  /* ── TOAST NOTIFICATIONS ── */
+  .toast-container {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none;
+  }
+
+  .toast {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font-family: 'Fredoka', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #3d2c1e;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    border: 2px solid #e8d5b8;
+    animation: toast-in 0.3s ease, toast-out 0.3s ease 2.5s forwards;
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .toast.success { border-color: #5cb85c; }
+  .toast.error { border-color: #e05c4d; }
+  .toast.info { border-color: #e8a849; }
+
+  @keyframes toast-in {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes toast-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-12px); }
+  }
+
+  /* ── CONFETTI ── */
+  .confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 99;
+    overflow: hidden;
+  }
+
+  .confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    top: -10px;
+    animation: confetti-fall 3s ease-out forwards;
+  }
+
+  @keyframes confetti-fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── ADMIN QUICK STATS ── */
+  .admin-quick-stats {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .admin-quick-stat {
+    flex: 1;
+    min-width: 100px;
+    background: #fff;
+    border: 2px solid #e8d5b8;
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+  }
+
+  .admin-quick-stat .qs-num {
+    font-family: 'Fredoka', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .admin-quick-stat .qs-label {
+    font-size: 10px;
+    color: #8b7355;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    margin-top: 2px;
+  }
+
+  .admin-quick-stat.qs-paid { border-color: #5cb85c; }
+  .admin-quick-stat.qs-paid .qs-num { color: #3a8a3a; }
+  .admin-quick-stat.qs-unpaid { border-color: #e05c4d; }
+  .admin-quick-stat.qs-unpaid .qs-num { color: #c94435; }
+  .admin-quick-stat.qs-alive { border-color: #e8a849; }
+  .admin-quick-stat.qs-alive .qs-num { color: #b8860b; }
+  .admin-quick-stat.qs-eliminated { border-color: #e05c4d; }
+  .admin-quick-stat.qs-eliminated .qs-num { color: #c94435; }
+
+  /* ── EGG WOBBLE (near hatch) ── */
+  @keyframes wobble {
+    0%, 100% { transform: rotate(0deg); }
+    15% { transform: rotate(2.5deg); }
+    30% { transform: rotate(-2deg); }
+    45% { transform: rotate(1.5deg); }
+    55% { transform: rotate(-1deg); }
+    65% { transform: rotate(0deg); }
+  }
+
+  .egg-icon.wobbling svg,
+  .my-egg-big-icon.wobbling svg {
+    animation: wobble 2.5s ease-in-out infinite;
+    animation-delay: var(--wobble-delay, 0s);
+  }
+
+  /* ── BACKUP BUTTONS ── */
+  .backup-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .backup-row label {
+    cursor: pointer;
+  }
+
+  .file-input-hidden {
+    display: none;
+  }
+
+  /* ── LAST UPDATED ── */
+  .last-updated {
+    text-align: center;
+    font-size: 11px;
+    color: #b8a08a;
+    margin-top: 16px;
+    font-style: italic;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .header h1 { font-size: 24px; }
+    .header .day-banner { font-size: 11px; }
+    .header-egg svg { width: 48px; height: 62px; }
+
+    .login-box { padding: 28px 20px; margin: 20px 12px; }
+    .login-egg { font-size: 44px; }
+
+    .race-lane {
+      padding: 6px 10px;
+      gap: 6px;
+      flex-wrap: wrap;
+      border-radius: 10px;
+    }
+
+    .race-lane.is-mine::before { font-size: 8px; top: -8px; left: 10px; }
+
+    .egg-label { font-size: 14px; width: 28px; height: 28px; }
+    .track-bar { height: 32px; }
+
+    .lane-info {
+      width: 100%;
+      text-align: left;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding-top: 2px;
+      order: 4;
+    }
+
+    .player-name { font-size: 11px; }
+    .egg-nickname { font-size: 10px; }
+    .status-tag { width: 68px; font-size: 9px; }
+
+    .stat-card { padding: 8px 12px; min-width: 80px; }
+    .stat-card .stat-num { font-size: 18px; }
+
+    .admin-row { gap: 6px; }
+    .admin-status-btns { width: 100%; justify-content: flex-start; margin-top: 6px; }
+    .nickname-input { width: 100%; margin-top: 4px; }
+
+    .race-legend { gap: 12px; font-size: 11px; }
+    .finish-line-label { padding-right: 72px; }
+
+    .winners-section { padding: 16px; }
+    .winner-card { padding: 10px 12px; gap: 10px; }
+    .winner-card .egg-letter { font-size: 20px; width: 38px; height: 38px; }
+
+    .my-egg-card { padding: 18px 16px; }
+    .my-egg-big-icon svg { width: 85px; height: 108px; }
+    .my-egg-name { font-size: 20px; }
+    .my-egg-nickname { font-size: 13px; }
+    .my-egg-top { gap: 12px; }
+
+    .timeline { padding: 14px 12px 10px; }
+    .timeline-marker-label { font-size: 7px; }
+    .timeline-marker-day { font-size: 9px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════════ HEADER ════════════════════ -->
+<div class="header">
+  <div class="header-egg" id="headerEgg">🥚</div>
+  <h1>The Hatching Bet</h1>
+  <div class="subtitle">May the best egg survive</div>
+  <div class="prize-pool" id="prizePool"></div>
+  <div class="day-banner" id="dayBanner"></div>
+</div>
+
+<button class="logout-btn" id="logoutBtn" style="display:none;" onclick="logout()">Log Out</button>
+<div class="toast-container" id="toastContainer"></div>
+<div class="confetti-container" id="confettiContainer"></div>
+
+<!-- ════════════════════ SCREEN: LOGIN ════════════════════ -->
+<div class="screen active" id="loginScreen">
+  <div class="login-box">
+    <div class="login-egg">🐣</div>
+    <h2>Welcome!</h2>
+    <p>Select your name to check on your egg</p>
+    <select id="playerSelect">
+      <option value="">-- Pick your name --</option>
+    </select>
+    <input type="tel" id="playerPin" class="pin-input" placeholder="Enter your 4-digit PIN" maxlength="4" pattern="[0-9]*" inputmode="numeric">
+    <br>
+    <button class="btn btn-gold" onclick="playerLogin()">Enter the Coop</button>
+    <br>
+    
+  </div>
+</div>
+
+
+
+<!-- ════════════════════ SCREEN: PAYMENT WALL ════════════════════ -->
+<div class="screen" id="paymentScreen">
+  <div class="payment-wall">
+    <div class="wall-icon">⏳</div>
+    <h2>Hold Tight!</h2>
+    <p>Your entry hasn't been confirmed yet.<br>Once the admin confirms your $5 payment, you'll be able to see the race.</p>
+    <br>
+    <button class="btn btn-gold" onclick="logout()">Back</button>
+  </div>
+</div>
+
+<!-- ════════════════════ SCREEN: RACE VIEW ════════════════════ -->
+<div class="screen" id="raceScreen">
+  <div class="race-container">
+    <div id="myEggCard"></div>
+    <div id="timeline"></div>
+    <div class="stats-bar" id="statsBar"></div>
+    <div style="font-family:'Fredoka',sans-serif; font-size:16px; font-weight:600; color:#5c3d2e; text-align:center; margin-bottom:8px;">The Full Race</div>
+    <div class="race-legend">
+      <span><span class="legend-dot" style="background: linear-gradient(135deg, #f5d78e, #e8a849);"></span> Alive</span>
+      <span><span class="legend-dot" style="background: linear-gradient(135deg, #e8b4a8, #d9766a);"></span> Eliminated</span>
+      <span><span class="legend-dot" style="background: linear-gradient(135deg, #8fd18f, #5cb85c);"></span> Hatched</span>
+    </div>
+    <div class="race-track" id="raceTrack"></div>
+    <div class="finish-line-label">FINISH LINE 🏁</div>
+    <div id="winnersContainer"></div>
+    <div class="last-updated" id="lastUpdated"></div>
+  </div>
+</div>
+
+
+
+<!-- ════════════════════ JAVASCRIPT ════════════════════ -->
+<script>
+/*
+  DATA STRUCTURE (stored in localStorage):
+  {
+    adminPassword: "hatch2024",
+    incubationDay: 1,
+    eggs: {
+      "A": { status: "alive", playerName: "", paid: false, eggName: "" },
+      "B": { ... },
+      ...
+    }
+  }
+*/
+
+const EGG_LETTERS = "ABCDEFGHIJKLMNOPQR".split("");
+const DEFAULT_PASSWORD = "hatch2024";
+
+// Milestones in the 28-day incubation
+const MILESTONES = [
+  { day: 1, label: "Start" },
+  { day: 5, label: "Candle 1" },
+  { day: 7, label: "Fertility" },
+  { day: 10, label: "Growth" },
+  { day: 14, label: "Dev Check" },
+  { day: 18, label: "Final Candle" },
+  { day: 24, label: "Lockdown" },
+  { day: 26, label: "Hatch Window" },
+  { day: 28, label: "Hatch Day" }
+];
+
+// ── Initialize or load game data ──
+function getGameData() {
+  const saved = localStorage.getItem("hatchingBetData");
+  if (saved) {
+    const data = JSON.parse(saved);
+    if (!data.incubationDay) data.incubationDay = 1;
+    EGG_LETTERS.forEach(letter => {
+      if (data.eggs[letter] && data.eggs[letter].eggName === undefined) {
+        data.eggs[letter].eggName = data.eggs[letter].hatchlingName || "";
+      }
+      if (data.eggs[letter] && data.eggs[letter].pin === undefined) {
+        data.eggs[letter].pin = "";
+      }
+    });
+    return data;
+  }
+
+  const eggs = {};
+  EGG_LETTERS.forEach(letter => {
+    eggs[letter] = {
+      status: "alive",
+      playerName: "",
+      paid: false,
+      eggName: "",
+      pin: ""
+    };
+  });
+
+  const data = { adminPassword: DEFAULT_PASSWORD, incubationDay: 1, eggs };
+  saveGameData(data);
+  return data;
+}
+
+function saveGameData(data) {
+  data.lastUpdated = new Date().toISOString();
+  localStorage.setItem("hatchingBetData", JSON.stringify(data));
+}
+
+// ── TOAST NOTIFICATIONS ──
+function showToast(message, type = "info") {
+  const container = document.getElementById("toastContainer");
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  const icons = { success: "✅", error: "❌", info: "💡" };
+  toast.innerHTML = `<span>${icons[type] || ""}</span> ${message}`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// ── CONFETTI ──
+function launchConfetti() {
+  const container = document.getElementById("confettiContainer");
+  const colors = ["#e8a849", "#5cb85c", "#f0c860", "#64c8ff", "#ff6b9d", "#c49dff"];
+
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement("div");
+    piece.className = "confetti-piece";
+    piece.style.left = Math.random() * 100 + "%";
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = Math.random() * 1.5 + "s";
+    piece.style.animationDuration = (2 + Math.random() * 2) + "s";
+    piece.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+    piece.style.width = (6 + Math.random() * 8) + "px";
+    piece.style.height = (6 + Math.random() * 8) + "px";
+    container.appendChild(piece);
+  }
+  setTimeout(() => container.innerHTML = "", 5000);
+}
+
+// ── SOUND EFFECTS ──
+// Uses Web Audio API to generate sounds — no files needed
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let _audioCtx = null;
+function getAudio() {
+  if (!_audioCtx) _audioCtx = new AudioCtx();
+  return _audioCtx;
+}
+
+function playSound(type) {
+  try {
+    const ctx = getAudio();
+    const gain = ctx.createGain();
+    gain.connect(ctx.destination);
+
+    if (type === "hatch") {
+      // Happy chime — ascending notes
+      [0, 0.15, 0.3].forEach((delay, i) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.type = "sine";
+        osc.frequency.value = [523, 659, 784][i]; // C5, E5, G5
+        g.gain.setValueAtTime(0.15, ctx.currentTime + delay);
+        g.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + delay + 0.5);
+        osc.start(ctx.currentTime + delay);
+        osc.stop(ctx.currentTime + delay + 0.5);
+      });
+    } else if (type === "eliminate") {
+      // Low thud + descending tone
+      const osc = ctx.createOscillator();
+      osc.connect(gain);
+      osc.type = "triangle";
+      osc.frequency.setValueAtTime(300, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.4);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.4);
+    } else if (type === "click") {
+      // Soft click
+      const osc = ctx.createOscillator();
+      osc.connect(gain);
+      osc.type = "sine";
+      osc.frequency.value = 800;
+      gain.gain.setValueAtTime(0.08, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.08);
+    }
+  } catch(e) { /* audio not supported, silently skip */ }
+}
+
+// ── EXPORT / IMPORT ──
+function exportData() {
+  const data = getGameData();
+  const json = JSON.stringify(data, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  const date = new Date().toISOString().slice(0, 10);
+  a.download = `hatching-bet-backup-${date}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("Backup downloaded!", "success");
+  playSound("click");
+}
+
+function importData(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      // Basic validation — make sure it has the expected structure
+      if (!data.eggs || !data.adminPassword) {
+        showToast("Invalid backup file", "error");
+        return;
+      }
+      // Check it has the right eggs
+      const hasEggs = EGG_LETTERS.every(l => data.eggs[l]);
+      if (!hasEggs) {
+        showToast("Backup file is missing egg data", "error");
+        return;
+      }
+      saveGameData(data);
+      showToast("Game data restored from backup!", "success");
+      playSound("hatch");
+      renderAdmin();
+      populatePlayerSelect();
+      updatePrizePool();
+      updateHeaderEgg();
+    } catch(err) {
+      showToast("Could not read backup file", "error");
+    }
+  };
+  reader.readAsText(file);
+  // Reset file input so same file can be selected again
+  event.target.value = "";
+}
+
+// ── EGG DEVELOPMENT SVG ──
+// Uses ellipses for a clean oval egg shape with gradient fills
+let _eggId = 0;
+function generateEggSVG(day, status, size = "small") {
+  const id = `e${_eggId++}`;
+  const S = size === "small";
+  const w = S ? 28 : 100;
+  const h = S ? 36 : 130;
+  const cx = w / 2;
+  const cy = h * 0.48; // slightly above center (egg is rounder at bottom)
+  const rx = w * 0.42;
+  const ry = h * 0.45;
+  const sw = S ? 1.2 : 2;
+
+  const defs = `<defs>
+    <clipPath id="${id}c"><ellipse cx="${cx}" cy="${cy}" rx="${rx-sw/2}" ry="${ry-sw/2}"/></clipPath>
+    <radialGradient id="${id}g" cx="38%" cy="32%" r="65%">
+      <stop offset="0%" stop-color="#fef8f0"/>
+      <stop offset="50%" stop-color="#f2e6d6"/>
+      <stop offset="100%" stop-color="#e0ccb4"/>
+    </radialGradient>
+    <radialGradient id="${id}s" cx="32%" cy="25%" r="45%">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="${id}y" cx="48%" cy="48%" r="50%">
+      <stop offset="0%" stop-color="#f7e27a"/>
+      <stop offset="80%" stop-color="#e8c44a"/>
+      <stop offset="100%" stop-color="#d4a830"/>
+    </radialGradient>
+    <radialGradient id="${id}d" cx="50%" cy="42%" r="55%">
+      <stop offset="0%" stop-color="#5a2a1a"/>
+      <stop offset="55%" stop-color="#3a1208"/>
+      <stop offset="100%" stop-color="#1a0804"/>
+    </radialGradient>
+  </defs>`;
+
+  const shell = `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${id}g)" stroke="#c4a07a" stroke-width="${sw}"/>`;
+  const shine = `<ellipse cx="${cx}" cy="${cy}" rx="${rx-sw/2}" ry="${ry-sw/2}" fill="url(#${id}s)"/>`;
+  const cOpen = `<g clip-path="url(#${id}c)">`;
+  const cClose = `</g>`;
+
+  // Air cell
+  const airPct = Math.min(0.1 + (day / 28) * 0.25, 0.35);
+  const airCy = cy - ry + ry * airPct * 0.75;
+  const airRx = rx * (0.4 + airPct * 0.35);
+  const airRy = ry * airPct * 0.6;
+  const air = `<ellipse cx="${cx}" cy="${airCy}" rx="${airRx}" ry="${airRy}" fill="#fdf6ec" opacity="0.85"/>`;
+  const airDash = day >= 5 ? `<ellipse cx="${cx}" cy="${airCy+airRy*0.7}" rx="${airRx*0.75}" ry="${S?0.8:2}" fill="none" stroke="#c4a07a" stroke-width="${S?0.4:0.8}" stroke-dasharray="${S?'1.5,1.5':'3,2.5'}" opacity="0.45"/>` : "";
+
+  let guts = "";
+
+  if (status === "hatched") {
+    // Broken shell bottom + duckling
+    const halfY = cy - ry * 0.15;
+    const dY = halfY - (S ? 7 : 26);
+    const dR = S ? 5.5 : 20;
+    const bR = S ? 4.5 : 16;
+    const eR = S ? 1 : 3.5;
+    const bkW = S ? 3 : 10;
+    const bkH = S ? 1.2 : 3.5;
+    // Zigzag top edge of shell
+    const zag = S ? 3 : 8;
+    const pts = 7;
+    let zigPath = `M${cx - rx * 0.75},${halfY}`;
+    for (let i = 0; i < pts; i++) {
+      const up = i % 2 === 0 ? -zag : zag * 0.6;
+      zigPath += ` l${(rx * 1.5) / pts},${up}`;
+    }
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:auto;">
+      ${defs}
+      <ellipse cx="${cx}" cy="${dY+dR*1.6}" rx="${bR}" ry="${bR*0.65}" fill="#f5d76e"/>
+      <circle cx="${cx}" cy="${dY}" r="${dR}" fill="#ffe082"/>
+      <circle cx="${cx}" cy="${dY}" r="${dR*0.9}" fill="#f5d76e"/>
+      <circle cx="${cx+dR*0.22}" cy="${dY-dR*0.12}" r="${eR}" fill="#2a1a0a"/>
+      <ellipse cx="${cx+dR*0.65}" cy="${dY+dR*0.18}" rx="${bkW}" ry="${bkH}" fill="#e8943a"/>
+      <path d="${zigPath} L${cx+rx*0.75},${halfY} L${cx+rx*0.7},${cy+ry} Q${cx},${cy+ry+ry*0.15} ${cx-rx*0.7},${cy+ry} L${cx-rx*0.75},${halfY} Z" fill="url(#${id}g)" stroke="#c4a07a" stroke-width="${sw}"/>
+    </svg>`;
+  }
+
+  if (status === "eliminated") {
+    const xsw = S ? 1.8 : 3.5;
+    const xr = S ? 5 : 18;
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:auto;">
+      ${defs}${shell}${cOpen}
+      <rect x="0" y="0" width="${w}" height="${h}" fill="#d8c0b0"/>
+      <ellipse cx="${cx}" cy="${cy}" rx="${rx*0.7}" ry="${ry*0.7}" fill="#c0a090" opacity="0.5"/>
+      ${cClose}${shine}
+      <line x1="${cx-xr}" y1="${cy-xr}" x2="${cx+xr}" y2="${cy+xr}" stroke="#c94435" stroke-width="${xsw}" stroke-linecap="round" opacity="0.7"/>
+      <line x1="${cx+xr}" y1="${cy-xr}" x2="${cx-xr}" y2="${cy+xr}" stroke="#c94435" stroke-width="${xsw}" stroke-linecap="round" opacity="0.7"/>
+    </svg>`;
+  }
+
+  // ── ALIVE stages ──
+  if (day <= 3) {
+    const dotR = S ? 1.5 : 5;
+    guts = `
+      <ellipse cx="${cx}" cy="${cy+ry*0.05}" rx="${rx*0.55}" ry="${ry*0.45}" fill="url(#${id}y)" opacity="0.65"/>
+      <circle cx="${cx}" cy="${cy}" r="${dotR}" fill="#d4513a" opacity="0.8"/>`;
+  } else if (day <= 6) {
+    const vL = S ? 6 : 22;
+    const vW = S ? 0.5 : 1.4;
+    const angles = [15, 75, 130, 190, 250, 320];
+    const veins = angles.map(a => {
+      const r = a * Math.PI / 180;
+      const ex = cx + Math.cos(r) * vL;
+      const ey = cy + Math.sin(r) * vL * 0.75;
+      const qx = cx + Math.cos(r) * vL * 0.4 + Math.sin(r) * (S?1:3);
+      const qy = cy + Math.sin(r) * vL * 0.3 - Math.cos(r) * (S?1:3);
+      return `<path d="M${cx},${cy} Q${qx},${qy} ${ex},${ey}" fill="none" stroke="#c83a2a" stroke-width="${vW}" opacity="0.5" stroke-linecap="round"/>`;
+    }).join("");
+    const eR = S ? 2 : 6;
+    guts = `
+      <ellipse cx="${cx}" cy="${cy+ry*0.03}" rx="${rx*0.55}" ry="${ry*0.45}" fill="url(#${id}y)" opacity="0.5"/>
+      ${veins}
+      <circle cx="${cx}" cy="${cy}" r="${eR}" fill="#aa2a1a" opacity="0.7"/>`;
+  } else if (day <= 10) {
+    const vL = S ? 9 : 30;
+    const vW = S ? 0.6 : 1.5;
+    const veins = [];
+    for (let i = 0; i < 10; i++) {
+      const a = (i * 36 + 12) * Math.PI / 180;
+      const l = vL * (0.75 + (i % 3) * 0.12);
+      const ex = cx + Math.cos(a) * l;
+      const ey = cy + Math.sin(a) * l * 0.7;
+      const qx = cx + Math.cos(a) * l * 0.45 + Math.sin(a) * (S?1.5:5);
+      const qy = cy + Math.sin(a) * l * 0.3 - Math.cos(a) * (S?1:3);
+      veins.push(`<path d="M${cx},${cy} Q${qx},${qy} ${ex},${ey}" fill="none" stroke="#b03020" stroke-width="${vW}" opacity="0.45" stroke-linecap="round"/>`);
+      const mx = cx + Math.cos(a) * l * 0.55;
+      const my = cy + Math.sin(a) * l * 0.38;
+      const ba = a + (i % 2 ? 0.6 : -0.6);
+      veins.push(`<line x1="${mx}" y1="${my}" x2="${mx+Math.cos(ba)*l*0.28}" y2="${my+Math.sin(ba)*l*0.2}" stroke="#b03020" stroke-width="${vW*0.55}" opacity="0.3" stroke-linecap="round"/>`);
+    }
+    const embRx = S ? 3 : 10;
+    const embRy = S ? 4 : 13;
+    guts = `
+      <ellipse cx="${cx}" cy="${cy+ry*0.03}" rx="${rx*0.6}" ry="${ry*0.5}" fill="url(#${id}y)" opacity="0.35"/>
+      ${veins.join("")}
+      <ellipse cx="${cx}" cy="${cy+ry*0.03}" rx="${embRx}" ry="${embRy}" fill="#7a2818" opacity="0.65"/>`;
+  } else if (day <= 14) {
+    const dRx = rx * 0.42;
+    const dRy = ry * 0.45;
+    const vW = S ? 0.5 : 1.1;
+    const veins = [];
+    for (let i = 0; i < 6; i++) {
+      const a = (i * 60 + 25) * Math.PI / 180;
+      veins.push(`<line x1="${cx+Math.cos(a)*dRx*0.85}" y1="${cy+ry*0.04+Math.sin(a)*dRy*0.8}" x2="${cx+Math.cos(a)*rx*0.7}" y2="${cy+Math.sin(a)*ry*0.6}" stroke="#882818" stroke-width="${vW}" opacity="0.28" stroke-linecap="round"/>`);
+    }
+    guts = `
+      <ellipse cx="${cx}" cy="${cy+ry*0.03}" rx="${rx*0.6}" ry="${ry*0.5}" fill="#e8c050" opacity="0.2"/>
+      ${veins.join("")}
+      <ellipse cx="${cx}" cy="${cy+ry*0.05}" rx="${dRx}" ry="${dRy}" fill="url(#${id}d)" opacity="0.7"/>`;
+  } else if (day <= 20) {
+    guts = `<ellipse cx="${cx}" cy="${cy+ry*0.1}" rx="${rx*0.75}" ry="${ry*0.65}" fill="url(#${id}d)" opacity="0.75"/>`;
+  } else if (day <= 25) {
+    guts = `
+      <rect x="0" y="${airCy+airRy+ry*0.05}" width="${w}" height="${h}" fill="#2a1008" opacity="0.65"/>
+      <ellipse cx="${cx}" cy="${cy+ry*0.15}" rx="${rx*0.5}" ry="${ry*0.4}" fill="#1a0804" opacity="0.35"/>`;
+  } else {
+    // Pip marks
+    const px = cx + (S ? 2 : 8);
+    const py = cy - (S ? 1 : 6);
+    const pR = S ? 1.5 : 4.5;
+    const pW = S ? 0.7 : 1.6;
+    guts = `
+      <rect x="0" y="${airCy+airRy+ry*0.05}" width="${w}" height="${h}" fill="#2a1008" opacity="0.65"/>
+      <ellipse cx="${cx}" cy="${cy+ry*0.15}" rx="${rx*0.5}" ry="${ry*0.4}" fill="#1a0804" opacity="0.35"/>
+      <circle cx="${px}" cy="${py}" r="${pR}" fill="#e8d8c8" stroke="#8b7355" stroke-width="${pW}" opacity="0.85"/>
+      <line x1="${px}" y1="${py-pR}" x2="${px+pR*0.8}" y2="${py-pR*2.5}" stroke="#8b7355" stroke-width="${pW*0.65}" stroke-linecap="round"/>
+      <line x1="${px-pR*0.5}" y1="${py-pR*0.8}" x2="${px-pR*1.5}" y2="${py-pR*2}" stroke="#8b7355" stroke-width="${pW*0.55}" stroke-linecap="round"/>`;
+  }
+
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:auto;">
+    ${defs}${shell}${cOpen}${guts}${air}${airDash}${cClose}${shine}
+  </svg>`;
+}
+
+// ── SCREEN MANAGEMENT ──
+let currentUser = null;
+let isAdmin = false;
+
+function showScreen(screenId) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(screenId).classList.add("active");
+  document.getElementById("logoutBtn").style.display =
+    (screenId === "loginScreen" || screenId === "adminLoginScreen") ? "none" : "block";
+}
+
+function logout() {
+  currentUser = null;
+  isAdmin = false;
+  showScreen("loginScreen");
+  populatePlayerSelect();
+}
+
+// ── HEADER EGG ──
+function updateHeaderEgg() {
+  const data = getGameData();
+  const day = data.incubationDay || 1;
+  // Show a "big" sized egg in the header based on current day
+  // Use a medium size between small and big
+  document.getElementById("headerEgg").innerHTML = generateEggSVG(day, "alive", "big");
+}
+
+// ── PRIZE POOL ──
+function updatePrizePool() {
+  const data = getGameData();
+  const playerCount = Object.values(data.eggs).filter(e => e.playerName).length;
+  const pool = playerCount * 5;
+  document.getElementById("prizePool").textContent =
+    playerCount > 0 ? `💰 Prize Pool: $${pool} (${playerCount} players)` : "";
+}
+
+// ── LOGIN: PLAYER ──
+function populatePlayerSelect() {
+  const data = getGameData();
+  const select = document.getElementById("playerSelect");
+  select.innerHTML = '<option value="">-- Pick your name --</option>';
+
+  Object.entries(data.eggs).forEach(([letter, egg]) => {
+    if (egg.playerName) {
+      const opt = document.createElement("option");
+      opt.value = egg.playerName;
+      opt.textContent = `${egg.playerName} (Egg ${letter})`;
+      select.appendChild(opt);
+    }
+  });
+}
+
+function playerLogin() {
+  const name = document.getElementById("playerSelect").value;
+  const pin = document.getElementById("playerPin").value.trim();
+  if (!name) { showToast("Please pick your name!", "error"); return; }
+
+  const data = getGameData();
+  const myEgg = Object.entries(data.eggs).find(([_, e]) => e.playerName === name);
+
+  if (!myEgg) { showToast("Something went wrong. Ask the admin.", "error"); return; }
+
+  // Check PIN if one is set
+  if (myEgg[1].pin && myEgg[1].pin !== pin) {
+    showToast("Wrong PIN! Try again.", "error");
+    playSound("eliminate");
+    return;
+  }
+
+  if (!pin && myEgg[1].pin) {
+    showToast("Please enter your PIN", "error");
+    return;
+  }
+
+  currentUser = name;
+  isAdmin = false;
+  document.getElementById("playerPin").value = "";
+  playSound("click");
+
+  if (!myEgg[1].paid) {
+    showScreen("paymentScreen");
+  } else {
+    showScreen("raceScreen");
+    renderRace();
+  }
+}
+
+// ── LOGIN: ADMIN ──
+function showAdminLogin() {
+  showScreen("adminLoginScreen");
+  document.getElementById("adminPassword").value = "";
+}
+
+function adminLogin() {
+  const data = getGameData();
+  const pass = document.getElementById("adminPassword").value;
+
+  if (pass === data.adminPassword) {
+    currentUser = "admin";
+    isAdmin = true;
+    showScreen("adminScreen");
+    renderAdmin();
+  } else {
+    showToast("Wrong password!", "error");
+  }
+}
+
+function changePassword() {
+  const newPass = document.getElementById("newAdminPass").value.trim();
+  if (!newPass) { showToast("Enter a new password", "error"); return; }
+  if (newPass.length < 4) { showToast("Password should be at least 4 characters", "error"); return; }
+
+  const data = getGameData();
+  data.adminPassword = newPass;
+  saveGameData(data);
+  document.getElementById("newAdminPass").value = "";
+  showToast("Password updated!", "success");
+}
+
+// ── RACE RENDERING ──
+function renderRace() {
+  const data = getGameData();
+  const track = document.getElementById("raceTrack");
+  track.innerHTML = "";
+
+  const day = data.incubationDay || 1;
+
+  // Stats
+  const aliveCount = Object.values(data.eggs).filter(e => e.status === "alive").length;
+  const eliminatedCount = Object.values(data.eggs).filter(e => e.status === "eliminated").length;
+  const hatchedCount = Object.values(data.eggs).filter(e => e.status === "hatched").length;
+  const claimedCount = Object.values(data.eggs).filter(e => e.playerName).length;
+
+  // Stats bar
+  document.getElementById("statsBar").innerHTML = `
+    <div class="stat-card alive-stat">
+      <div class="stat-num">${aliveCount}</div>
+      <div class="stat-label">Alive</div>
+    </div>
+    <div class="stat-card eliminated-stat">
+      <div class="stat-num">${eliminatedCount}</div>
+      <div class="stat-label">Eliminated</div>
+    </div>
+    <div class="stat-card hatched-stat">
+      <div class="stat-num">${hatchedCount}</div>
+      <div class="stat-label">Hatched</div>
+    </div>
+  `;
+
+  // Day banner
+  const dayBanner = document.getElementById("dayBanner");
+  if (day >= 26 && hatchedCount > 0) {
+    dayBanner.textContent = `🎉 Hatch Day! ${hatchedCount} egg${hatchedCount > 1 ? "s" : ""} made it!`;
+  } else {
+    dayBanner.textContent = `📆 Day ${day} of 28 — ${aliveCount} egg${aliveCount !== 1 ? "s" : ""} still going`;
+  }
+
+  // Update header egg to match current day
+  updateHeaderEgg();
+
+  // Personal egg card (only shown for players, not admin)
+  renderMyEggCard(data, day);
+
+  // Progress timeline
+  renderTimeline(day);
+
+  // Sort eggs: alive first, then hatched, then eliminated, then unclaimed
+  const sortOrder = { alive: 0, hatched: 1, eliminated: 2 };
+  const sortedEggs = [...EGG_LETTERS].sort((a, b) => {
+    const eggA = data.eggs[a];
+    const eggB = data.eggs[b];
+    const claimedA = eggA.playerName ? 0 : 1;
+    const claimedB = eggB.playerName ? 0 : 1;
+    if (claimedA !== claimedB) return claimedA - claimedB;
+    const statusA = sortOrder[eggA.status] ?? 3;
+    const statusB = sortOrder[eggB.status] ?? 3;
+    return statusA - statusB;
+  });
+
+  // Show all 18 eggs — sorted, unclaimed dimmed, yours stands out
+  sortedEggs.forEach(letter => {
+    const egg = data.eggs[letter];
+    const isMine = egg.playerName === currentUser && currentUser;
+    const unclaimed = !egg.playerName;
+    let progress, statusClass;
+
+    if (egg.status === "hatched") {
+      progress = 100;
+      statusClass = "hatched";
+    } else if (egg.status === "eliminated") {
+      const stopDay = Math.min(day, 5 + (letter.charCodeAt(0) % 18));
+      progress = Math.round((stopDay / 28) * 90);
+      statusClass = "eliminated";
+    } else {
+      progress = Math.round((day / 28) * 90);
+      statusClass = "alive";
+    }
+
+    let laneClass = `race-lane ${statusClass}`;
+    if (isMine) laneClass += " is-mine";
+    if (unclaimed) laneClass += " unclaimed";
+
+    const lane = document.createElement("div");
+    lane.className = laneClass;
+
+    const nameDisplay = egg.eggName
+      ? `<div class="player-name">${egg.playerName || "—"}</div><div class="egg-nickname">${egg.eggName}</div>`
+      : `<div class="player-name">${egg.playerName || "—"}</div>`;
+
+    lane.innerHTML = `
+      <div class="egg-label">${letter}</div>
+      <div class="track-bar">
+        <div class="track-progress ${statusClass}" style="width: ${progress}%">
+          <span class="egg-icon${egg.status === 'alive' && day >= 25 ? ' wobbling' : ''}" ${egg.status === 'alive' && day >= 25 ? `style="--wobble-delay:${Math.random()*2}s"` : ''}>${generateEggSVG(day, egg.status, "small")}</span>
+        </div>
+      </div>
+      <div class="lane-info">${nameDisplay}</div>
+      <div class="status-tag ${statusClass}">${egg.status.toUpperCase()}</div>
+    `;
+
+    track.appendChild(lane);
+  });
+
+  renderWinners(data);
+  updatePrizePool();
+
+  // Last updated timestamp
+  const lastUpdatedEl = document.getElementById("lastUpdated");
+  if (data.lastUpdated) {
+    const d = new Date(data.lastUpdated);
+    const timeStr = d.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit", hour12: true });
+    lastUpdatedEl.textContent = `Last updated: ${timeStr}`;
+  } else {
+    lastUpdatedEl.textContent = "";
+  }
+}
+
+// ── PERSONAL EGG CARD ──
+function renderMyEggCard(data, day) {
+  const container = document.getElementById("myEggCard");
+
+  // Only show for logged-in players, not admin
+  if (!currentUser || isAdmin) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const myEntry = Object.entries(data.eggs).find(([_, e]) => e.playerName === currentUser);
+  if (!myEntry) { container.innerHTML = ""; return; }
+
+  const [letter, egg] = myEntry;
+
+  // Generate egg illustration
+  const icon = generateEggSVG(day, egg.status, "big");
+
+  // Generate a fun message based on status and day
+  let message = "";
+  if (egg.status === "hatched") {
+    message = `Your egg hatched! ${egg.eggName || "Your little one"} made it to the finish line. Congratulations — you're a winner!`;
+  } else if (egg.status === "eliminated") {
+    message = `Unfortunately, Egg ${letter} didn't make it. ${egg.eggName ? egg.eggName + " is" : "It's"} out of the race. Better luck next round!`;
+  } else if (day <= 3) {
+    message = `The journey has just begun! ${egg.eggName || "Your egg"} is settling in. Fingers crossed for good development.`;
+  } else if (day <= 7) {
+    message = `First candle check time! We'll soon know if ${egg.eggName || "your egg"} is developing. Stay hopeful!`;
+  } else if (day <= 14) {
+    message = `${egg.eggName || "Your egg"} is growing! Past the early danger zone and getting stronger every day.`;
+  } else if (day <= 18) {
+    message = `Getting close! ${egg.eggName || "Your egg"} has made it past the halfway mark. The finish line is in sight.`;
+  } else if (day <= 24) {
+    message = `Almost lockdown time! ${egg.eggName || "Your egg"} is in the home stretch. Not much longer now!`;
+  } else {
+    message = `It's hatch time! ${egg.eggName || "Your egg"} could hatch any moment. This is it!`;
+  }
+
+  // Position among alive eggs
+  const aliveEggs = Object.entries(data.eggs).filter(([_, e]) => e.status === "alive");
+  const totalEggs = EGG_LETTERS.length;
+  let positionHtml = "";
+  if (egg.status === "alive") {
+    positionHtml = `<div class="my-egg-position">Still in the race — <strong>${aliveEggs.length}</strong> of ${totalEggs} eggs alive</div>`;
+  }
+
+  container.innerHTML = `
+    <div class="my-egg-card">
+      <div class="my-egg-top">
+        <div class="my-egg-big-icon${egg.status === 'alive' && day >= 25 ? ' wobbling' : ''}">${icon}</div>
+        <div class="my-egg-details">
+          <div class="my-egg-label">Your Egg</div>
+          <div class="my-egg-name">Egg ${letter}</div>
+          ${egg.eggName ? `<div class="my-egg-nickname">"${egg.eggName}"</div>` : ""}
+        </div>
+      </div>
+      <div class="my-egg-status ${egg.status}">${egg.status === "alive" ? "🟢 Alive & Going" : egg.status === "hatched" ? "🐣 Hatched!" : "❌ Eliminated"}</div>
+      <div class="my-egg-message">${message}</div>
+      ${positionHtml}
+    </div>
+  `;
+}
+
+// ── PROGRESS TIMELINE ──
+function renderTimeline(day) {
+  const container = document.getElementById("timeline");
+  const percent = Math.round(((day - 1) / 27) * 100);
+
+  // Find the current milestone
+  let currentMilestoneIdx = 0;
+  for (let i = MILESTONES.length - 1; i >= 0; i--) {
+    if (day >= MILESTONES[i].day) {
+      currentMilestoneIdx = i;
+      break;
+    }
+  }
+
+  const markersHtml = MILESTONES.map((m, i) => {
+    const pos = ((m.day - 1) / 27) * 100;
+    const reached = day >= m.day;
+    const isCurrent = i === currentMilestoneIdx;
+    const classes = `timeline-marker${reached ? " reached" : ""}${isCurrent ? " current" : ""}`;
+
+    return `<div class="${classes}" style="left: ${pos}%">
+      <div class="timeline-marker-dot"></div>
+      <div class="timeline-marker-day">${m.day}</div>
+      <div class="timeline-marker-label">${m.label}</div>
+    </div>`;
+  }).join("");
+
+  container.innerHTML = `
+    <div class="timeline">
+      <div class="timeline-title">📅 Incubation Progress — Day ${day} of 28</div>
+      <div class="timeline-bar-container">
+        <div class="timeline-track">
+          <div class="timeline-fill" style="width: ${percent}%"></div>
+        </div>
+        <div class="timeline-markers">${markersHtml}</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderWinners(data) {
+  const container = document.getElementById("winnersContainer");
+  const winners = Object.entries(data.eggs).filter(([_, e]) => e.status === "hatched" && e.playerName);
+
+  if (winners.length === 0) {
+    container.innerHTML = "";
+    return;
+  }
+
+  const totalPlayers = Object.values(data.eggs).filter(e => e.playerName).length;
+  const pool = totalPlayers * 5;
+  const payout = winners.length > 0 ? Math.floor(pool / winners.length) : 0;
+
+  let html = `<div class="winners-section">
+    <div class="trophy">🏆</div>
+    <h3>Winners! ($${payout} each)</h3>`;
+
+  winners.forEach(([letter, egg]) => {
+    html += `
+      <div class="winner-card">
+        <div class="egg-letter">${letter}</div>
+        <div class="winner-info">
+          <div class="winner-name">${egg.playerName}</div>
+          <div class="hatchling-name">${egg.eggName || "Name pending..."}</div>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+  container.innerHTML = html;
+}
+
+// ── ADMIN RENDERING ──
+function renderAdmin() {
+  const data = getGameData();
+
+  // Quick stats
+  const claimed = Object.values(data.eggs).filter(e => e.playerName);
+  const paidCount = claimed.filter(e => e.paid).length;
+  const unpaidCount = claimed.filter(e => !e.paid).length;
+  const aliveAdmin = Object.values(data.eggs).filter(e => e.status === "alive").length;
+  const elimAdmin = Object.values(data.eggs).filter(e => e.status === "eliminated").length;
+
+  document.getElementById("adminQuickStats").innerHTML = `
+    <div class="admin-quick-stat qs-paid">
+      <div class="qs-num">${paidCount}</div>
+      <div class="qs-label">Paid</div>
+    </div>
+    <div class="admin-quick-stat qs-unpaid">
+      <div class="qs-num">${unpaidCount}</div>
+      <div class="qs-label">Unpaid</div>
+    </div>
+    <div class="admin-quick-stat qs-alive">
+      <div class="qs-num">${aliveAdmin}</div>
+      <div class="qs-label">Alive</div>
+    </div>
+    <div class="admin-quick-stat qs-eliminated">
+      <div class="qs-num">${elimAdmin}</div>
+      <div class="qs-label">Eliminated</div>
+    </div>
+  `;
+
+  document.getElementById("daySlider").value = data.incubationDay || 1;
+  document.getElementById("dayDisplay").textContent = data.incubationDay || 1;
+  renderMilestones(data.incubationDay || 1);
+
+  renderAdminEggList(data);
+  renderAdminStatusList(data);
+  renderAvailableEggs(data);
+  updatePrizePool();
+}
+
+// ── DAY CONTROL ──
+function updateDay(value) {
+  const day = parseInt(value);
+  document.getElementById("dayDisplay").textContent = day;
+  renderMilestones(day);
+
+  const data = getGameData();
+  data.incubationDay = day;
+  saveGameData(data);
+  updateHeaderEgg();
+}
+
+function renderMilestones(currentDay) {
+  const container = document.getElementById("dayMilestones");
+  container.innerHTML = MILESTONES.map(m => {
+    const isActive = currentDay >= m.day;
+    return `<span class="day-milestone${isActive ? " active" : ""}">Day ${m.day}: ${m.label}</span>`;
+  }).join("");
+}
+
+function renderAdminEggList(data) {
+  const container = document.getElementById("adminEggList");
+  let html = "";
+
+  EGG_LETTERS.forEach(letter => {
+    const egg = data.eggs[letter];
+    const hasPlayer = egg.playerName;
+
+    html += `<div class="admin-row">
+      <div class="admin-egg-label">${letter}</div>
+      <div class="admin-player-name">
+        ${hasPlayer ? egg.playerName : "<em style='color:#b8a08a;'>Unclaimed</em>"}
+      </div>`;
+
+    if (hasPlayer) {
+      html += `
+        <input class="nickname-input" type="text" placeholder="Egg name..."
+          value="${egg.eggName || ""}"
+          onchange="setEggName('${letter}', this.value)">
+        <input class="pin-input-small" type="tel" placeholder="PIN" maxlength="4"
+          value="${egg.pin || ""}"
+          onchange="setPin('${letter}', this.value)"
+          inputmode="numeric">
+        <span class="admin-badge ${egg.paid ? "paid" : "unpaid"}">${egg.paid ? "PAID" : "UNPAID"}</span>
+        <button class="btn btn-small ${egg.paid ? "btn-red" : "btn-green"}"
+          onclick="togglePaid('${letter}')">${egg.paid ? "Mark Unpaid" : "Mark Paid"}</button>
+        <button class="btn btn-small btn-red" onclick="removePlayer('${letter}')">Remove</button>
+      `;
+    }
+
+    html += `</div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function renderAdminStatusList(data) {
+  const container = document.getElementById("adminStatusList");
+  let html = "";
+
+  EGG_LETTERS.forEach(letter => {
+    const egg = data.eggs[letter];
+
+    html += `<div class="admin-row">
+      <div class="admin-egg-label">${letter}</div>
+      <div class="admin-player-name">${egg.playerName || "—"}</div>
+      <div class="admin-status-btns">
+        <button class="status-btn ${egg.status === "alive" ? "active-alive" : ""}"
+          onclick="setEggStatus('${letter}', 'alive')">Alive</button>
+        <button class="status-btn ${egg.status === "eliminated" ? "active-eliminated" : ""}"
+          onclick="setEggStatus('${letter}', 'eliminated')">Eliminated</button>
+        <button class="status-btn ${egg.status === "hatched" ? "active-hatched" : ""}"
+          onclick="setEggStatus('${letter}', 'hatched')">Hatched</button>
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+function renderAvailableEggs(data) {
+  const select = document.getElementById("newPlayerEgg");
+  select.innerHTML = '<option value="">-- Pick egg --</option>';
+
+  EGG_LETTERS.forEach(letter => {
+    if (!data.eggs[letter].playerName) {
+      const opt = document.createElement("option");
+      opt.value = letter;
+      opt.textContent = `Egg ${letter}`;
+      select.appendChild(opt);
+    }
+  });
+}
+
+// ── ADMIN ACTIONS ──
+function togglePaid(letter) {
+  const data = getGameData();
+  data.eggs[letter].paid = !data.eggs[letter].paid;
+  saveGameData(data);
+  const name = data.eggs[letter].playerName;
+  showToast(`${name} marked as ${data.eggs[letter].paid ? "paid" : "unpaid"}`, "success");
+  renderAdmin();
+}
+
+function removePlayer(letter) {
+  if (!confirm(`Remove player from Egg ${letter}? This won't delete anything else.`)) return;
+
+  const data = getGameData();
+  data.eggs[letter].playerName = "";
+  data.eggs[letter].paid = false;
+  data.eggs[letter].eggName = "";
+  data.eggs[letter].pin = "";
+  saveGameData(data);
+  renderAdmin();
+}
+
+function setEggName(letter, name) {
+  const data = getGameData();
+  data.eggs[letter].eggName = name.trim();
+  saveGameData(data);
+}
+
+function setPin(letter, pin) {
+  if (pin && (pin.length !== 4 || !/^\d{4}$/.test(pin))) {
+    showToast("PIN must be exactly 4 digits", "error");
+    renderAdmin();
+    return;
+  }
+  const data = getGameData();
+  data.eggs[letter].pin = pin;
+  saveGameData(data);
+  showToast(`PIN updated for ${data.eggs[letter].playerName}`, "success");
+}
+
+function addPlayer() {
+  const name = document.getElementById("newPlayerName").value.trim();
+  const egg = document.getElementById("newPlayerEgg").value;
+  const eggName = document.getElementById("newEggName").value.trim();
+  const pin = document.getElementById("newPlayerPin").value.trim();
+
+  if (!name) { showToast("Enter a player name", "error"); return; }
+  if (!egg) { showToast("Pick an egg", "error"); return; }
+  if (!pin || pin.length !== 4 || !/^\d{4}$/.test(pin)) {
+    showToast("Enter a 4-digit PIN", "error"); return;
+  }
+
+  const data = getGameData();
+
+  const nameExists = Object.values(data.eggs).some(e => e.playerName.toLowerCase() === name.toLowerCase());
+  if (nameExists) { showToast("That name is already taken!", "error"); return; }
+
+  data.eggs[egg].playerName = name;
+  data.eggs[egg].pin = pin;
+  if (eggName) data.eggs[egg].eggName = eggName;
+  saveGameData(data);
+
+  document.getElementById("newPlayerName").value = "";
+  document.getElementById("newEggName").value = "";
+  document.getElementById("newPlayerPin").value = "";
+  showToast(`${name} added to Egg ${egg} (PIN: ${pin})`, "success");
+  playSound("click");
+  renderAdmin();
+}
+
+function setEggStatus(letter, status) {
+  const data = getGameData();
+  const oldStatus = data.eggs[letter].status;
+  data.eggs[letter].status = status;
+  saveGameData(data);
+
+  if (status === "hatched" && oldStatus !== "hatched") {
+    const name = data.eggs[letter].playerName || `Egg ${letter}`;
+    showToast(`🐣 ${name}'s egg hatched!`, "success");
+    launchConfetti();
+    playSound("hatch");
+  } else if (status === "eliminated" && oldStatus !== "eliminated") {
+    const name = data.eggs[letter].playerName || `Egg ${letter}`;
+    showToast(`💀 ${name}'s egg has been eliminated`, "error");
+    playSound("eliminate");
+  } else {
+    playSound("click");
+  }
+
+  renderAdmin();
+}
+
+// ── PUBLISH PUBLIC SITE ──
+function publishPublicSite() {
+  const data = getGameData();
+
+  // Clone current page, remove admin stuff, hardcode data
+  const doc = document.implementation.createHTMLDocument("The Hatching Bet");
+
+  // Copy the full current HTML
+  doc.documentElement.innerHTML = document.documentElement.innerHTML;
+
+  // Remove admin-only screens
+  const adminScreen = doc.getElementById("adminScreen");
+  if (adminScreen) adminScreen.remove();
+  const adminLoginScreen = doc.getElementById("adminLoginScreen");
+  if (adminLoginScreen) adminLoginScreen.remove();
+
+  // Remove admin login link from login screen
+  const navLinks = doc.querySelectorAll(".nav-link");
+  navLinks.forEach(function(el) { if (el.textContent.includes("Admin")) el.remove(); });
+
+  // Get the existing script and replace the data loading
+  const scripts = doc.querySelectorAll("script");
+  scripts.forEach(function(s) { s.remove(); });
+
+  // Build a new script that uses hardcoded data
+  const newScript = doc.createElement("script");
+
+  // Get the egg SVG function source
+  const eggFnSrc = generateEggSVG.toString();
+
+  // Get all other function sources we need
+  const fns = [
+    showToast, launchConfetti, playSound,
+    showScreen, logout, populatePlayerSelect, playerLogin,
+    updateHeaderEgg, updatePrizePool, renderRace,
+    renderMyEggCard, renderTimeline, renderWinners
+  ];
+
+  var jsCode = "";
+  jsCode += "var GAME_DATA = " + JSON.stringify(data) + ";\n";
+  jsCode += "var EGG_LETTERS = 'ABCDEFGHIJKLMNOPQR'.split('');\n";
+  jsCode += "var MILESTONES = " + JSON.stringify([
+    { day: 1, label: "Start" }, { day: 5, label: "Candle 1" }, { day: 7, label: "Fertility" },
+    { day: 10, label: "Growth" }, { day: 14, label: "Dev Check" }, { day: 18, label: "Final Candle" },
+    { day: 24, label: "Lockdown" }, { day: 26, label: "Hatch Window" }, { day: 28, label: "Hatch Day" }
+  ]) + ";\n";
+  jsCode += "function getGameData() { return GAME_DATA; }\n";
+  jsCode += "function saveGameData() {} \n";
+  jsCode += "var AudioCtx = window.AudioContext || window.webkitAudioContext;\n";
+  jsCode += "var _audioCtx = null;\n";
+  jsCode += "function getAudio() { if (!_audioCtx) _audioCtx = new AudioCtx(); return _audioCtx; }\n";
+  jsCode += "var currentUser = null;\n";
+  jsCode += "var isAdmin = false;\n";
+  jsCode += "var _eggId = 0;\n";
+
+  // Add all function sources
+  jsCode += eggFnSrc + ";\n";
+  fns.forEach(function(fn) { jsCode += fn.toString() + ";\n"; });
+
+  // Init code
+  jsCode += "populatePlayerSelect();\n";
+  jsCode += "updatePrizePool();\n";
+  jsCode += "updateHeaderEgg();\n";
+
+  newScript.textContent = jsCode;
+  doc.body.appendChild(newScript);
+
+  // Serialize
+  const html = "<!DOCTYPE html>\n" + doc.documentElement.outerHTML;
+
+  const blob = new Blob([html], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "public.html";
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast("🚀 Public site downloaded! Upload it to share with players.", "success");
+  playSound("hatch");
+}
+
+// ── INITIALIZE ──
+populatePlayerSelect();
+updatePrizePool();
+updateHeaderEgg();
+
+document.getElementById("adminPassword").addEventListener("keypress", (e) => {
+  if (e.key === "Enter") adminLogin();
+});
+</script>
+
+</body>
+</html>
