@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shape the Field: AI Agents in Product - Speaker Notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #cbd5e1; line-height: 1.7; font-size: 17px; padding: 0 24px 80px; }
+  .meta-bar { text-align: center; padding: 12px 0; font-size: 13px; color: #64748b; font-family: 'SF Mono', 'Fira Code', monospace; border-bottom: 1px solid #1e293b; margin-bottom: 40px; }
+  .meta-bar a { color: #64748b; text-decoration: none; border-bottom: 1px solid #334155; }
+  main { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 40px; font-weight: 800; color: #f1f5f9; line-height: 1.1; margin-bottom: 8px; }
+  h1 .accent { color: #2dd4bf; }
+  .subtitle { font-size: 18px; color: #94a3b8; margin-bottom: 24px; }
+  .meta { font-size: 15px; color: #64748b; margin-bottom: 8px; }
+  .meta strong { color: #94a3b8; }
+  .thesis { font-size: 18px; color: #e2e8f0; margin: 24px 0 40px; padding: 16px 20px; background: rgba(45,212,191,0.06); border: 1px solid #164e63; border-radius: 8px; }
+  hr { border: none; border-top: 1px solid #1e293b; margin: 40px 0; }
+  h2 { font-size: 26px; font-weight: 700; color: #f1f5f9; margin: 40px 0 8px; }
+  h2 .time { font-size: 14px; color: #64748b; font-weight: 400; margin-left: 8px; }
+  h3 { font-size: 20px; font-weight: 600; color: #2dd4bf; margin: 28px 0 10px; }
+  p { margin-bottom: 14px; }
+  strong { color: #f1f5f9; }
+  em { color: #2dd4bf; font-style: normal; }
+  ul, ol { margin: 10px 0 16px 24px; }
+  li { margin-bottom: 8px; }
+  blockquote { margin: 20px 0; padding: 0 20px; border-left: 3px solid #334155; color: #94a3b8; font-size: 18px; }
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+  th { text-align: left; padding: 10px 14px; background: #1e293b; color: #94a3b8; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+  td { padding: 10px 14px; border-bottom: 1px solid #1e293b; }
+  .faq-q { font-size: 18px; font-weight: 600; color: #e2e8f0; margin: 20px 0 6px; }
+  .faq-a { color: #94a3b8; margin-bottom: 16px; }
+  .deck-link { display: inline-block; margin-top: 16px; padding: 10px 20px; background: #1e293b; border: 1px solid #334155; border-radius: 6px; color: #2dd4bf; text-decoration: none; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 15px; }
+  .deck-link:hover { background: #334155; border-color: #2dd4bf; }
+  footer { text-align: center; padding: 32px 24px; color: #475569; font-size: 13px; border-top: 1px solid #1e293b; margin-top: 60px; }
+  footer a { color: #64748b; text-decoration: none; border-bottom: 1px solid #334155; }
+  @media print { body { background: #fff; color: #111; } h1, h2, h3, strong { color: #111; } em { color: #0d9488; } -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+</style>
+</head>
+<body>
+
+<div class="meta-bar">
+  May 9, 2026 &middot; CPO Council &middot; Tenni Theurer &middot; <a href="https://aughthour.com" target="_blank" rel="noopener">Aught Hour</a>
+</div>
+
+<main>
+
+<h1>Shape the Field: AI Agents in <span class="accent">Product</span></h1>
+<p class="subtitle">Speaker notes and outline</p>
+
+<p class="meta"><strong>Format:</strong> Talk + interactive web deck (15-20 min)</p>
+<p class="meta"><strong>Audience:</strong> CPO Council - product executives exploring AI agent adoption</p>
+
+<a href="./" class="deck-link">Open interactive deck &rarr;</a>
+
+<div class="thesis">
+<strong>Key thesis:</strong> Building great agent systems is product work. The PMs who build agent infrastructure around themselves will operate at a visibly different level - and the gap widens fast.
+</div>
+
+<hr>
+
+<h2>Opening <span class="time">(1 min)</span></h2>
+
+<blockquote>"I've been running AI agents as my actual operating system for about a year now - across startups, an advisory role, and now a large enterprise. Not experimenting. Operating. And I built the whole thing with a product manager's lens - backlogs, feedback loops, interaction contracts, value checks. That framing turned out to matter more than the AI itself. I want to share what I learned across three phases."</blockquote>
+
+<p><strong>Frame the three acts:</strong></p>
+<ol>
+  <li>What I was building when I first started (the solo phase)</li>
+  <li>How my thinking evolved (the shift to enterprise)</li>
+  <li>What the space looks like 12 months from now</li>
+</ol>
+
+<hr>
+
+<h2>Act 1: Early Use Cases <span class="time">(3 min)</span></h2>
+<p><strong>Key message:</strong> Agents started as task automation. The interesting part is when they stopped being tools and became domain-specific operating systems.</p>
+
+<h3>Where everyone starts</h3>
+<p>Task automation. Auto-bookers, calendar sync, receipt scanners. The agent does what a human would do, just faster. <strong>This is where most orgs are right now.</strong></p>
+
+<h3>Where it gets interesting: agents for real businesses</h3>
+<ul>
+  <li><strong>An urban farming startup:</strong> Built a full operating layer - email pipeline that watches inbound, classifies, and ingests into a 200+ doc knowledge base. A data room agent that takes a one-line email and turns it into Google Doc edits + deck uploads + confirmation drafts. Financial models, vendor comparisons, operator onboarding. An autonomous PM agent that runs every 6 hours and pushes back when deadlines slip.</li>
+  <li><strong>A home resilience advisory:</strong> Built a vision-based evaluator that reviews roofing inspection photos for insurance compliance. The unlock was sending full photo sets instead of samples - the model started catching things humans missed (wrong-property photos, signer mismatches, retroactive orders). 29-case batch, real product heading to production.</li>
+  <li><strong>The pattern across both:</strong> I approached the agent the way a PM approaches a product. What's the user need? What's the feedback loop? Where does the system break? What's the minimum that delivers value? The value wasn't in any single prompt - it was in the accumulated system.</li>
+</ul>
+
+<h3>The turning point: memory</h3>
+<ul>
+  <li>Added persistent memory, a task system the agent reads and writes to, strategic context that loads every session</li>
+  <li>Built a PM layer on top: every completed task gets a value check (what artifact was produced, what decision was made, what metric moved). Tasks that produce no tangible output get flagged.</li>
+  <li>Session 1 and session 254 feel like the same conversation</li>
+  <li>The agent stopped being a tool I use and became a system I work inside</li>
+</ul>
+
+<blockquote>"All of this was for me and small teams. Full control, fast iteration. Then I took a role at a large company and everything broke."</blockquote>
+
+<hr>
+
+<h2>Act 2: What Changed <span class="time">(7-8 min)</span></h2>
+<p><strong>Key message:</strong> The pattern survived the transition. The implementation had to be completely rewritten. Three weeks to get it load-bearing.</p>
+
+<h3>The 3-week bootstrap</h3>
+<table>
+  <tr><th>Week</th><th>Mode</th><th>What happened</th></tr>
+  <tr><td>1</td><td>Bootstrap</td><td>Setup. Basic triage. AI captures, doesn't really act. Mostly trust-building.</td></tr>
+  <tr><td>2</td><td>OS Overhaul</td><td>Rewrote the system mid-week. AI started doing real work <em>through</em> the system. First skills emerged.</td></tr>
+  <tr><td>3</td><td>Leverage</td><td>Load-bearing for daily ops and strategic synthesis. Started building infrastructure for other people to use.</td></tr>
+</table>
+
+<p><strong>The shape: capture -> automate -> leverage -> share.</strong></p>
+
+<h3>What "Share" actually looked like (Week 3)</h3>
+<ul>
+  <li>Started extracting patterns that weren't just personal - the triage pipeline, the meeting prep flow, the drafting-with-context pattern</li>
+  <li>Built shareable skills: reusable prompt templates that encode a workflow, not just a task</li>
+  <li>The hard part: separating personal context from transferable infrastructure</li>
+  <li>This is where it shifts from "I'm more productive" to "I'm changing how the team operates"</li>
+</ul>
+
+<h3>The Manager OS: 8 use cases</h3>
+<p>Not a chatbot. A manager OS. Two repos: one shareable, one private. AI handles inputs and drafts; the human owns judgment and the send button.</p>
+<ol>
+  <li><strong>Daily intelligence triage</strong> - One sweep of email, chat, calendar, transcripts, shared files, work items, service health</li>
+  <li><strong>Meeting prep & capture</strong> - Auto-prep before, auto-capture after. Action items reconcile back to a unified backlog</li>
+  <li><strong>Drafting with context</strong> - Replies pulled from full thread history, KB, and prior interactions. Written in your voice. Click-to-copy HTML draft, never auto-send</li>
+  <li><strong>People intelligence</strong> - Every shared artifact updates a running profile: what they own, what they care about, friction points</li>
+  <li><strong>Knowledge base</strong> - LLM-maintained pages over curated raw sources. Humans curate inputs, AI structures the knowledge</li>
+  <li><strong>Strategic synthesis</strong> - Briefs, POV docs, framings generated from accumulated context, not from scratch</li>
+  <li><strong>Backlog & follow-through</strong> - Unified store for todos, drafts, delegated items, watch items. Auto-resolves when downstream evidence shows up</li>
+  <li><strong>Operational hygiene</strong> - Privacy guards on every commit, nightly lint, session memory rotation</li>
+</ol>
+
+<h3>What works (the honest version)</h3>
+<ul>
+  <li><strong>The handoff pattern.</strong> AI prepares; human reviews and sends. Never delegate the send button.</li>
+  <li><strong>Privacy as structure, not vigilance.</strong> Two-repo split makes leaks structurally impossible.</li>
+  <li><strong>Investigation before draft.</strong> Replies are grounded in real history, not generic AI tone.</li>
+  <li><strong>Curated > comprehensive.</strong> A 5-observation synthesis lands. A 20-page assessment doesn't.</li>
+  <li><strong>Always-on enrichment.</strong> Substantive work flows back into the right files automatically. Memory compounds.</li>
+</ul>
+
+<h3>Where it breaks (the honest version)</h3>
+<ul>
+  <li><strong>Signal-to-noise on automation.</strong> First version of any pipeline is too noisy. Needs an allowlist pass.</li>
+  <li><strong>Tooling fragility.</strong> MCP servers drop. Auth walls appear constantly.</li>
+  <li><strong>The "drafted vs sent" gap.</strong> AI surfaces what's owed. It can't make me close the loop.</li>
+  <li><strong>Judgment doesn't scale.</strong> 5-10x on inputs. 2-3x on actual leverage. That's the ceiling.</li>
+  <li><strong>Single-user shape.</strong> A teammate can't fork without rebuilding their own private layer.</li>
+</ul>
+
+<blockquote>"That last point - single-user shape - is the unsolved problem. And it tells you where this is going."</blockquote>
+
+<hr>
+
+<h2>Act 3: 12 Months Out <span class="time">(4-5 min)</span></h2>
+<p><strong>Key message:</strong> The patterns are clear. The infrastructure isn't there yet. Here's what closes the gap.</p>
+
+<h3>Prediction 1: Memory becomes the moat, not the model</h3>
+<p>Proved this twice - once solo (254 sessions), once at enterprise scale. Every product org will have access to the same foundation models. The differentiation is what your agent knows about <em>this user, this workflow, this org</em>.</p>
+<p><strong>CPO implication:</strong> Your agent strategy should start with "what's the memory architecture?" not "which model?"</p>
+
+<h3>Prediction 2: The Manager OS is the first real agent product category</h3>
+<p>Not "chat with your data." Not "autocomplete in your IDE." A system that does daily triage, preps you for meetings, drafts in your voice, tracks follow-through, and maintains a running model of your people and priorities. I built it by hand. It works. Someone will productize it.</p>
+<p><strong>CPO implication:</strong> If you're building agent products, look at what managers actually do all day. That's the TAM, not developer productivity.</p>
+
+<h3>Prediction 3: The ceiling is judgment, not automation</h3>
+<p>5-10x on inputs and drafts. 2-3x on actual leverage. That's the honest number. Products that respect this boundary will win. Products that pretend the AI replaces judgment will fail.</p>
+<p><strong>CPO implication:</strong> Design for the 2-3x, not the 5-10x. Build your products around the handoff, not the automation.</p>
+
+<h3>Prediction 4: Agent-native PMs will create an uncomfortable performance gap</h3>
+<p>The PMs who build agent systems around themselves will operate at a visibly different level. This isn't a tool adoption curve. It's a skill gap. The difference between a PM who uses agents and a PM who builds agent systems is the difference between someone who uses Excel and someone who builds models.</p>
+<p><strong>CPO implication:</strong> You need to decide if this is something you encourage, require, or let happen organically. In 12 months, you'll be able to tell which PMs built agent systems and which didn't - just from the quality of their work.</p>
+
+<hr>
+
+<h2>Close <span class="time">(1 min)</span></h2>
+
+<p><strong>The shape, one more time:</strong> capture -> automate -> leverage -> share.</p>
+
+<p>Every CPO in this room can start week 1 tomorrow. The question isn't whether agents work in product leadership - they do. The question is whether you're willing to invest the trust-building to get to the point where it's load-bearing.</p>
+
+<p>The hard part isn't the AI. It's designing the system around the AI - the memory, the contracts, the feedback loops, the human-agent boundaries. Building great agent systems is product work. It's PM work. The people best equipped to lead this transition are already in your org.</p>
+
+<hr>
+
+<h2>Anticipated Questions</h2>
+
+<p class="faq-q">"What about hallucination / trust?"</p>
+<p class="faq-a">The handoff pattern handles this. AI never sends - it drafts. Investigation before draft means replies are grounded in real thread history. Trust is a design problem, not a model problem.</p>
+
+<p class="faq-q">"Does it scale beyond one person?"</p>
+<p class="faq-a">Not yet - that's the honest answer. The patterns are transferable but the infrastructure isn't forkable. That's prediction #2 - someone will productize this.</p>
+
+<p class="faq-q">"What model do you use?"</p>
+<p class="faq-a">Claude (Opus), but that's the least interesting part. The value is in the memory architecture, the interaction contracts, and the workflow design.</p>
+
+<p class="faq-q">"How do you handle sensitive data?"</p>
+<p class="faq-a">Privacy as structure: two-repo split, PII guards on every commit, session memory rotation. Make leaks structurally impossible rather than relying on vigilance.</p>
+
+<p class="faq-q">"What should I try first?"</p>
+<p class="faq-a">Daily intelligence triage. One sweep of everything that came in overnight. Lowest risk, highest immediate value, builds the trust that unlocks everything else.</p>
+
+</main>
+
+<footer>
+  &copy; 2026 <a href="https://aughthour.com" target="_blank" rel="noopener">Aught Hour LLC</a>. All rights reserved.
+</footer>
+
+</body>
+</html>

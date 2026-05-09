@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHAPE THE FIELD - AI Agents in Product</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif; background: #0f172a; color: #e2e8f0; line-height: 1.6; font-size: 18px; overflow-x: hidden; }
+
+  /* Nav */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(15,23,42,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #1e293b; padding: 0 24px; }
+  .nav-inner { display: flex; align-items: center; max-width: 1200px; margin: 0 auto; gap: 0; overflow-x: auto; scrollbar-width: none; }
+  .nav-inner::-webkit-scrollbar { display: none; }
+  .nav-prompt { color: #2dd4bf; padding: 12px 16px 12px 0; font-weight: 700; font-size: 15px; white-space: nowrap; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .nav-btn { padding: 12px 14px; background: none; border: none; color: #94a3b8; font-family: inherit; font-size: 14px; cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.15s; }
+  .nav-btn:hover { color: #cbd5e1; }
+  .nav-btn.active { color: #2dd4bf; border-bottom-color: #2dd4bf; }
+  .nav-right { margin-left: auto; color: #64748b; font-size: 13px; white-space: nowrap; padding: 12px 0; font-family: 'SF Mono', 'Fira Code', monospace; }
+
+  /* Sections */
+  .section { display: none; padding: 72px 24px 80px; max-width: 960px; margin: 0 auto; min-height: 100vh; }
+  .section.active { display: block; }
+
+  /* Terminal styling - keeps dark terminal look as embedded element */
+  .term { background: #0c0f1a; border: 1px solid #1e293b; border-radius: 8px; overflow: hidden; margin: 20px 0; font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; }
+  .term-bar { background: #131829; padding: 8px 14px; display: flex; align-items: center; gap: 8px; }
+  .term-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .term-dot.r { background: #ff5f57; }
+  .term-dot.y { background: #ffbd2e; }
+  .term-dot.g { background: #28c840; }
+  .term-title { color: #64748b; font-size: 14px; margin-left: 8px; }
+  .term-body { padding: 20px 24px; font-size: 18px; line-height: 1.8; min-height: 60px; }
+  .term-body .prompt { color: #2dd4bf; }
+  .term-body .cmd { color: #f1f5f9; }
+  .term-body .out { color: #94a3b8; }
+  .term-body .hl { color: #60a5fa; }
+  .term-body .warn { color: #f59e0b; }
+  .term-body .err { color: #ef4444; }
+  .term-body .good { color: #2dd4bf; }
+
+  /* Typing animation */
+  .type-line { overflow: hidden; white-space: nowrap; border-right: 2px solid #2dd4bf; width: 0; animation: typing 1.5s steps(40) forwards, blink 0.7s step-end infinite; font-family: 'SF Mono', 'Fira Code', monospace; }
+  @keyframes typing { to { width: 100%; } }
+  @keyframes blink { 50% { border-color: transparent; } }
+  .type-line.done { border-right: none; width: 100%; }
+
+  /* Typography */
+  h1 { font-size: 52px; font-weight: 800; color: #f1f5f9; line-height: 1.1; margin-bottom: 12px; }
+  h1 .accent { color: #2dd4bf; }
+  .subtitle { font-size: 22px; color: #94a3b8; margin-bottom: 32px; font-weight: 400; }
+  h2 { font-size: 36px; font-weight: 700; color: #f1f5f9; margin: 48px 0 16px; }
+  h3 { font-size: 17px; color: #2dd4bf; text-transform: uppercase; letter-spacing: 2px; margin: 32px 0 12px; font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; }
+  p { color: #cbd5e1; margin-bottom: 14px; font-size: 19px; line-height: 1.7; }
+  p strong { color: #f1f5f9; }
+
+  /* Live demo simulation */
+  .demo-container { position: relative; margin: 24px 0; }
+  .demo-step { opacity: 0; transform: translateY(12px); transition: all 0.4s ease; margin-bottom: 2px; }
+  .demo-step.visible { opacity: 1; transform: translateY(0); }
+  .demo-btn { display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: #1e293b; border: 1px solid #334155; border-radius: 6px; color: #2dd4bf; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 16px; cursor: pointer; transition: all 0.2s; margin: 16px 0; }
+  .demo-btn:hover { background: #334155; border-color: #2dd4bf; }
+  .demo-btn:disabled { opacity: 0.3; cursor: default; }
+  .demo-btn .key { background: #1e293b; border: 1px solid #334155; border-radius: 3px; padding: 2px 8px; font-size: 14px; color: #64748b; }
+
+  /* Journey visualization */
+  .journey { display: flex; gap: 0; margin: 32px 0; position: relative; }
+  .journey::after { content: ''; position: absolute; top: 24px; left: 40px; right: 40px; height: 2px; background: #1e293b; z-index: 0; }
+  .journey-node { flex: 1; text-align: center; position: relative; z-index: 1; cursor: pointer; padding: 8px; transition: all 0.3s; }
+  .journey-node:hover { transform: translateY(-4px); }
+  .journey-dot { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #334155; background: #1e293b; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; font-size: 18px; transition: all 0.4s; }
+  .journey-node.lit .journey-dot { border-color: #2dd4bf; background: rgba(45,212,191,0.1); box-shadow: 0 0 24px rgba(45,212,191,0.15); }
+  .journey-node.lit .j-label { color: #f1f5f9; }
+  .journey-node.lit .j-sub { color: #2dd4bf; }
+  .j-label { font-size: 16px; font-weight: 600; color: #94a3b8; transition: color 0.3s; }
+  .j-sub { font-size: 15px; color: #64748b; margin-top: 4px; transition: color 0.3s; }
+  .journey-detail { margin-top: 20px; padding: 20px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; min-height: 80px; display: none; }
+  .journey-detail.show { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Radar chart */
+  .radar-wrap { display: flex; gap: 40px; align-items: flex-start; margin: 24px 0; flex-wrap: wrap; }
+  .radar-canvas { flex-shrink: 0; }
+  .radar-legend { flex: 1; min-width: 280px; }
+  .radar-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; cursor: pointer; transition: all 0.2s; user-select: none; border: 1px solid transparent; margin-bottom: 4px; }
+  .radar-item:hover { background: #1e293b; border-color: #334155; }
+  .radar-item.checked { background: rgba(45,212,191,0.06); border-color: #164e63; }
+  .radar-item .ri-check { width: 22px; height: 22px; border: 2px solid #334155; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: transparent; transition: all 0.2s; flex-shrink: 0; }
+  .radar-item.checked .ri-check { border-color: #2dd4bf; background: #2dd4bf; color: #0f172a; }
+  .radar-item .ri-label { font-size: 17px; color: #94a3b8; }
+  .radar-item.checked .ri-label { color: #e2e8f0; }
+  .radar-score { margin-top: 20px; padding: 16px 20px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; }
+  .radar-score .score-num { font-size: 36px; font-weight: 800; color: #2dd4bf; }
+  .radar-score .score-label { font-size: 16px; color: #94a3b8; margin-top: 4px; }
+  .radar-score .score-msg { font-size: 17px; color: #cbd5e1; margin-top: 12px; line-height: 1.6; }
+
+  /* Side by side comparison */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; margin: 24px 0; background: #1e293b; border-radius: 8px; overflow: hidden; }
+  @media (max-width: 700px) { .compare { grid-template-columns: 1fr; } }
+  .compare-col { background: #0f172a; padding: 24px; }
+  .compare-col h3 { margin-top: 0; }
+  .compare-item { padding: 14px 0; border-bottom: 1px solid #1e293b; }
+  .compare-item:last-child { border-bottom: none; }
+  .compare-item .ci-title { font-size: 18px; font-weight: 600; color: #e2e8f0; margin-bottom: 4px; }
+  .compare-item .ci-desc { font-size: 16px; color: #94a3b8; }
+
+  /* Prediction cards with reveal */
+  .pred { background: #1e293b; border: 1px solid #334155; border-radius: 8px; margin-bottom: 12px; overflow: hidden; transition: all 0.3s; }
+  .pred:hover { border-color: #475569; }
+  .pred-head { padding: 20px 24px; cursor: pointer; display: flex; align-items: flex-start; gap: 16px; }
+  .pred-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; background: #0f172a; }
+  .pred-head-text { flex: 1; }
+  .pred-head-text .pred-num { font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .pred-head-text .pred-title { font-size: 22px; font-weight: 600; color: #e2e8f0; }
+  .pred-toggle { color: #64748b; font-size: 20px; transition: all 0.3s; padding-top: 4px; }
+  .pred.open .pred-toggle { transform: rotate(45deg); color: #2dd4bf; }
+  .pred.open { border-color: #475569; }
+  .pred-reveal { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
+  .pred.open .pred-reveal { max-height: 500px; }
+  .pred-reveal-inner { padding: 0 24px 24px 80px; }
+  .pred-reveal-inner p { font-size: 17px; color: #cbd5e1; }
+  .pred-cpo { margin-top: 16px; padding: 14px 16px; background: rgba(45,212,191,0.06); border: 1px solid #164e63; border-radius: 6px; }
+  .pred-cpo .cpo-label { font-size: 13px; color: #2dd4bf; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 6px; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .pred-cpo p { font-size: 17px; color: #cbd5e1; margin-bottom: 0; }
+
+  /* Big quote */
+  .bigquote { font-size: 28px; font-weight: 300; color: #94a3b8; line-height: 1.5; margin: 40px 0; padding: 0 20px; border-left: 3px solid #334155; }
+  .bigquote strong { color: #f1f5f9; font-weight: 600; }
+  .bigquote em { color: #2dd4bf; font-style: normal; }
+
+  /* FAQ */
+  .faq { border-top: 1px solid #1e293b; margin-top: 4px; }
+  .faq-q { padding: 16px 0; cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #94a3b8; font-size: 18px; transition: color 0.2s; }
+  .faq-q:hover { color: #cbd5e1; }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+  .faq.open .faq-a { max-height: 200px; }
+  .faq.open .faq-q { color: #f1f5f9; }
+  .faq-a-inner { padding-bottom: 16px; font-size: 17px; color: #94a3b8; line-height: 1.7; }
+
+  /* Nav button */
+  .next-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 16px; margin-top: 40px; background: #1e293b; border: 1px solid #334155; border-radius: 8px; color: #2dd4bf; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 16px; cursor: pointer; transition: all 0.2s; }
+  .next-btn:hover { background: #334155; border-color: #2dd4bf; }
+
+  /* Key hint */
+  .key-hint { position: fixed; bottom: 16px; right: 20px; font-size: 13px; color: #64748b; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .key-hint kbd { background: #1e293b; border: 1px solid #334155; border-radius: 3px; padding: 2px 6px; }
+
+  /* Stack layers */
+  .stack-toggle { display: flex; gap: 2px; margin: 24px 0 32px; background: #1e293b; border-radius: 8px; overflow: hidden; border: 1px solid #334155; }
+  .stack-toggle-btn { flex: 1; padding: 14px 16px; background: none; border: none; color: #94a3b8; font-family: inherit; font-size: 15px; cursor: pointer; transition: all 0.2s; text-align: center; }
+  .stack-toggle-btn.active { background: #334155; color: #2dd4bf; }
+  .stack-toggle-btn:hover:not(.active) { color: #cbd5e1; }
+
+  .stack-container { position: relative; }
+  .stack-layer { display: flex; align-items: stretch; margin-bottom: 4px; border-radius: 8px; overflow: hidden; transition: all 0.3s; cursor: pointer; border: 1px solid transparent; }
+  .stack-layer:hover { border-color: #334155; }
+  .stack-layer.expanded { border-color: #475569; }
+  .stack-label { width: 170px; padding: 14px 16px; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px; flex-shrink: 0; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .stack-solo { flex: 1; padding: 12px 16px; font-size: 15px; color: #94a3b8; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; transition: all 0.3s; }
+  .stack-enterprise { flex: 1; padding: 12px 16px; font-size: 15px; color: #94a3b8; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; border-left: 1px solid #1e293b; transition: all 0.3s; }
+  .stack-chip { padding: 5px 12px; border-radius: 4px; font-size: 14px; white-space: nowrap; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .chip-tool { background: rgba(96,165,250,0.1); color: #60a5fa; }
+  .chip-new { background: rgba(45,212,191,0.1); color: #2dd4bf; }
+  .chip-bloat { background: rgba(239,68,68,0.1); color: #ef4444; }
+  .chip-warn { background: rgba(245,158,11,0.1); color: #f59e0b; }
+
+  .stack-detail { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+  .stack-layer.expanded .stack-detail { max-height: 200px; }
+  .stack-detail-inner { padding: 12px 16px 16px; font-size: 16px; color: #94a3b8; line-height: 1.6; }
+
+  .complexity-meter { margin: 32px 0; }
+  .cm-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .cm-label { width: 110px; font-size: 16px; color: #94a3b8; text-align: right; }
+  .cm-bar-wrap { flex: 1; height: 24px; background: #1e293b; border-radius: 4px; overflow: hidden; position: relative; }
+  .cm-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+  .cm-val { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); font-size: 14px; color: #94a3b8; font-family: 'SF Mono', 'Fira Code', monospace; }
+
+  @media print {
+    nav, .key-hint, .demo-btn, .next-btn { display: none; }
+    .section { display: block !important; page-break-before: always; padding-top: 24px; min-height: auto; }
+    body { background: #fff; color: #111; }
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <div class="nav-prompt">~/shape-the-field $</div>
+    <button class="nav-btn active" onclick="go('opening')">intro</button>
+    <button class="nav-btn" onclick="go('act1')">early</button>
+    <button class="nav-btn" onclick="go('stack')">the-stack</button>
+    <button class="nav-btn" onclick="go('demo')">demo</button>
+    <button class="nav-btn" onclick="go('act2')">evolution</button>
+    <button class="nav-btn" onclick="go('manager')">manager-os</button>
+    <button class="nav-btn" onclick="go('assess')">assess</button>
+    <button class="nav-btn" onclick="go('act3')">predictions</button>
+    <button class="nav-btn" onclick="go('close')">close</button>
+    <div class="nav-right">May 9, 2026 &middot; CPO Council &middot; Aught Hour</div>
+  </div>
+</nav>
+
+<!-- ============ OPENING ============ -->
+<div id="opening" class="section active">
+  <div style="padding-top: 80px;">
+    <h3>Shape the Field</h3>
+    <h1>AI Agents<br>in <span class="accent">Product</span></h1>
+    <p class="subtitle">Early use cases. How thinking evolved. What's next.</p>
+  </div>
+
+  <div class="term">
+    <div class="term-bar"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><div class="term-title">co-builder</div></div>
+    <div class="term-body">
+      <div><span class="prompt">$ </span><span class="cmd">whoami</span></div>
+      <div class="out">Tenni Theurer. PM who's been running AI agents as an actual operating system.</div>
+      <div class="out">1 year. 8 projects. 250+ sessions. Startups, advisory, enterprise.</div>
+      <div class="out">Not experimenting. <span class="good">Operating.</span></div>
+      <div style="margin-top:12px;"><span class="prompt">$ </span><span class="cmd">cat approach.md</span></div>
+      <div class="out">Built the whole thing with a <span class="hl">product manager's lens</span>.</div>
+      <div class="out">Backlogs. Feedback loops. Interaction contracts. Value checks.</div>
+      <div class="out">That framing turned out to matter more than the AI itself.</div>
+    </div>
+  </div>
+
+  <div class="journey" id="shapeJourney">
+    <div class="journey-node lit" onclick="showJourneyDetail(0)">
+      <div class="journey-dot">1</div>
+      <div class="j-label">Capture</div>
+      <div class="j-sub">Week 1</div>
+    </div>
+    <div class="journey-node" onclick="showJourneyDetail(1)">
+      <div class="journey-dot">2</div>
+      <div class="j-label">Automate</div>
+      <div class="j-sub">Week 2</div>
+    </div>
+    <div class="journey-node" onclick="showJourneyDetail(2)">
+      <div class="journey-dot">3</div>
+      <div class="j-label">Leverage</div>
+      <div class="j-sub">Week 3</div>
+    </div>
+    <div class="journey-node" onclick="showJourneyDetail(3)">
+      <div class="journey-dot">4</div>
+      <div class="j-label">Share</div>
+      <div class="j-sub">What's next</div>
+    </div>
+  </div>
+  <div class="journey-detail" id="journeyDetail"></div>
+
+  <button class="next-btn" onclick="go('act1')">Next: Early use cases &rarr;</button>
+</div>
+
+<!-- ============ ACT 1 ============ -->
+<div id="act1" class="section">
+  <h3>Act 1</h3>
+  <h1>Early Use Cases</h1>
+  <p class="subtitle">The solo builder phase</p>
+
+  <div class="term">
+    <div class="term-bar"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><div class="term-title">where-everyone-starts</div></div>
+    <div class="term-body">
+      <div><span class="prompt">$ </span><span class="cmd">describe --phase=1</span></div>
+      <div class="out">Task automation. Auto-bookers, calendar sync, receipt scanners.</div>
+      <div class="out">The agent does what a human would do, just faster.</div>
+      <div class="out"><span class="warn">This is where most orgs are right now.</span></div>
+    </div>
+  </div>
+
+  <h2>Then you build for real businesses</h2>
+
+  <div class="term">
+    <div class="term-bar"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><div class="term-title">urban-farming-startup</div></div>
+    <div class="term-body">
+      <div><span class="prompt">$ </span><span class="cmd">ls agents/</span></div>
+      <div class="out"><span class="hl">email-pipeline/</span>      Watches 5+ team members, classifies, ingests into 200+ doc KB</div>
+      <div class="out"><span class="hl">data-room-agent/</span>     One-line email -> Google Doc edits -> deck upload -> confirmation</div>
+      <div class="out"><span class="hl">financial-models/</span>    3 generations, 4 vendor comparisons, operator P&Ls for SBA</div>
+      <div class="out"><span class="hl">operator-app/</span>        Voice note feedback -> prompts -> SQL migrations -> onboarding</div>
+      <div class="out"><span class="hl">pm-agent/</span>            Runs every 6h. Reads all state. Writes reports. <span class="warn">Pushes back.</span></div>
+    </div>
+  </div>
+
+  <div class="term">
+    <div class="term-bar"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><div class="term-title">home-resilience-advisory</div></div>
+    <div class="term-body">
+      <div><span class="prompt">$ </span><span class="cmd">describe evaluator</span></div>
+      <div class="out">Vision-based agent reviews roofing inspection photos for compliance.</div>
+      <div class="out">Key unlock: full photo sets, not samples.</div>
+      <div class="out">Caught wrong-property photos <span class="err">85 miles away</span>. Signer mismatches.</div>
+      <div class="out">29-case batch. Correctly differentiates approved / held / incomplete.</div>
+      <div class="out"><span class="good">Real product heading to production.</span></div>
+    </div>
+  </div>
+
+  <div class="bigquote">
+    I approached the agent the way a <strong>PM approaches a product</strong>. What's the user need? What's the feedback loop? Where does the system break? What's the <em>minimum that delivers value</em>?
+  </div>
+
+  <div class="term">
+    <div class="term-bar"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><div class="term-title">turning-point</div></div>
+    <div class="term-body">
+      <div><span class="prompt">$ </span><span class="cmd">diff session-001 session-254</span></div>
+      <div class="out">+ persistent memory loads every session</div>
+      <div class="out">+ task system the agent reads AND writes to</div>
+      <div class="out">+ PM layer: every task gets a <span class="hl">value check</span></div>
+      <div class="out">+   - what artifact was produced?</div>
+      <div class="out">+   - what decision was made?</div>
+      <div class="out">+   - what metric moved?</div>
+      <div class="out">+ tasks with no tangible output get <span class="warn">flagged</span></div>
+      <div style="margin-top:8px;" class="out"><span class="good">The agent stopped being a tool I use</span></div>
+      <div class="out"><span class="good">and became a system I work inside.</span></div>
+    </div>
+  </div>
+
+  <button class="next-btn" onclick="go('stack')">Next: The tech stack &rarr;</button>
+</div>
+
+<!-- ============ STACK ============ -->
+<div id="stack" class="section">
+  <h3>Under the Hood</h3>
+  <h1>The <span class="accent">Stack</span></h1>
+  <p class="subtitle">Same layers, different scale. Click each layer to see what's inside.</p>
+
+  <div class="stack-toggle">
+    <button class="stack-toggle-btn active" onclick="setStackMode('solo', this)">Solo / Startup</button>
+    <button class="stack-toggle-btn" onclick="setStackMode('enterprise', this)">Enterprise</button>
+    <button class="stack-toggle-btn" onclick="setStackMode('bloat', this)">Where it bloats</button>
+  </div>
+
+  <div class="stack-container" id="stackContainer">
+    <div class="stack-layer" onclick="this.classList.toggle('expanded')" style="background: linear-gradient(90deg, rgba(96,165,250,0.06), transparent);">
+      <div class="stack-label" style="color:#60a5fa;">Model Layer</div>
+      <div class="stack-solo" id="sl-model"></div>
+      <div class="stack-detail"><div class="stack-detail-inner" id="sd-model"></div></div>
+    </div>
+    <div class="stack-layer" onclick="this.classList.toggle('expanded')" style="background: linear-gradient(90deg, rgba(167,139,250,0.06), transparent);">
+      <div class="stack-label" style="color:#a78bfa;">Memory</div>
+      <div class="stack-solo" id="sl-memory"></div>
+      <div class="stack-detail"><div class="stack-detail-inner" id="sd-memory"></div></div>
+    </div>
+    <div class="stack-layer" onclick="this.classList.toggle('expanded')" style="background: linear-gradient(90deg, rgba(52,211,153,0.06), transparent);">
+      <div class="stack-label" style="color:#2dd4bf;">Tools / MCPs</div>
+      <div class="stack-solo" id="sl-tools"></div>
+      <div class="stack-detail"><div class="stack-detail-inner" id="sd-tools"></div></div>
+    </div>
+    <div class="stack-layer" onclick="this.classList.toggle('expanded')" style="background: linear-gradient(90deg, rgba(245,158,11,0.06), transparent);">
+      <div class="stack-label" style="color:#f59e0b;">Skills</div>
+      <div class="stack-solo" id="sl-skills"></div>
+      <div class="stack-detail"><div class="stack-detail-inner" id="sd-skills"></div></div>
+    </div>
+    <div class="stack-layer" onclick="this.classList.toggle('expanded')" style="background: linear-gradient(90deg, rgba(236,72,153,0.06), transparent);">
+      <div class="stack-label" style="color:#ec4899;">Automations</div>
+      <div class="stack-solo" id="sl-auto"></div>
+      <div class="stack-detail"><div class="stack-detail-inner" id="sd-auto"></div></div>
+    </div>
+    <div class="stack-layer" onclick="this.classList.toggle('expanded')" style="background: linear-gradient(90deg, rgba(239,68,68,0.06), transparent);">
+      <div class="stack-label" style="color:#ef4444;">Outputs</div>
+      <div class="stack-solo" id="sl-outputs"></div>
+      <div class="stack-detail"><div class="stack-detail-inner" id="sd-outputs"></div></div>
+    </div>
+    <div class="stack-layer" onclick="this.classList.toggle('expanded')" style="background: linear-gradient(90deg, rgba(255,255,255,0.03), transparent);">
+      <div class="stack-label" style="color:#f1f5f9;">The Human</div>
+      <div class="stack-solo" id="sl-human"></div>
+      <div class="stack-detail"><div class="stack-detail-inner" id="sd-human"></div></div>
+    </div>
+  </div>
+
+  <div class="complexity-meter" id="complexityMeter" style="margin-top:40px;">
+    <h3 style="margin-bottom:20px;">The complexity tension</h3>
+    <div class="cm-row">
+      <div class="cm-label">Capability</div>
+      <div class="cm-bar-wrap"><div class="cm-bar" id="cmCap" style="width:0%;background:linear-gradient(90deg,#2dd4bf,#60a5fa);"></div><div class="cm-val" id="cmCapVal"></div></div>
+    </div>
+    <div class="cm-row">
+      <div class="cm-label">Complexity</div>
+      <div class="cm-bar-wrap"><div class="cm-bar" id="cmComp" style="width:0%;background:linear-gradient(90deg,#f59e0b,#ef4444);"></div><div class="cm-val" id="cmCompVal"></div></div>
+    </div>
+    <div class="cm-row">
+      <div class="cm-label">Human load</div>
+      <div class="cm-bar-wrap"><div class="cm-bar" id="cmHuman" style="width:0%;background:linear-gradient(90deg,#a78bfa,#ec4899);"></div><div class="cm-val" id="cmHumanVal"></div></div>
+    </div>
+  </div>
+
+  <div class="bigquote" style="margin-top:32px;">
+    Each layer makes the system <strong>more capable</strong> but also <strong>more complex</strong>. The human - me - has <em>limited memory and computing power</em>. So every layer needs to make my interface <strong>simpler</strong>, not just the system more powerful. I become the evaluator, not the operator. The system proposes; I judge.
+  </div>
+
+  <button class="next-btn" onclick="go('demo')">Next: See it in action &rarr;</button>
+</div>
+
+<!-- ============ DEMO ============ -->
+<div id="demo" class="section">
+  <h3>Live Simulation</h3>
+  <h1>Agent in <span class="accent">Action</span></h1>
+  <p class="subtitle">What a morning triage actually looks like</p>
+
+  <div class="demo-container">
+    <div class="term">
+      <div class="term-bar"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><div class="term-title">co-builder - morning triage</div></div>
+      <div class="term-body" id="demoBody">
+        <div><span class="prompt">$ </span><span class="cmd" id="demoCmdLine">_</span></div>
+      </div>
+    </div>
+    <button class="demo-btn" id="demoBtn" onclick="runDemo()">
+      <span>Run triage</span> <span class="key">Enter</span>
+    </button>
+  </div>
+
+  <div id="demoInsight" style="display:none; margin-top:32px;">
+    <div class="bigquote">
+      That whole sequence took <strong>45 seconds</strong>. Without the agent, it's <strong>45 minutes</strong> of context-switching across 6 tools. <em>5-10x compression on inputs.</em> But the judgment calls - what to escalate, what to draft, what to defer - that's still you.
+    </div>
+  </div>
+
+  <button class="next-btn" onclick="go('act2')">Next: How thinking evolved &rarr;</button>
+</div>
+
+<!-- ============ ACT 2 ============ -->
+<div id="act2" class="section">
+  <h3>Act 2</h3>
+  <h1>What Changed</h1>
+  <p class="subtitle">From solo OS to manager OS</p>
+
+  <p>The pattern survived the transition to enterprise. The implementation had to be completely rewritten. <strong>Three weeks to get it load-bearing.</strong></p>
+
+  <div class="journey" id="weekJourney">
+    <div class="journey-node lit" onclick="showWeekDetail(0)">
+      <div class="journey-dot" style="font-size:16px;">W1</div>
+      <div class="j-label">Bootstrap</div>
+      <div class="j-sub">Trust-building</div>
+    </div>
+    <div class="journey-node" onclick="showWeekDetail(1)">
+      <div class="journey-dot" style="font-size:16px;">W2</div>
+      <div class="j-label">OS Overhaul</div>
+      <div class="j-sub">Real work</div>
+    </div>
+    <div class="journey-node" onclick="showWeekDetail(2)">
+      <div class="journey-dot" style="font-size:16px;">W3</div>
+      <div class="j-label">Leverage</div>
+      <div class="j-sub">Load-bearing</div>
+    </div>
+  </div>
+  <div class="journey-detail show" id="weekDetail">
+    <div class="term-body">
+      <div class="out">Click each week above to see the progression.</div>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;">
+    <h2>The honest version</h2>
+    <div class="compare">
+      <div class="compare-col">
+        <h3 style="color:#2dd4bf; margin-top:0;">What works</h3>
+        <div class="compare-item"><div class="ci-title">The handoff pattern</div><div class="ci-desc">AI prepares; human reviews and sends. Never delegate the send button.</div></div>
+        <div class="compare-item"><div class="ci-title">Privacy as structure</div><div class="ci-desc">Two-repo split makes leaks structurally impossible.</div></div>
+        <div class="compare-item"><div class="ci-title">Investigation before draft</div><div class="ci-desc">Replies grounded in real history, not generic AI tone.</div></div>
+        <div class="compare-item"><div class="ci-title">Curated > comprehensive</div><div class="ci-desc">A 5-observation synthesis lands. 20 pages doesn't.</div></div>
+        <div class="compare-item"><div class="ci-title">Always-on enrichment</div><div class="ci-desc">Work flows back into the right files. Memory compounds.</div></div>
+      </div>
+      <div class="compare-col">
+        <h3 style="color:#f59e0b; margin-top:0;">Where it breaks</h3>
+        <div class="compare-item"><div class="ci-title">Signal-to-noise</div><div class="ci-desc">First version of any pipeline is too noisy. Needs allowlist pass.</div></div>
+        <div class="compare-item"><div class="ci-title">Tooling fragility</div><div class="ci-desc">MCP servers drop. Auth walls appear constantly.</div></div>
+        <div class="compare-item"><div class="ci-title">The "drafted vs sent" gap</div><div class="ci-desc">AI surfaces what's owed. Can't make you close the loop.</div></div>
+        <div class="compare-item"><div class="ci-title">Judgment doesn't scale</div><div class="ci-desc">5-10x on inputs. 2-3x on leverage. That's the ceiling.</div></div>
+        <div class="compare-item"><div class="ci-title">Single-user shape</div><div class="ci-desc">A teammate can't fork without rebuilding their own layer.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="next-btn" onclick="go('manager')">Next: The Manager OS &rarr;</button>
+</div>
+
+<!-- ============ MANAGER OS ============ -->
+<div id="manager" class="section">
+  <h3>The System</h3>
+  <h1>The Manager <span class="accent">OS</span></h1>
+  <p class="subtitle">8 use cases. Built with PM discipline.</p>
+
+  <p>Not a chatbot. A manager OS. Two repos: one shareable, one private. AI handles inputs and drafts; <strong>the human owns judgment and the send button.</strong></p>
+
+  <div class="term" style="margin: 32px 0;">
+    <div class="term-bar"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><div class="term-title">manager-os --list-capabilities</div></div>
+    <div class="term-body" id="osListBody" style="min-height:auto;">
+      <div><span class="prompt">$ </span><span class="cmd">list --capabilities</span></div>
+      <div id="osItems"></div>
+      <div id="osPromptLine" style="display:none;margin-top:12px;"><span class="prompt">$ </span><span class="cmd">_</span></div>
+    </div>
+  </div>
+  <button class="demo-btn" id="osBtn" onclick="runOsList()">
+    <span>Load capabilities</span> <span class="key">Enter</span>
+  </button>
+
+  <div id="osInsight" style="display:none;">
+    <h2>What this changes for PMs</h2>
+    <div class="bigquote">
+      The PM who builds this system <strong>changes what they're good at</strong>. They show up with synthesis, not cold. They close loops they used to drop. They draft with full history.<br><br>
+      The skill that matters isn't prompt engineering - it's <em>system design</em>.
+    </div>
+  </div>
+
+  <button class="next-btn" onclick="go('assess')">Next: Where are you? &rarr;</button>
+</div>
+
+<!-- ============ SELF-ASSESSMENT ============ -->
+<div id="assess" class="section">
+  <h3>Interactive</h3>
+  <h1>Where Are <span class="accent">You</span>?</h1>
+  <p class="subtitle">Which of these are still manual in your org?</p>
+
+  <div class="radar-wrap">
+    <canvas id="radarCanvas" class="radar-canvas" width="320" height="320"></canvas>
+    <div class="radar-legend">
+      <div class="radar-item" onclick="toggleRadar(this, 0)"><div class="ri-check">&#10003;</div><div class="ri-label">Daily intelligence triage</div></div>
+      <div class="radar-item" onclick="toggleRadar(this, 1)"><div class="ri-check">&#10003;</div><div class="ri-label">Meeting prep & capture</div></div>
+      <div class="radar-item" onclick="toggleRadar(this, 2)"><div class="ri-check">&#10003;</div><div class="ri-label">Drafting with context</div></div>
+      <div class="radar-item" onclick="toggleRadar(this, 3)"><div class="ri-check">&#10003;</div><div class="ri-label">People intelligence</div></div>
+      <div class="radar-item" onclick="toggleRadar(this, 4)"><div class="ri-check">&#10003;</div><div class="ri-label">Knowledge base</div></div>
+      <div class="radar-item" onclick="toggleRadar(this, 5)"><div class="ri-check">&#10003;</div><div class="ri-label">Strategic synthesis</div></div>
+      <div class="radar-item" onclick="toggleRadar(this, 6)"><div class="ri-check">&#10003;</div><div class="ri-label">Backlog & follow-through</div></div>
+      <div class="radar-item" onclick="toggleRadar(this, 7)"><div class="ri-check">&#10003;</div><div class="ri-label">Operational hygiene</div></div>
+
+      <div class="radar-score">
+        <div class="score-num" id="radarNum">0/8</div>
+        <div class="score-label">manual processes identified</div>
+        <div class="score-msg" id="radarMsg">Check the ones your PMs still do manually.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bigquote" style="margin-top:20px;">
+    Every checked box is an <em>agent opportunity</em>. The question isn't whether to automate them - it's <strong>what order</strong>, and <strong>who designs the system</strong>.
+  </div>
+
+  <button class="next-btn" onclick="go('act3')">Next: Where this goes &rarr;</button>
+</div>
+
+<!-- ============ ACT 3 ============ -->
+<div id="act3" class="section">
+  <h3>Act 3</h3>
+  <h1>12 Months <span class="accent">Out</span></h1>
+  <p class="subtitle">Four predictions grounded in 250+ sessions of real usage</p>
+
+  <div class="pred" onclick="this.classList.toggle('open')">
+    <div class="pred-head">
+      <div class="pred-icon">&#128274;</div>
+      <div class="pred-head-text">
+        <div class="pred-num">Prediction 1</div>
+        <div class="pred-title">Memory becomes the moat, not the model</div>
+      </div>
+      <div class="pred-toggle">+</div>
+    </div>
+    <div class="pred-reveal"><div class="pred-reveal-inner">
+      <p>Proved this twice - once solo (254 sessions of accumulated context), once at enterprise scale. Every product org will have access to the same foundation models. The differentiation is what your agent knows about <em>this user, this workflow, this org</em>.</p>
+      <div class="pred-cpo"><div class="cpo-label">CPO Implication</div><p>Your agent strategy should start with "what's the memory architecture?" not "which model?"</p></div>
+    </div></div>
+  </div>
+
+  <div class="pred" onclick="this.classList.toggle('open')">
+    <div class="pred-head">
+      <div class="pred-icon">&#9881;</div>
+      <div class="pred-head-text">
+        <div class="pred-num">Prediction 2</div>
+        <div class="pred-title">The Manager OS is the first real agent product category</div>
+      </div>
+      <div class="pred-toggle">+</div>
+    </div>
+    <div class="pred-reveal"><div class="pred-reveal-inner">
+      <p>Not "chat with your data." Not "autocomplete in your IDE." A system that does daily triage, preps you for meetings, drafts in your voice, tracks follow-through, and maintains a running model of your people and priorities. I built it by hand. It works. Someone will productize it.</p>
+      <div class="pred-cpo"><div class="cpo-label">CPO Implication</div><p>If you're building agent products, look at what managers actually do all day. That's the TAM, not developer productivity.</p></div>
+    </div></div>
+  </div>
+
+  <div class="pred" onclick="this.classList.toggle('open')">
+    <div class="pred-head">
+      <div class="pred-icon">&#9650;</div>
+      <div class="pred-head-text">
+        <div class="pred-num">Prediction 3</div>
+        <div class="pred-title">The ceiling is judgment, not automation</div>
+      </div>
+      <div class="pred-toggle">+</div>
+    </div>
+    <div class="pred-reveal"><div class="pred-reveal-inner">
+      <p><strong style="color:#f1f5f9;font-size:20px;">5-10x</strong> on inputs and drafts. <strong style="color:#f1f5f9;font-size:20px;">2-3x</strong> on actual leverage. That's the honest number. The compression is real. The thinking still requires you.</p>
+      <div class="pred-cpo"><div class="cpo-label">CPO Implication</div><p>Design for the 2-3x, not the 5-10x. Build your products around the handoff, not the automation.</p></div>
+    </div></div>
+  </div>
+
+  <div class="pred" onclick="this.classList.toggle('open')">
+    <div class="pred-head">
+      <div class="pred-icon">&#9889;</div>
+      <div class="pred-head-text">
+        <div class="pred-num">Prediction 4</div>
+        <div class="pred-title">Agent-native PMs will create an uncomfortable performance gap</div>
+      </div>
+      <div class="pred-toggle">+</div>
+    </div>
+    <div class="pred-reveal"><div class="pred-reveal-inner">
+      <p>The PMs who build agent systems around themselves will operate at a visibly different level. This isn't a tool adoption curve. It's a skill gap. The difference between a PM who <em>uses</em> agents and a PM who <em>builds agent systems</em> is the difference between someone who uses Excel and someone who builds models.</p>
+      <div class="pred-cpo"><div class="cpo-label">CPO Implication</div><p>You need to decide if this is something you encourage, require, or let happen organically. In 12 months, you'll be able to tell which PMs built agent systems and which didn't - just from the quality of their work.</p></div>
+    </div></div>
+  </div>
+
+  <button class="next-btn" onclick="go('close')">Next: Close &rarr;</button>
+</div>
+
+<!-- ============ CLOSE ============ -->
+<div id="close" class="section">
+  <h3>Close</h3>
+  <h1>The <span class="accent">Shape</span></h1>
+
+  <div class="journey" style="margin:48px 0;" id="finalJourney">
+    <div class="journey-node lit">
+      <div class="journey-dot" style="border-color:#2dd4bf;">1</div>
+      <div class="j-label">Capture</div>
+      <div class="j-sub">Watch, ingest, summarize</div>
+    </div>
+    <div class="journey-node lit">
+      <div class="journey-dot" style="border-color:#60a5fa;">2</div>
+      <div class="j-label">Automate</div>
+      <div class="j-sub">Pipelines, skills, agents</div>
+    </div>
+    <div class="journey-node lit">
+      <div class="journey-dot" style="border-color:#a78bfa;">3</div>
+      <div class="j-label">Leverage</div>
+      <div class="j-sub">Load-bearing, daily ops</div>
+    </div>
+    <div class="journey-node lit">
+      <div class="journey-dot" style="border-color:#f59e0b;">4</div>
+      <div class="j-label">Share</div>
+      <div class="j-sub">Team infrastructure</div>
+    </div>
+  </div>
+
+  <div class="bigquote" style="font-size:22px;">
+    Every CPO in this room can start <strong>week 1 tomorrow</strong>. The question isn't whether agents work in product leadership - they do. The question is whether you're willing to invest the trust-building to get to the point where it's <em>load-bearing</em>.
+  </div>
+
+  <div class="term" style="margin:40px 0;">
+    <div class="term-bar"><div class="term-dot r"></div><div class="term-dot y"></div><div class="term-dot g"></div><div class="term-title">takeaway</div></div>
+    <div class="term-body">
+      <div class="out">The hard part isn't the AI.</div>
+      <div class="out">It's designing the system around the AI -</div>
+      <div class="out">the memory, the contracts, the feedback loops,</div>
+      <div class="out">the human-agent boundaries.</div>
+      <div style="margin-top:12px;"><span class="good">Building great agent systems is product work.</span></div>
+      <div><span class="good">It's PM work.</span></div>
+      <div><span class="good">The people best equipped to lead this transition</span></div>
+      <div><span class="good">are already in your org.</span></div>
+    </div>
+  </div>
+
+  <h2 style="margin-top:48px;">Questions</h2>
+  <div class="faq" onclick="this.classList.toggle('open')">
+    <div class="faq-q">"What about hallucination / trust?"<span style="color:#64748b">&rsaquo;</span></div>
+    <div class="faq-a"><div class="faq-a-inner">The handoff pattern handles this. AI never sends - it drafts. Investigation before draft means replies are grounded in real thread history. Trust is a design problem, not a model problem.</div></div>
+  </div>
+  <div class="faq" onclick="this.classList.toggle('open')">
+    <div class="faq-q">"Does it scale beyond one person?"<span style="color:#64748b">&rsaquo;</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Not yet - that's the honest answer. The patterns are transferable but the infrastructure isn't forkable. Someone will productize this.</div></div>
+  </div>
+  <div class="faq" onclick="this.classList.toggle('open')">
+    <div class="faq-q">"What model do you use?"<span style="color:#64748b">&rsaquo;</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Claude (Opus), but that's the least interesting part. The value is in the memory architecture, the interaction contracts, and the workflow design.</div></div>
+  </div>
+  <div class="faq" onclick="this.classList.toggle('open')">
+    <div class="faq-q">"How do you handle sensitive data?"<span style="color:#64748b">&rsaquo;</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Privacy as structure: two-repo split, PII guards on every commit, session memory rotation. Make leaks structurally impossible rather than relying on vigilance.</div></div>
+  </div>
+  <div class="faq" onclick="this.classList.toggle('open')">
+    <div class="faq-q">"What should I try first?"<span style="color:#64748b">&rsaquo;</span></div>
+    <div class="faq-a"><div class="faq-a-inner">Daily intelligence triage. One sweep of everything that came in overnight. Lowest risk, highest immediate value, builds the trust that unlocks everything else.</div></div>
+  </div>
+</div>
+
+
+<script>
+/* Navigation */
+const secs = ['opening','act1','stack','demo','act2','manager','assess','act3','close'];
+let cur = 0;
+function go(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  cur = secs.indexOf(id);
+  document.querySelectorAll('.nav-btn')[cur].classList.add('active');
+  window.scrollTo(0,0);
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') { e.preventDefault(); if (cur < secs.length-1) go(secs[cur+1]); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); if (cur > 0) go(secs[cur-1]); }
+});
+
+/* Journey detail */
+const journeyData = [
+  { title: 'Capture', body: '<span class="out">Watch, ingest, summarize. The agent observes your information flows and starts building context. Email, chat, calendar, docs - it captures but doesn\'t act. You\'re building trust.</span>' },
+  { title: 'Automate', body: '<span class="out">Pipelines emerge from repeated patterns. Meeting prep becomes a skill. Drafting with context becomes automatic. You stop telling the agent what to do and start telling it what to <span class="hl">watch for</span>.</span>' },
+  { title: 'Leverage', body: '<span class="out">The system becomes load-bearing. Daily ops run through it. Strategic synthesis comes from accumulated context, not from scratch. You\'re <span class="good">faster and better-informed</span> than anyone expects.</span>' },
+  { title: 'Share', body: '<span class="out">Extract transferable patterns. Separate personal context from reusable infrastructure. Build skills that any PM can invoke. Shift from "I\'m productive" to <span class="hl">"I\'m changing how the team operates."</span></span>' },
+];
+function showJourneyDetail(idx) {
+  document.querySelectorAll('#shapeJourney .journey-node').forEach((n,i) => { n.classList.toggle('lit', i <= idx); });
+  const d = document.getElementById('journeyDetail');
+  d.className = 'journey-detail';
+  d.innerHTML = '<div class="term-body">' + journeyData[idx].body + '</div>';
+  setTimeout(() => d.classList.add('show'), 10);
+}
+
+/* Week detail */
+const weekData = [
+  '<div><span class="prompt">week-1 $ </span><span class="cmd">status</span></div><div class="out">Setup. Basic triage. AI captures, doesn\'t really act.</div><div class="out">Learning the org\'s information flows. What\'s sensitive. What tools exist.</div><div class="out">The agent watches and captures. <span class="warn">Mostly trust-building.</span></div>',
+  '<div><span class="prompt">week-2 $ </span><span class="cmd">status</span></div><div class="out">Rewrote the system mid-week.</div><div class="out">AI started doing real work <span class="hl">through</span> the system, not just in it.</div><div class="out">First skills emerged from repeated patterns.</div><div class="out"><span class="warn">This is where most people break through or give up.</span></div>',
+  '<div><span class="prompt">week-3 $ </span><span class="cmd">status</span></div><div class="out">Load-bearing for daily ops and strategic synthesis.</div><div class="out">Started building infrastructure for <span class="good">other people to use</span>.</div><div class="out">Shareable skills: reusable templates that encode workflows, not tasks.</div><div class="out">The hard part: separating personal context from transferable infrastructure.</div>',
+];
+function showWeekDetail(idx) {
+  document.querySelectorAll('#weekJourney .journey-node').forEach((n,i) => { n.classList.toggle('lit', i <= idx); });
+  const d = document.getElementById('weekDetail');
+  d.className = 'journey-detail';
+  d.innerHTML = '<div class="term-body">' + weekData[idx] + '</div>';
+  setTimeout(() => d.classList.add('show'), 10);
+}
+
+/* Demo simulation */
+const demoLines = [
+  { delay: 300, html: '<span class="prompt">$ </span><span class="cmd">triage --morning</span>' },
+  { delay: 800, html: '<span class="out">Scanning email, Slack, calendar, shared files...</span>' },
+  { delay: 600, html: '<span class="out">Found: <span class="hl">14 emails</span>, <span class="hl">3 Slack threads</span>, <span class="hl">2 doc updates</span>, <span class="hl">4 calendar changes</span></span>' },
+  { delay: 400, html: '' },
+  { delay: 500, html: '<span class="out"><span class="warn">&#9679;</span> VP of Eng escalated infra cost review - needs your input by noon</span>' },
+  { delay: 400, html: '<span class="out"><span class="hl">&#9679;</span> PM lead shared Q3 roadmap draft - 3 items conflict with your team\'s commitments</span>' },
+  { delay: 400, html: '<span class="out"><span class="good">&#9679;</span> Design review moved to Thursday - calendar updated, prep doc regenerated</span>' },
+  { delay: 400, html: '<span class="out">  <span style="color:#777">&#9679;</span> 8 items triaged as FYI, filed to KB</span>' },
+  { delay: 400, html: '' },
+  { delay: 600, html: '<span class="prompt">$ </span><span class="cmd">draft --reply "infra cost review"</span>' },
+  { delay: 800, html: '<span class="out">Pulling thread history (6 messages, 2 attachments)...</span>' },
+  { delay: 500, html: '<span class="out">Cross-referencing with Q2 budget doc and last week\'s standup notes...</span>' },
+  { delay: 700, html: '<span class="out"><span class="good">Draft ready.</span> 4 sentences. Includes the two data points they\'re missing.</span>' },
+  { delay: 300, html: '<span class="out">Saved to drafts. <span class="warn">Waiting for your review before send.</span></span>' },
+  { delay: 400, html: '' },
+  { delay: 600, html: '<span class="prompt">$ </span><span class="cmd">backlog --check</span>' },
+  { delay: 500, html: '<span class="out"><span class="err">OVERDUE</span> Follow-up with platform team on API deprecation (3 days)</span>' },
+  { delay: 400, html: '<span class="out"><span class="warn">DUE TODAY</span> Share customer interview synthesis with design lead</span>' },
+  { delay: 400, html: '<span class="out"><span class="good">AUTO-RESOLVED</span> Waiting on legal review - approval landed in email overnight</span>' },
+  { delay: 400, html: '' },
+  { delay: 500, html: '<span class="out">Triage complete. <span class="hl">3 actions queued</span>, <span class="good">1 auto-resolved</span>, <span class="err">1 overdue flagged</span>.</span>' },
+];
+let demoRunning = false;
+function runDemo() {
+  if (demoRunning) return;
+  demoRunning = true;
+  document.getElementById('demoBtn').disabled = true;
+  const body = document.getElementById('demoBody');
+  body.innerHTML = '';
+  let i = 0;
+  let totalDelay = 0;
+  demoLines.forEach((line, idx) => {
+    totalDelay += line.delay;
+    setTimeout(() => {
+      if (line.html === '') {
+        body.appendChild(document.createElement('br'));
+      } else {
+        const div = document.createElement('div');
+        div.innerHTML = line.html;
+        div.style.opacity = '0';
+        div.style.transform = 'translateY(4px)';
+        div.style.transition = 'all 0.2s ease';
+        body.appendChild(div);
+        setTimeout(() => { div.style.opacity = '1'; div.style.transform = 'translateY(0)'; }, 30);
+      }
+      body.parentElement.scrollTop = body.scrollHeight;
+    }, totalDelay);
+  });
+  setTimeout(() => {
+    document.getElementById('demoInsight').style.display = 'block';
+    demoRunning = false;
+  }, totalDelay + 600);
+}
+
+/* OS capability list */
+const osCapabilities = [
+  { num: '01', name: 'daily-intelligence-triage', desc: 'One sweep of email, chat, calendar, transcripts, service health' },
+  { num: '02', name: 'meeting-prep-and-capture', desc: 'Auto-prep before, auto-capture after, action items reconcile' },
+  { num: '03', name: 'drafting-with-context', desc: 'Full thread history + KB + prior interactions, in your voice' },
+  { num: '04', name: 'people-intelligence', desc: 'Running profiles: what they own, care about, friction points' },
+  { num: '05', name: 'knowledge-base', desc: 'Humans curate inputs, AI structures the knowledge' },
+  { num: '06', name: 'strategic-synthesis', desc: 'Briefs and POV docs from accumulated context, not scratch' },
+  { num: '07', name: 'backlog-and-follow-through', desc: 'Unified store, auto-resolves on downstream evidence' },
+  { num: '08', name: 'operational-hygiene', desc: 'Privacy guards, nightly lint, session memory rotation' },
+];
+let osRunning = false;
+function runOsList() {
+  if (osRunning) return;
+  osRunning = true;
+  document.getElementById('osBtn').disabled = true;
+  const container = document.getElementById('osItems');
+  container.innerHTML = '';
+  osCapabilities.forEach((cap, idx) => {
+    setTimeout(() => {
+      const div = document.createElement('div');
+      div.innerHTML = '<span class="hl">' + cap.num + '</span>  <span class="cmd">' + cap.name + '</span>  <span class="out">' + cap.desc + '</span>';
+      div.style.opacity = '0'; div.style.transform = 'translateX(-8px)';
+      div.style.transition = 'all 0.25s ease';
+      container.appendChild(div);
+      setTimeout(() => { div.style.opacity = '1'; div.style.transform = 'translateX(0)'; }, 30);
+    }, idx * 250);
+  });
+  setTimeout(() => {
+    document.getElementById('osPromptLine').style.display = 'block';
+    document.getElementById('osInsight').style.display = 'block';
+    osRunning = false;
+  }, osCapabilities.length * 250 + 300);
+}
+
+/* Radar chart */
+const radarLabels = ['Triage','Meeting','Draft','People','KB','Synthesis','Backlog','Hygiene'];
+const radarState = [0,0,0,0,0,0,0,0];
+function toggleRadar(el, idx) {
+  el.classList.toggle('checked');
+  radarState[idx] = el.classList.contains('checked') ? 1 : 0;
+  drawRadar();
+  updateRadarScore();
+}
+function drawRadar() {
+  const c = document.getElementById('radarCanvas');
+  const ctx = c.getContext('2d');
+  const cx = 160, cy = 160, r = 120;
+  const n = 8;
+  ctx.clearRect(0, 0, 320, 320);
+
+  // Grid rings
+  for (let ring = 1; ring <= 3; ring++) {
+    ctx.beginPath();
+    for (let i = 0; i <= n; i++) {
+      const a = (Math.PI * 2 * i / n) - Math.PI / 2;
+      const rr = r * ring / 3;
+      const x = cx + rr * Math.cos(a);
+      const y = cy + rr * Math.sin(a);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Axis lines + labels
+  for (let i = 0; i < n; i++) {
+    const a = (Math.PI * 2 * i / n) - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
+    ctx.strokeStyle = '#151515';
+    ctx.stroke();
+    const lx = cx + (r + 18) * Math.cos(a);
+    const ly = cy + (r + 18) * Math.sin(a);
+    ctx.fillStyle = radarState[i] ? '#2dd4bf' : '#334155';
+    ctx.font = '11px -apple-system, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(radarLabels[i], lx, ly);
+  }
+
+  // Data polygon
+  ctx.beginPath();
+  for (let i = 0; i <= n; i++) {
+    const idx = i % n;
+    const a = (Math.PI * 2 * idx / n) - Math.PI / 2;
+    const val = radarState[idx] ? 0.85 : 0.15;
+    const x = cx + r * val * Math.cos(a);
+    const y = cy + r * val * Math.sin(a);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.fillStyle = 'rgba(52, 211, 153, 0.12)';
+  ctx.fill();
+  ctx.strokeStyle = '#2dd4bf';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Data dots
+  for (let i = 0; i < n; i++) {
+    const a = (Math.PI * 2 * i / n) - Math.PI / 2;
+    const val = radarState[i] ? 0.85 : 0.15;
+    const x = cx + r * val * Math.cos(a);
+    const y = cy + r * val * Math.sin(a);
+    ctx.beginPath();
+    ctx.arc(x, y, radarState[i] ? 5 : 3, 0, Math.PI * 2);
+    ctx.fillStyle = radarState[i] ? '#2dd4bf' : '#334155';
+    ctx.fill();
+  }
+}
+function updateRadarScore() {
+  const count = radarState.reduce((a,b) => a+b, 0);
+  document.getElementById('radarNum').textContent = count + '/8';
+  const msg = document.getElementById('radarMsg');
+  if (count === 0) msg.textContent = 'Check the ones your PMs still do manually.';
+  else if (count <= 2) msg.textContent = 'Early stages. The compound value kicks in when 4+ of these connect to the same memory layer.';
+  else if (count <= 5) msg.textContent = 'This is where most orgs are. Each checked box is hours of PM time an agent system could compress to minutes.';
+  else msg.textContent = 'High opportunity. Your PMs are spending most of their time on work agents can compress 5-10x. The 2-3x judgment leverage compounds on top.';
+}
+drawRadar();
+
+/* Stack visualization */
+const stackData = {
+  solo: {
+    model: { chips: ['Claude Opus','Sonnet (fallback)'], detail: 'Single model provider. Swap models per-task based on cost/quality tradeoff. No fine-tuning - prompt engineering + system design.' },
+    memory: { chips: ['CLAUDE.md','LOG.md','current.md','tasks/*.json','KB (ChromaDB)'], detail: 'Persistent memory in markdown files. Session logs, task state, strategic context, decision records. RAG over 200+ docs via local vector store.' },
+    tools: { chips: ['Gmail API','Drive API','Calendar','Supabase','MCP filesystem','MCP GitHub'], detail: '6 MCP servers connecting to Google Workspace, Supabase, filesystem, git. Each one is a new integration surface to maintain.' },
+    skills: { chips: ['triage','reply','recap','savestate','brainstorm','TDD','debugging'], detail: 'Reusable prompt templates that encode workflows. "Reply" pulls thread history + KB + voice. "Brainstorm" runs a structured design process.' },
+    auto: { chips: ['email pipeline','co-pilot (6h cron)','KB auto-ingest','mileage tracker','club booker'], detail: 'Launchd cron jobs running autonomously. Email classifier, PM agent, knowledge base ingestion, personal automations. 23 scripts total.' },
+    outputs: { chips: ['HTML drafts','Excel models','meeting briefs','task proposals','portfolio reports'], detail: 'Click-to-copy email drafts, financial models, strategic briefs, automated PM reports. Everything is an artifact, not a conversation.' },
+    human: { chips: ['evaluator','send button','judgment calls','prioritization'], detail: 'I review, approve, send. The system proposes. I never delegate the send button. Judgment is the bottleneck and that\'s correct.' },
+    cap: 65, comp: 35, hum: 40
+  },
+  enterprise: {
+    model: { chips: ['Claude Opus 4.6','Sonnet 4.6','+ internal models'], detail: 'Same model layer but now gated by IT policy, admin consent, token management. Model choice constrained by compliance, not just quality.' },
+    memory: { chips: ['CLAUDE.md (2 repos)','LOG.md','tasks/*.json','KB','Slack history','Notion/Confluence','shared wiki'], detail: 'Two-repo split: shareable + private. Memory now spans corporate knowledge (Notion, wikis, Slack threads). 10x the context surface. Privacy becomes structural.' },
+    tools: { chips: ['Gmail','Drive','Calendar','Slack','Notion','Linear','GitHub','Jira','Confluence','+ 3 internal MCPs'], detail: '8+ MCP servers. Auth walls everywhere - admin consent, token expiry, credential provider timeouts. Each new MCP is a new failure mode.' },
+    skills: { chips: ['triage','reply','recap','savestate','brainstorm','TDD','meeting-prep','people-intel','weekly-digest','team-brief','+ 12 custom'], detail: 'Skills multiply fast in enterprise. Meeting prep, people intelligence, weekly digests, team briefs. First skills you share with others become the infrastructure layer.' },
+    auto: { chips: ['email pipeline','co-pilot','KB ingest','Slack monitor','calendar sync','doc watcher','linter','PII guard','session cleanup'], detail: 'More automations, more coordination, more things that can break. Auth renewal alone is a recurring maintenance burden.' },
+    outputs: { chips: ['HTML drafts','briefs','meeting notes','people profiles','backlog updates','strategic synthesis','team artifacts'], detail: 'Outputs now include team-facing artifacts. Strategic synthesis that gets forwarded. Briefs that shape decisions. The stakes of quality go up.' },
+    human: { chips: ['evaluator','send button','judgment','prioritization','calibration','relationship work','teaching others'], detail: 'Same role but higher stakes. Now also teaching others the patterns, calibrating outputs for different audiences, managing the system itself. The system is more powerful but demands more from the evaluator.' },
+    cap: 90, comp: 70, hum: 55
+  },
+  bloat: {
+    model: { chips: ['<span class="chip-warn">token limits</span>','<span class="chip-warn">context overflow</span>','<span class="chip-bloat">rate limits</span>'], detail: 'Context windows fill faster with enterprise data. Rate limits hit during heavy triage. Token costs scale with memory size.' },
+    memory: { chips: ['<span class="chip-warn">stale context</span>','<span class="chip-bloat">conflicting sources</span>','<span class="chip-warn">memory rot</span>'], detail: 'More memory means more things that can be wrong. Old decisions referenced as current. Team wiki conflicts with your notes. Memory maintenance becomes its own job.' },
+    tools: { chips: ['<span class="chip-bloat">auth failures</span>','<span class="chip-bloat">MCP drops</span>','<span class="chip-warn">permission gaps</span>','<span class="chip-bloat">token expiry</span>'], detail: 'MCP servers drop mid-session. Admin consent flows break. Credential providers time out. Each integration is a new thing that fails at 2am or Monday morning.' },
+    skills: { chips: ['<span class="chip-warn">skill sprawl</span>','<span class="chip-warn">overlapping logic</span>','<span class="chip-bloat">version drift</span>'], detail: 'Too many skills with overlapping purpose. Which "draft" skill? The one from week 1 or the one you improved in week 3? Skills need pruning and consolidation.' },
+    auto: { chips: ['<span class="chip-bloat">noisy pipelines</span>','<span class="chip-bloat">false positives</span>','<span class="chip-warn">cron failures</span>','<span class="chip-warn">silent errors</span>'], detail: 'First version of any pipeline is too noisy. Allowlist tuning is ongoing. Cron jobs fail silently. You don\'t know something broke until the output is missing.' },
+    outputs: { chips: ['<span class="chip-warn">draft quality variance</span>','<span class="chip-bloat">wrong context pulled</span>','<span class="chip-warn">stale data in briefs</span>'], detail: 'Drafts sometimes pull wrong thread. Briefs reference outdated data. Quality is high on average but failures are high-stakes - a bad draft sent to leadership burns trust fast.' },
+    human: { chips: ['<span class="chip-bloat">system maintenance tax</span>','<span class="chip-bloat">evaluation fatigue</span>','<span class="chip-warn">trust calibration</span>'], detail: 'The more powerful the system, the more you need to evaluate. Every output needs a judgment call. Maintaining the system itself takes real time. The paradox: the system exists to save you time, but it also demands your time.' },
+    cap: 90, comp: 85, hum: 75
+  }
+};
+
+let currentStackMode = 'solo';
+function setStackMode(mode, btn) {
+  currentStackMode = mode;
+  document.querySelectorAll('.stack-toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.stack-layer').forEach(l => l.classList.remove('expanded'));
+  const layers = ['model','memory','tools','skills','auto','outputs','human'];
+  const d = stackData[mode];
+  layers.forEach(layer => {
+    const el = document.getElementById('sl-' + layer);
+    const det = document.getElementById('sd-' + layer);
+    const chips = d[layer].chips;
+    const chipClass = mode === 'bloat' ? '' : (mode === 'enterprise' ? 'chip-new' : 'chip-tool');
+    el.innerHTML = chips.map(c => {
+      if (c.includes('chip-')) return '<span class="stack-chip">' + c + '</span>';
+      return '<span class="stack-chip ' + chipClass + '">' + c + '</span>';
+    }).join('');
+    det.textContent = d[layer].detail;
+  });
+  // Animate complexity bars
+  setTimeout(() => {
+    document.getElementById('cmCap').style.width = d.cap + '%';
+    document.getElementById('cmCapVal').textContent = d.cap + '%';
+    document.getElementById('cmComp').style.width = d.comp + '%';
+    document.getElementById('cmCompVal').textContent = d.comp + '%';
+    document.getElementById('cmHuman').style.width = d.hum + '%';
+    document.getElementById('cmHumanVal').textContent = d.hum + '%';
+  }, 100);
+}
+// Initialize
+setStackMode('solo', document.querySelector('.stack-toggle-btn'));
+</script>
+
+<footer style="text-align: center; padding: 32px 24px; color: #475569; font-size: 13px; border-top: 1px solid #1e293b;">
+  &copy; 2026 <a href="https://aughthour.com" target="_blank" rel="noopener" style="color: #64748b; text-decoration: none; border-bottom: 1px solid #334155;">Aught Hour LLC</a>. All rights reserved.
+</footer>
+
+</body>
+</html>
