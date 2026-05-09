@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talks – Aught Hour</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .talks-list { margin-top: 3rem; }
+    .talk-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .talk-card:hover { border-color: rgba(255,255,255,0.2); }
+    .talk-card h3 { margin: 0 0 0.5rem; font-size: 1.4rem; }
+    .talk-card h3 a { color: #f1f5f9; text-decoration: none; border-bottom: 1px solid transparent; }
+    .talk-card h3 a:hover { border-bottom-color: #2dd4bf; }
+    .talk-meta { font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem; }
+    .talk-meta span + span::before { content: " · "; }
+    .talk-desc { color: #94a3b8; margin: 0; }
+    .talk-format { display: inline-block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 4px; background: rgba(45,212,191,0.1); color: #2dd4bf; margin-left: 8px; vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
+        <ul class="nav-links">
+          <li><a href="/#story">Story</a></li>
+          <li><a href="/#work">The Work</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/#proof">Experience</a></li>
+          <li><a href="/talks/">Talks</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-alt" style="padding-top: 120px;">
+    <div class="container">
+      <div class="offset-left">
+        <div class="vertical-label">Share</div>
+        <h2>Talks</h2>
+        <p class="large-text">Talks on AI agent systems, attribution, product strategy, and the future of building with AI.</p>
+      </div>
+
+      <div class="talks-list">
+
+        <div class="talk-card">
+          <h3><a href="/talks/2026-05-09-shape-the-field/">Shape the Field: AI Agents in Product</a><span class="talk-format">Interactive Deck</span></h3>
+          <div class="talk-meta">
+            <span>May 9, 2026</span>
+            <span>CPO Council</span>
+          </div>
+          <p class="talk-desc">Building great agent systems is product work. Covers early use cases, the evolution from solo to enterprise, the 8-use-case Manager OS, and four predictions for the next 12 months. Includes interactive self-assessment and triage simulation.</p>
+        </div>
+
+        <div class="talk-card">
+          <h3><a href="/talks/who-controls-the-story.pdf">Who Controls the Story?</a><span class="talk-format">PDF</span></h3>
+          <div class="talk-meta">
+            <span>April 2026</span>
+            <span>Bell AI Fellowship</span>
+          </div>
+          <p class="talk-desc">From clay tablets to AI - a briefing on content, attribution, and the economics of the agentic web. Covers media and technology, AI policy, and publishing economics.</p>
+        </div>
+
+        <div class="talk-card">
+          <h3><a href="/talks/the-attribution-problem-is-unsolved.pdf">The Attribution Problem Is Unsolved</a><span class="talk-format">PDF</span></h3>
+          <div class="talk-meta">
+            <span>April 2026</span>
+            <span>Bell AI Fellowship Workshop</span>
+          </div>
+          <p class="talk-desc">The attribution problem is the hinge the next decade turns on. 5,000 years of platform power grabs, the economics of AI licensing, and why attribution technology is the unsolved problem underneath everything.</p>
+        </div>
+
+        <div class="talk-card">
+          <h3><a href="/talks/claude-code-co-builder-workshop.pdf">Claude Code Co-Builder: Lesson and Workshop</a><span class="talk-format">PDF</span></h3>
+          <div class="talk-meta">
+            <span>April 2026</span>
+            <span>Bell AI Fellowship Workshop</span>
+          </div>
+          <p class="talk-desc">The AI progression from chat to co-builder to autonomous agents. A hands-on workshop on building with Claude Code as a co-builder - persistent memory, task systems, and agentic workflows.</p>
+        </div>
+
+        <div class="talk-card">
+          <h3><a href="/talks/bell-ai-fellowship-overview.pdf">Bell AI Fellowship</a><span class="talk-format">PDF</span></h3>
+          <div class="talk-meta">
+            <span>March 2026</span>
+            <span>Bell AI Fellowship</span>
+          </div>
+          <p class="talk-desc">Overview of the Bell AI Fellowship - a community built on the Learn, Do, Teach framework. How the fellowship grows through builders developing real AI skills, doing hands-on projects, and teaching others.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="#hero" class="footer-home">Back to Top</a>
+      <nav class="footer-links">
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </nav>
+      <div class="footer-meta">
+        &copy; <span id="year"></span> Aught Hour LLC. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
