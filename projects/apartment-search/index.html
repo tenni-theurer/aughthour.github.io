@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apartment Search - Orange CA</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f5f5; color: #222; padding: 20px;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  h1 { color: #1a1a2e; margin-bottom: 5px; font-size: 1.5em; }
+  .subtitle { color: #666; margin-bottom: 15px; font-size: 0.9em; }
+  .anchors {
+    display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .anchor {
+    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+    padding: 10px 15px; flex: 1; min-width: 200px;
+  }
+  .anchor .label { color: #c62828; font-weight: 600; font-size: 0.8em; text-transform: uppercase; }
+  .anchor .addr { color: #555; font-size: 0.85em; margin-top: 3px; }
+  .params {
+    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+    padding: 12px 15px; margin-bottom: 20px; font-size: 0.85em;
+  }
+  .params b { color: #c62828; }
+  .params span { margin-right: 20px; }
+  .filters {
+    margin-bottom: 15px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  }
+  .filters select, .filters input {
+    background: #fff; border: 1px solid #ccc; color: #333;
+    padding: 6px 10px; border-radius: 5px; font-size: 0.85em;
+  }
+  .filters label { font-size: 0.8em; color: #666; }
+  .score-legend {
+    display: flex; gap: 12px; margin-bottom: 10px; font-size: 0.8em; color: #666;
+  }
+  .score-legend .dot {
+    width: 12px; height: 12px; border-radius: 50%; display: inline-block; margin-right: 4px; vertical-align: middle;
+  }
+  table {
+    width: 100%; border-collapse: collapse; font-size: 0.82em;
+  }
+  th {
+    background: #37474f; color: #fff; padding: 8px 6px; text-align: left;
+    cursor: pointer; position: sticky; top: 0; white-space: nowrap;
+    user-select: none;
+  }
+  th:hover { background: #546e7a; }
+  th.sort-asc::after { content: ' \u25B2'; }
+  th.sort-desc::after { content: ' \u25BC'; }
+  td {
+    padding: 6px; border-bottom: 1px solid #e0e0e0;
+    vertical-align: top;
+  }
+  tr:hover { background: #e8eaf6; }
+  tr:nth-child(even) { background: #fafafa; }
+  tr:nth-child(even):hover { background: #e8eaf6; }
+  tr.eliminated { opacity: 0.4; }
+  tr.eliminated td:not(.score-cell):not(.status-cell) { text-decoration: line-through; }
+  .cost { text-align: right; font-variant-numeric: tabular-nums; }
+  .dist { text-align: center; }
+  .score-cell {
+    text-align: center; font-weight: 700; font-size: 1.1em;
+  }
+  .score-a { color: #2e7d32; }
+  .score-b { color: #388e3c; }
+  .score-c { color: #f57f17; }
+  .score-d { color: #e65100; }
+  .score-f { color: #c62828; }
+  .tag {
+    display: inline-block; padding: 2px 6px; border-radius: 3px;
+    font-size: 0.75em; margin: 1px;
+  }
+  .tag-house { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+  .tag-apartment { background: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; }
+  .tag-condo { background: #f3e5f5; color: #7b1fa2; border: 1px solid #ce93d8; }
+  .tag-townhouse { background: #fff3e0; color: #e65100; border: 1px solid #ffcc80; }
+  .tag-mtm { background: #e0f7fa; color: #00695c; border: 1px solid #80deea; }
+  .tag-short { background: #e0f2f1; color: #004d40; border: 1px solid #80cbc4; }
+  .tag-promo { background: #fce4ec; color: #c62828; border: 1px solid #ef9a9a; }
+  .tag-furnished { background: #f1f8e9; color: #33691e; border: 1px solid #aed581; }
+  .tag-new-build { background: #e8eaf6; color: #283593; border: 1px solid #9fa8da; }
+  .tag-walkable { background: #efebe9; color: #4e342e; border: 1px solid #bcaaa4; }
+  .tag-waitlist { background: #f5f5f5; color: #616161; border: 1px solid #bdbdbd; }
+  .tag-cats-ok { background: #e0f2f1; color: #00695c; border: 1px solid #80cbc4; }
+  .tag-cats-tbd { background: #efebe9; color: #5d4037; border: 1px solid #bcaaa4; }
+  .tag-no-cats { background: #fce4ec; color: #c62828; border: 1px solid #ef9a9a; }
+  .cats-ok { color: #2e7d32; }
+  .cats-tbd { color: #f57f17; }
+  .cats-no { color: #c62828; }
+  .status-new { color: #2e7d32; }
+  .status-contacted { color: #f57f17; }
+  .status-toured { color: #1565c0; }
+  .status-applied { color: #7b1fa2; }
+  .status-eliminated { color: #c62828; }
+  .notes-col { max-width: 280px; font-size: 0.8em; color: #555; }
+  .source-link { color: #1565c0; text-decoration: none; font-size: 0.8em; }
+  .source-link:hover { text-decoration: underline; }
+  .section-header {
+    background: #eceff1; padding: 10px; margin-top: 25px; margin-bottom: 10px;
+    border-left: 3px solid #c62828; font-weight: 600; font-size: 0.95em; color: #333;
+  }
+  .summary {
+    display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .summary-card {
+    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+    padding: 10px 15px; text-align: center; flex: 1; min-width: 120px;
+  }
+  .summary-card .num { font-size: 1.8em; font-weight: 700; color: #c62828; }
+  .summary-card .label { font-size: 0.75em; color: #666; margin-top: 3px; }
+  .deadline-bar {
+    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+    padding: 10px 15px; margin-bottom: 20px;
+  }
+  .deadline-bar .track {
+    height: 8px; background: #e0e0e0; border-radius: 4px; margin-top: 8px; position: relative;
+  }
+  .deadline-bar .fill {
+    height: 100%; border-radius: 4px; background: linear-gradient(90deg, #00e676, #ffd740, #ff1744);
+    position: absolute; left: 0; top: 0;
+  }
+  .deadline-bar .info { display: flex; justify-content: space-between; font-size: 0.8em; color: #666; }
+  .action-items {
+    background: #fff; border: 1px solid #ddd; border-radius: 8px;
+    padding: 15px; margin-bottom: 20px;
+  }
+  .action-items h3 { color: #c62828; font-size: 0.95em; margin-bottom: 10px; }
+  .action-items ol { padding-left: 20px; font-size: 0.85em; line-height: 1.8; }
+  .action-items .priority { color: #e65100; font-weight: 600; }
+  .action-items .phone { color: #1565c0; }
+  @media print {
+    body { background: #fff; color: #000; }
+    th { background: #333; }
+    td { border-color: #ccc; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Apartment Search</h1>
+<p class="subtitle">Orange, CA - Started June 8, 2026 - Deadline: July 8, 2026</p>
+
+<div class="deadline-bar">
+  <div class="info">
+    <span id="deadline-left"></span>
+    <span>Deadline: July 8, 2026</span>
+  </div>
+  <div class="track"><div class="fill" id="deadline-fill"></div></div>
+</div>
+
+<div class="anchors">
+  <div class="anchor">
+    <div class="label">Current Address</div>
+    <div class="addr">8227 E Candleberry Cir, Orange, CA 92869</div>
+  </div>
+  <div class="anchor">
+    <div class="label">McPherson Magnet</div>
+    <div class="addr">535 S Walnut St, Orange, CA 92868</div>
+  </div>
+  <div class="anchor">
+    <div class="label">Chapman University</div>
+    <div class="addr">1 University Dr, Orange, CA 92866</div>
+  </div>
+</div>
+
+<div class="params">
+  <span><b>Budget:</b> $2,500 - $4,000/mo</span>
+  <span><b>Beds:</b> 2-3</span>
+  <span><b>Bath:</b> 1.5+</span>
+  <span><b>Pets:</b> 2 cats (required)</span>
+  <span><b>Furnished:</b> Not needed</span>
+  <span><b>Lease:</b> Any (short-term and long-term)</span>
+</div>
+
+<div class="action-items">
+  <h3>Call List - Priority Order (35 listings total)</h3>
+  <ol>
+  <ol>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://hotpads.com/837-e-la-veta-ave-orange-ca-92866-1n2rxsx/pad" target="_blank">837 E La Veta Ave</a> - $3,200, 2/2, 1500sf house, listed 3 days ago! Pets OK, close to BOTH schools</li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.apartments.com/106-villa-pointe-apartments-orange-ca/c09461d/" target="_blank">Villa Pointe</a> - $2,050, 2/1, cats yes/no dogs! $600 off move-in, cheapest option - <span class="phone">(714) 532-3910</span></li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.apartments.com/219-n-center-st-orange-ca/h9e08s2/" target="_blank">219 N Center St</a> - 2/2, Old Towne, 0.5mi Chapman! Price TBD</li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.redfin.com/CA/Orange/131-N-Harwood-St-92866/home/4398886" target="_blank">131 N Harwood St</a> - $2,895, 2/1, near Chapman, backyard</li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.apartments.com/173-s-lemon-st-orange-ca/ntrwc9q/" target="_blank">173 S Lemon St</a> - $2,200, walk to Chapman, pets OK, cheapest find</li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.apartments.com/634-w-culver-ave-orange-ca/frj419t/" target="_blank">634 W Culver Ave</a> - $2,595, 2/1, Old Towne back house, walk to Plaza</li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.zumper.com/apartment-buildings/p1578433/404-w-palmyra-avenue-orange-ca" target="_blank">404 W Palmyra Ave</a> - $2,695, 2/2, Zumper 9.7/10, walk to Chapman</li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.apartments.com/646-s-cypress-st-orange-ca/7wzl5pz/" target="_blank">646 S Cypress St #B</a> - $2,650, 2/2, remodeled, near Chapman</li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.apartments.com/grove-house-orange-ca/33xz1xf/" target="_blank">Grove House</a> - $3,185, 1mo free promo, pets OK, near Chapman - <span class="phone">grovehouseoforange.com</span></li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.apartments.com/orange-ca-92867/" target="_blank">883 N Waverly St ADU</a> - $2,800, 2/2, new build - check lease + cats</li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.rent.com/r/371-n-oak-st-orange-ca-lv3026997563" target="_blank">371 N Oak St Unit F</a> - $2,650, 2/1.5, pets confirmed - <span class="phone">(949) 496-5200</span></li>
+    <li><span class="priority">TODAY</span> - <a class="source-link" href="https://www.apartments.com/345-n-batavia-st-orange-ca/n3e5s0q/" target="_blank">Batavia Gardens</a> - $2,700, townhouse, $750 off, EV chargers - <span class="phone">(714) 538-2511</span></li>
+    <li><span class="priority">THIS WEEK</span> - <a class="source-link" href="https://www.apartments.com/the-aspens-fairhaven-santa-ana-ca/1hwm7g5/" target="_blank">The Aspens Fairhaven</a> - $2,415, cats-only community! 12 units, Santa Ana</li>
+    <li><span class="priority">THIS WEEK</span> - <a class="source-link" href="https://www.apartments.com/410-n-clark-st-orange-ca-unit-a/7yyd2ey/" target="_blank">410 N Clark St #A</a> - $3,495, 2/2, cats confirmed, walk to Chapman</li>
+    <li><span class="priority">THIS WEEK</span> - <a class="source-link" href="https://www.apartments.com/la-veta-grand-orange-ca/nyw3dmq/" target="_blank">La Veta Grand</a> - $2,595+, 2/2, 12 units avail, cats OK - <span class="phone">lavetagrandorange.com</span></li>
+    <li><span class="priority">THIS WEEK</span> - <a class="source-link" href="https://www.liveeleven10.com/availability" target="_blank">Eleven10</a> - $3,550 base but 1mo free promo ends 6/30 - <span class="phone">liveeleven10.com</span></li>
+    <li><span class="priority">THIS WEEK</span> - <a class="source-link" href="https://www.apartments.com/ridgewood-village-apartment-homes-orange-ca/pethw8r/" target="_blank">Ridgewood Village</a> - $2,655, private entrances</li>
+    <li><span class="priority">THIS WEEK</span> - <a class="source-link" href="https://www.apartments.com/briar-villa-apartments-orange-ca/t933vj8/" target="_blank">Briar Villa</a> - $2,325, pets no restrictions! ask about 2BR - <span class="phone">(714) 974-6320</span></li>
+    <li><span class="priority">THIS WEEK</span> - <a class="source-link" href="https://orangecounty.craigslist.org/search/orange-ca/two-bedroom-apartment" target="_blank">Orange Creek</a> - waitlist ($2,650, best location)</li>
+    <li><span class="priority">THIS WEEK</span> - <a class="source-link" href="https://www.apartments.com/orange-plaza-orange-ca/q92jrsy/" target="_blank">Orange Plaza</a> - $2,495, 1mo free, cats OK - <span class="phone">(714) 637-3551</span></li>
+  </ol>
+</div>
+
+<div class="summary">
+  <div class="summary-card"><div class="num" id="count-total">0</div><div class="label">Total Listings</div></div>
+  <div class="summary-card"><div class="num" id="count-active">0</div><div class="label">Active</div></div>
+  <div class="summary-card"><div class="num" id="count-contacted">0</div><div class="label">Contacted</div></div>
+  <div class="summary-card"><div class="num" id="count-eliminated">0</div><div class="label">Eliminated</div></div>
+</div>
+
+<div class="filters">
+  <label>Filter by:</label>
+  <select id="filter-type">
+    <option value="all">All Types</option>
+    <option value="House">House</option>
+    <option value="Apartment">Apartment</option>
+    <option value="Condo">Condo</option>
+    <option value="Townhouse">Townhouse</option>
+  </select>
+  <select id="filter-status">
+    <option value="all">All Statuses</option>
+    <option value="New">New</option>
+    <option value="Contacted">Contacted</option>
+    <option value="Toured">Toured</option>
+    <option value="Applied">Applied</option>
+    <option value="Eliminated">Eliminated</option>
+  </select>
+  <select id="filter-price">
+    <option value="all">All Prices</option>
+    <option value="under2800">Under $2,800</option>
+    <option value="2800-3200">$2,800 - $3,200</option>
+    <option value="3200-3600">$3,200 - $3,600</option>
+    <option value="over3600">Over $3,600</option>
+  </select>
+  <select id="filter-lease">
+    <option value="all">All Lease Terms</option>
+    <option value="mtm">Month-to-Month</option>
+    <option value="short">Short-Term (3-6 mo)</option>
+    <option value="year">12 Month</option>
+  </select>
+</div>
+
+<div class="score-legend">
+  <span><span class="dot" style="background:#2e7d32"></span> A = Great fit</span>
+  <span><span class="dot" style="background:#388e3c"></span> B = Good</span>
+  <span><span class="dot" style="background:#f57f17"></span> C = Okay</span>
+  <span><span class="dot" style="background:#e65100"></span> D = Weak</span>
+  <span><span class="dot" style="background:#c62828"></span> F = Poor fit</span>
+  <span style="margin-left: 15px; color: #999;">Score = School (30) + Chapman (25) + Price (25) + Lease (10) + Avail (5) + Cats (+5)</span>
+</div>
+
+<table id="listings-table">
+  <thead>
+    <tr>
+      <th data-sort="score">Score</th>
+      <th data-sort="address">Address</th>
+      <th data-sort="cost">$/Mo</th>
+      <th data-sort="type">Type</th>
+      <th data-sort="bed">Bed</th>
+      <th data-sort="bath">Bath</th>
+      <th data-sort="sqft">SqFt</th>
+      <th data-sort="lease">Lease</th>
+      <th data-sort="available">Available</th>
+      <th data-sort="distMcP">Mi-McP</th>
+      <th data-sort="distChap">Mi-Chap</th>
+      <th data-sort="distCur">Mi-Cur</th>
+      <th data-sort="cats">Cats</th>
+      <th data-sort="status">Status</th>
+      <th>Contact</th>
+      <th>Tags</th>
+      <th>Notes</th>
+      <th>Source</th>
+    </tr>
+  </thead>
+  <tbody id="listings-body"></tbody>
+</table>
+
+<div class="section-header">Search Sites to Monitor</div>
+<div style="font-size: 0.85em; padding: 10px; line-height: 1.8;">
+  <a class="source-link" href="https://www.zillow.com/orange-ca/rentals/" target="_blank">Zillow</a> |
+  <a class="source-link" href="https://www.apartments.com/orange-ca/2-bedrooms/" target="_blank">Apartments.com 2BR</a> |
+  <a class="source-link" href="https://www.apartments.com/houses/orange-ca/" target="_blank">Apartments.com Houses</a> |
+  <a class="source-link" href="https://orangecounty.craigslist.org/search/orange-ca/two-bedroom-apartment" target="_blank">Craigslist OC 2BR</a> |
+  <a class="source-link" href="https://www.westsiderentals.com/apartments/orange-apartments/2-bedroom/" target="_blank">Westside Rentals Apts</a> |
+  <a class="source-link" href="https://www.westsiderentals.com/houses/orange-houses/2-bedroom/" target="_blank">Westside Rentals Houses</a> |
+  <a class="source-link" href="https://www.westsiderentals.com/townhouses/orange-townhouses/2-bedroom/" target="_blank">Westside Townhomes</a> |
+  <a class="source-link" href="https://www.zumper.com/apartments-for-rent/orange-ca/2-beds" target="_blank">Zumper</a> |
+  <a class="source-link" href="https://www.rentcafe.com/apartments-for-rent/us/ca/orange/" target="_blank">RentCafe</a> |
+  <a class="source-link" href="https://offcampushousing.chapman.edu/housing" target="_blank">Chapman Off-Campus</a> |
+  <a class="source-link" href="https://www.facebook.com/marketplace/category/propertyrentals" target="_blank">FB Marketplace</a> |
+  <a class="source-link" href="https://www.furnishedfinder.com/housing/Orange-CA" target="_blank">Furnished Finder</a> |
+  <a class="source-link" href="https://www.redfin.com/city/13969/CA/Orange/houses-for-rent" target="_blank">Redfin Houses</a> |
+  <a class="source-link" href="https://hotpads.com/orange-ca/houses-for-rent" target="_blank">HotPads</a> |
+  <a class="source-link" href="https://www.byowner.com/rental/houses-apartments-for-rent/california/orange" target="_blank">ByOwner (FSBO)</a> |
+  <a class="source-link" href="https://www.apartments.com/orange-ca/short-term/" target="_blank">Apartments.com Short-Term</a> |
+  <a class="source-link" href="https://www.compass.com/for-rent/orange-ca/" target="_blank">Compass</a> |
+  <a class="source-link" href="https://homes.trovit.com/for-rent-orange-county-ca-adu" target="_blank">Trovit ADUs</a>
+</div>
+
+<div class="section-header">Lessons from 2023 Search</div>
+<div style="font-size: 0.85em; padding: 10px; color: #555; line-height: 1.6;">
+  <b style="color:#c62828;">Scam signals:</b> Price way below market ($1,500 for 3BR), vague listing details, pressure to send deposit before viewing, listings that appear on multiple sites with different prices.<br>
+  <b style="color:#e65100;">Management cos tried before:</b> Arnel Management (apartments on Ball Rd, 1st St Tustin - decent complexes but far from McPherson).<br>
+  <b style="color:#2e7d32;">What worked:</b> Direct owner rentals, ADUs/granny units, small property managers. Calling immediately matters - good listings go fast. Applied to 2312 E Villa Vista Way through a rental agency (Penny) - straightforward process.<br>
+  <b style="color:#1565c0;">Neighborhoods to watch:</b> Old Towne Orange, near Chapman, E Rose Ave area, N Prospect/Shattuck area, E Culver area.<br>
+  <b style="color:#7b1fa2;">Budget reality:</b> $2,500-$3,500 is the sweet spot for 2BR. Houses tend to be $3,500+. Best value = apartments/condos/ADUs. 3BR houses in range are rare and go fast.
+</div>
+
+<script>
+const MCPHERSON = "535 S Walnut St, Orange CA 92868";
+const CHAPMAN = "1 University Dr, Orange CA 92866";
+function zillowUrl(addr) {
+  const q = addr.replace(/\s*\(.*?\)\s*/g, '').replace(/ - .*/, '').trim().replace(/,?\s+/g, '-').replace(/-+/g, '-');
+  return `https://www.zillow.com/homes/${encodeURIComponent(q)}`;
+}
+function aptComUrl(addr) {
+  const q = encodeURIComponent(addr.replace(/\s*\(.*?\)\s*/g, '').replace(/ - .*/, '').trim());
+  return `https://www.apartments.com/?query=${q}`;
+}
+function mapsDir(fromAddr, toAddr) {
+  const from = encodeURIComponent(fromAddr);
+  const to = encodeURIComponent(toAddr);
+  return `https://www.google.com/maps/dir/${from}/${to}/`;
+}
+function mapsPin(addr) {
+  return `https://www.google.com/maps/search/${encodeURIComponent(addr.replace(/\s*\(.*?\)\s*/g, '').trim())}`;
+}
+
+const listings = [
+  // === HOUSES / ADUs ===
+  {
+    address: "883 N Waverly St, Orange 92867",
+    mapAddr: "883 N Waverly St, Orange CA 92867",
+    cost: 2800, type: "House", bed: 2, bath: 2, sqft: 1000,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 2.3, distChap: 1.4, distCur: 2.8, cats: "Ask",
+    status: "New", tags: ["new-build"],
+    contact: "Via Apartments.com",
+    notes: "Brand new detached ADU. Quality finishes, open/airy layout, bright natural light. Confirm lease terms AND 2-cat policy. Great value for new construction 2/2.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/orange-ca-92867/"
+  },
+  {
+    address: "585 E Culver Ave, Orange 92866",
+    mapAddr: "585 E Culver Ave, Orange CA 92866",
+    cost: 3495, type: "House", bed: 2, bath: 2, sqft: 780,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 1.8, distChap: 1.2, distCur: 3.2, cats: "Ask",
+    status: "New", tags: ["walkable"],
+    contact: "Via Apartments.com",
+    notes: "Charming 1924 Mediterranean in Old Town Orange. Remodeled kitchen, gas cooktop, wood floors, built-in cabinetry. Inside laundry, spacious yard, detached garage + driveway. Walk to Orange Circle. Ask about 2-cat policy.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/585-e-culver-ave-orange-ca/xlt1rep/"
+  },
+  {
+    address: "385 N Harwood St, Orange 92866 (back house)",
+    mapAddr: "385 N Harwood St, Orange CA 92866",
+    cost: 3550, type: "House", bed: 2, bath: 1, sqft: 1032,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 2.0, distChap: 1.2, distCur: 3.0, cats: "Ask",
+    status: "New", tags: [],
+    contact: "(657) 390-5926",
+    notes: "Detached back house. Brand new kitchen, bath vanity, ceiling fans. Dishwasher, W/D, fenced yard. Walk to restaurants. Only 1 bath. Listing says 'dogs allowed' - ask about 2 cats.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/houses/orange-ca/"
+  },
+  {
+    address: "8243 E Ironwood Ave, Orange 92869",
+    mapAddr: "8243 E Ironwood Ave, Orange CA 92869",
+    cost: 3700, type: "House", bed: 2, bath: 2, sqft: 1141,
+    lease: "TBD", available: "TBD", pool: false,
+    distMcP: 3.5, distChap: 3.8, distCur: 0.8, cats: "Ask",
+    status: "New", tags: [],
+    contact: "(714) 299-2755",
+    notes: "Very close to current address! $3,700 for 2/2 (Compass); other sites show 3/2.5 at $3,800-$4,400. Cowen Heights foothills. Fireplace, dual pane. Top of budget. Ask about 2 cats.",
+    source: "Compass", sourceUrl: "https://www.compass.com/for-rent/orange-ca/"
+  },
+
+  // === CONDOS ===
+  {
+    address: "371 N Oak St, Unit F, Orange 92867",
+    mapAddr: "371 N Oak St, Orange CA 92867",
+    cost: 2650, type: "Condo", bed: 2, bath: 1.5, sqft: 962,
+    lease: "12 mo", available: "Now", pool: false,
+    distMcP: 2.1, distChap: 1.4, distCur: 2.9, cats: "Yes",
+    status: "New", tags: ["cats-ok"],
+    contact: "Hall & Assoc: (949) 496-5200",
+    notes: "Freshly painted upstairs. New quartz counters, vinyl plank floors, W/D hookups inside. Central heat, balcony. Garage + 1 spot. Water/sewer/trash included. PET FRIENDLY. $2,650 deposit.",
+    source: "Rent.com", sourceUrl: "https://www.rent.com/r/371-n-oak-st-orange-ca-lv3026997563"
+  },
+
+  // === APARTMENTS (COMPLEXES) ===
+  {
+    address: "La Veta Grand, 401 W La Veta Ave, Orange 92866",
+    mapAddr: "401 W La Veta Ave, Orange CA 92866",
+    cost: 2595, type: "Apartment", bed: 2, bath: 2, sqft: 1004,
+    lease: "12 mo", available: "Now", pool: true,
+    distMcP: 2.8, distChap: 1.5, distCur: 3.8, cats: "Yes",
+    status: "New", tags: ["cats-ok"],
+    contact: "lavetagrandorange.com",
+    notes: "12 units available! 2BR $2,595-$3,895. Walk-in closets, patio/balcony. Select W/D + garage. CATS OK: 2 max, 25 lbs, $500 dep + $50/mo. Built 1971, 250 units. Was on 2023 list - short term was available then.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/la-veta-grand-orange-ca/nyw3dmq/"
+  },
+  {
+    address: "Eleven10, 1110 W Town & Country Rd, Orange 92868",
+    mapAddr: "1110 W Town and Country Rd, Orange CA 92868",
+    cost: 3550, type: "Apartment", bed: 2, bath: 2, sqft: 1167,
+    lease: "12 mo", available: "Now", pool: true,
+    distMcP: 3.0, distChap: 2.2, distCur: 3.8, cats: "Yes",
+    status: "New", tags: ["promo", "cats-ok"],
+    contact: "liveeleven10.com",
+    notes: "PROMO: 1 mo free + $1,000 look-and-lease on select 2BR (ends 6/30). Effective ~$3,254/mo. Built 2018, modern. In-unit laundry, resort amenities. Pet-friendly. 22 units avail.",
+    source: "liveeleven10.com", sourceUrl: "https://www.liveeleven10.com/availability"
+  },
+  {
+    address: "Orange Plaza, 1450 E Del Mar Ave, Orange 92865",
+    mapAddr: "1450 E Del Mar Ave, Orange CA 92865",
+    cost: 2495, type: "Apartment", bed: 2, bath: 2, sqft: 1100,
+    lease: "12 mo", available: "Now", pool: true,
+    distMcP: 4.2, distChap: 4.0, distCur: 2.5, cats: "Yes",
+    status: "New", tags: ["promo", "cats-ok"],
+    contact: "(714) 637-3551",
+    notes: "PROMO: 1 mo free! 2BR/2BA $2,495-$2,595. 1-car garage. CATS OK: 2 cats fine (no 2 dogs, 25 lbs). 3BR at $2,845-$3,325. Cheapest option but far from McPherson/Chapman.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/orange-plaza-orange-ca/q92jrsy/"
+  },
+  {
+    address: "Santiago, 235 W Lincoln Ave, Orange 92865",
+    mapAddr: "235 W Lincoln Ave, Orange CA 92865",
+    cost: 2621, type: "Apartment", bed: 2, bath: 1, sqft: 968,
+    lease: "12 mo", available: "Now", pool: true,
+    distMcP: 4.5, distChap: 4.2, distCur: 3.0, cats: "Ask",
+    status: "New", tags: ["promo"],
+    contact: "(657) 216-7248",
+    notes: "Spring special: waived app fee. 21% cheaper than city avg. Pool, laundry, covered parking. Only 1 bath. Far from McPherson. Ask about 2 cats.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/santiago-orange-ca/gwz93kz/"
+  },
+  {
+    address: "Ridgewood Village, 1918 E Vanowen Ave, Orange 92867",
+    mapAddr: "1918 E Vanowen Ave, Orange CA 92867",
+    cost: 2655, type: "Apartment", bed: 2, bath: 2, sqft: 1050,
+    lease: "12 mo", available: "Now", pool: false,
+    distMcP: 2.5, distChap: 2.0, distCur: 2.2, cats: "Ask",
+    status: "New", tags: [],
+    contact: "ridgewoodvillageapthomes.com",
+    notes: "$500 off move-in. Townhome-style, private entrances, condo feel. A/C, hardwood floors, vaulted ceilings. W/D connections. 2BR/3BR avail. Great location/price balance. Ask about 2 cats.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/ridgewood-village-apartment-homes-orange-ca/pethw8r/"
+  },
+  {
+    address: "Casa Ciento, 2627 N Bourbon St, Orange 92865",
+    mapAddr: "2627 N Bourbon St, Orange CA 92865",
+    cost: 2975, type: "Apartment", bed: 2, bath: 1, sqft: 995,
+    lease: "12 mo", available: "Now", pool: true,
+    distMcP: 4.2, distChap: 4.8, distCur: 3.1, cats: "Yes",
+    status: "New", tags: ["promo", "cats-ok"],
+    contact: "Via Craigslist",
+    notes: "$100/mo off x12 ($2,875 effective). Spanish-style, cathedral ceilings, walk-in closets, private patios. CATS OK: $500 dep + $35/mo. Only 1 bath. Far from McPherson/Chapman.",
+    source: "Craigslist", sourceUrl: "https://orangecounty.craigslist.org/search/orange-ca/two-bedroom-apartment"
+  },
+  {
+    address: "Orange Creek, 4011 E Chapman Ave, Orange 92869",
+    mapAddr: "4011 E Chapman Ave, Orange CA 92869",
+    cost: 2650, type: "Apartment", bed: 2, bath: 1, sqft: 930,
+    lease: "12 mo", available: "Waitlist", pool: true,
+    distMcP: 1.8, distChap: 2.5, distCur: 1.0, cats: "Yes",
+    status: "New", tags: ["waitlist", "cats-ok"],
+    contact: "Via Craigslist",
+    notes: "FULLY LEASED - accepting future inquiries. Close to McPherson. CATS OK: dogs/cats under 35 lbs. Near Fwy 55. Scenic. JOIN WAITLIST.",
+    source: "Craigslist", sourceUrl: "https://orangecounty.craigslist.org/search/orange-ca/two-bedroom-apartment"
+  },
+
+  // === NEW FINDS (Round 2) ===
+  {
+    address: "646 S Cypress St #B, Orange 92866",
+    mapAddr: "646 S Cypress St, Orange CA 92866",
+    cost: 2650, type: "Apartment", bed: 2, bath: 2, sqft: 1150,
+    lease: "12 mo", available: "Now", pool: false,
+    distMcP: 1.6, distChap: 1.4, distCur: 3.5, cats: "Ask",
+    status: "New", tags: [],
+    contact: "Via Apartments.com",
+    notes: "Remodeled downstairs unit in 4-plex. Newer wall A/C, granite counters, stainless gas range, wood floors, ceiling fans. Ground-level entry, 1-car garage + 1 spot. Community laundry. Need 3x rent income, 650 credit. Listed 37 days - may still be avail. Ask about cats.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/646-s-cypress-st-orange-ca/7wzl5pz/"
+  },
+  {
+    address: "173 S Lemon St #4, Orange 92866",
+    mapAddr: "173 S Lemon St, Orange CA 92866",
+    cost: 2200, type: "Apartment", bed: 2, bath: 1, sqft: 650,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 1.5, distChap: 0.5, distCur: 3.8, cats: "Yes",
+    status: "New", tags: ["cats-ok", "walkable"],
+    contact: "Via Apartments.com",
+    notes: "Cheapest option! Walk to Chapman (0.5 mi) and Orange Circle. Modern vintage charm in 1923 building. Nobody above/below. Pets allowed, in-unit W/D. Only 1 bath, 650 sqft is small. Walk Score 94. Unit 6 also avail at $1,850 (even cheaper).",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/173-s-lemon-st-orange-ca/ntrwc9q/"
+  },
+  {
+    address: "837 E La Veta Ave, Orange 92866",
+    mapAddr: "837 E La Veta Ave, Orange CA 92866",
+    cost: 3200, type: "House", bed: 2, bath: 2, sqft: 1500,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 1.4, distChap: 1.0, distCur: 3.5, cats: "Yes",
+    status: "New", tags: ["cats-ok"],
+    contact: "Via HotPads",
+    notes: "Listed 3 days ago! 1,500 sqft house - biggest option. Owner pays water + internet. Small well-trained pets allowed (cats should be fine). No smoking inside. Very close to McPherson AND Chapman. Premium location.",
+    source: "HotPads", sourceUrl: "https://hotpads.com/837-e-la-veta-ave-orange-ca-92866-1n2rxsx/pad"
+  },
+  {
+    address: "Grove House, 501 E Katella Ave, Orange 92867",
+    mapAddr: "501 E Katella Ave, Orange CA 92867",
+    cost: 3185, type: "Apartment", bed: 2, bath: 2, sqft: 1200,
+    lease: "12 mo", available: "Now", pool: true,
+    distMcP: 2.2, distChap: 1.4, distCur: 3.0, cats: "Yes",
+    status: "New", tags: ["promo", "cats-ok"],
+    contact: "grovehouseoforange.com",
+    notes: "PROMO: 1 month free on select units! Near Chapman. In-unit W/D, large private patios, smart tech (Nest, Ring). EV-friendly. Pet-friendly, non-smoking. 2 resort pools + spa. $500 deposit. Built 1968.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/grove-house-orange-ca/33xz1xf/"
+  },
+  {
+    address: "Batavia Gardens, 345 N Batavia St, Orange 92868",
+    mapAddr: "345 N Batavia St, Orange CA 92868",
+    cost: 2700, type: "Townhouse", bed: 2, bath: 1.5, sqft: 1050,
+    lease: "TBD", available: "Now", pool: true,
+    distMcP: 2.5, distChap: 1.8, distCur: 3.5, cats: "Ask",
+    status: "New", tags: ["promo"],
+    contact: "Remy/Paul: (714) 538-2511",
+    notes: "PROMO: $750 off 1st month. Townhouse-style 2BR/1.5BA. EV chargers, private yard, pool, gated, covered parking. Open floor plan, plank floors, quartz counters. Need to confirm price and cat policy.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/345-n-batavia-st-orange-ca/n3e5s0q/"
+  },
+  {
+    address: "Mardi Gras, 1475 W Palmyra Ave, Orange 92868",
+    mapAddr: "1475 W Palmyra Ave, Orange CA 92868",
+    cost: 2500, type: "Apartment", bed: 2, bath: 1, sqft: 694,
+    lease: "TBD", available: "TBD", pool: true,
+    distMcP: 3.2, distChap: 2.0, distCur: 4.0, cats: "Ask",
+    status: "New", tags: [],
+    contact: "Via Apartments.com",
+    notes: "Budget option at ~$2,500. Small at 694 sqft, only 1 bath. Pool. Built 1961, 24 units. Availability limited - may have no vacancies. Ask about cats and current openings.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/mardi-gras-apartments-orange-ca/43tspql/"
+  },
+
+  // === NEW FINDS (Round 3) ===
+  {
+    address: "131 N Harwood St, Orange 92866",
+    mapAddr: "131 N Harwood St, Orange CA 92866",
+    cost: 2895, type: "House", bed: 2, bath: 1, sqft: 1039,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 1.8, distChap: 0.8, distCur: 3.2, cats: "Ask",
+    status: "New", tags: ["walkable"],
+    contact: "MLS PW25192576 - Freedom First Properties",
+    notes: "SFH near Old Towne Orange & Chapman. Hardwood floors, bright open plan, white shaker kitchen, backyard, laundry area. Built 1990. Walk to dining. Ask about 2 cats. Listed on Redfin/Zillow/Compass.",
+    source: "Redfin", sourceUrl: "https://www.redfin.com/CA/Orange/131-N-Harwood-St-92866/home/4398886"
+  },
+  {
+    address: "219 N Center St, Orange 92866",
+    mapAddr: "219 N Center St, Orange CA 92866",
+    cost: null, type: "House", bed: 2, bath: 2, sqft: 1000,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 1.5, distChap: 0.5, distCur: 3.5, cats: "Ask",
+    status: "New", tags: ["walkable"],
+    contact: "Via Apartments.com",
+    notes: "Heart of Old Towne Orange! 0.5 mi to Chapman. Stackable W/D inside, upgraded baths, full kitchen, small grassy patio, 1-car garage. Tranquil alley setting. Walk to shops/restaurants. Price TBD - check listing. Ask about cats.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/219-n-center-st-orange-ca/h9e08s2/"
+  },
+  {
+    address: "410 N Clark St #A, Orange 92868",
+    mapAddr: "410 N Clark St, Orange CA 92868",
+    cost: 3495, type: "Condo", bed: 2, bath: 2, sqft: 750,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 2.8, distChap: 1.5, distCur: 3.5, cats: "Yes",
+    status: "New", tags: ["cats-ok", "walkable"],
+    contact: "Via Apartments.com",
+    notes: "Remodeled 2-story townhouse-style corner unit. New kitchen/bath/flooring. No carpet (great for cats). 2 private patios, W/D + fridge included. Walk to Chapman & Orange Circle. CATS OK: $300 dep + $35/mo pet rent. 750sf is small.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/410-n-clark-st-orange-ca-unit-a/7yyd2ey/"
+  },
+  {
+    address: "Briar Villa, 138 E Briardale Ave, Orange 92865",
+    mapAddr: "138 E Briardale Ave, Orange CA 92865",
+    cost: 2325, type: "Apartment", bed: 1, bath: 1, sqft: null,
+    lease: "TBD", available: "TBD", pool: true,
+    distMcP: 3.5, distChap: 1.8, distCur: 3.0, cats: "Yes",
+    status: "New", tags: ["cats-ok"],
+    contact: "(714) 974-6320",
+    notes: "Pet friendly - NO weight limits, no breed restrictions, no pet deposit! Heated pool, BBQs, garages on select units. 30 units, built 1978. Near freeways. Only 1BR listed at $2,325 - ask about 2BR availability. Office: Wed/Fri 9-6 + by appt.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/briar-villa-apartments-orange-ca/t933vj8/"
+  },
+  {
+    address: "The Aspens Fairhaven, 1201 E Fairhaven Ave, Santa Ana 92705",
+    mapAddr: "1201 E Fairhaven Ave, Santa Ana CA 92705",
+    cost: 2415, type: "Apartment", bed: 2, bath: 2, sqft: 1001,
+    lease: "12 mo", available: "Now", pool: true,
+    distMcP: 3.0, distChap: 2.5, distCur: 4.5, cats: "Yes",
+    status: "New", tags: ["cats-ok"],
+    contact: "Via Apartments.com",
+    notes: "CATS ONLY community (no dogs!). Indoor cats, $25/mo pet fee, $500 dep. 12 units avail from $2,415-$3,250 (740-1001sf). 2 pools, spa, tennis, clubhouse. 232 units. Built 1972. Santa Ana (not Orange) but close.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/the-aspens-fairhaven-santa-ana-ca/1hwm7g5/"
+  },
+
+  {
+    address: "634 W Culver Ave, Orange 92868",
+    mapAddr: "634 W Culver Ave, Orange CA 92868",
+    cost: 2595, type: "House", bed: 2, bath: 1, sqft: 700,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 1.8, distChap: 1.0, distCur: 3.5, cats: "Ask",
+    status: "New", tags: ["walkable"],
+    contact: "Via Apartments.com",
+    notes: "Back house in Old Towne Orange - walk to the Plaza! Updated kitchen, laminate floors, split AC, private front yard (synthetic grass), detached 1-car garage. Small at 700sf with only 1 bath. Ask about 2 cats.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/634-w-culver-ave-orange-ca/frj419t/"
+  },
+  {
+    address: "404 W Palmyra Ave, Orange 92866",
+    mapAddr: "404 W Palmyra Ave, Orange CA 92866",
+    cost: 2695, type: "Apartment", bed: 2, bath: 2, sqft: null,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 2.2, distChap: 1.0, distCur: 3.5, cats: "Ask",
+    status: "New", tags: ["walkable"],
+    contact: "Via Apartments.com",
+    notes: "Zumper 9.7/10 rating! Upgraded 2/2, LVP flooring, new carpet in bedrooms, in-unit W/D, stainless appliances, fireplace, balcony, ceiling fans. Walk to Old Towne Plaza & Chapman. Pets allowed - confirm 2 cats OK.",
+    source: "Zumper", sourceUrl: "https://www.zumper.com/apartment-buildings/p1578433/404-w-palmyra-avenue-orange-ca"
+  },
+  {
+    address: "Villa Pointe, 540 S La Veta Park Cir, Orange 92868",
+    mapAddr: "540 S La Veta Park Cir, Orange CA 92868",
+    cost: 2050, type: "Apartment", bed: 2, bath: 1, sqft: 672,
+    lease: "TBD", available: "Now", pool: true,
+    distMcP: 2.0, distChap: 1.3, distCur: 3.8, cats: "Yes",
+    status: "New", tags: ["promo", "cats-ok"],
+    contact: "(714) 532-3910",
+    notes: "CATS ALLOWED, no dogs! $600 off move-in (Manager's Special). Cheapest 2BR option. Heated pool, gated, on-site laundry, 24hr maintenance. Near freeways + Old Towne. Small at 672sf, only 1 bath. Great price point.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/106-villa-pointe-apartments-orange-ca/c09461d/"
+  },
+
+  {
+    address: "Windsor Main Place, 1235 W Town & Country Rd, Orange 92868",
+    mapAddr: "1235 W Town and Country Rd, Orange CA 92868",
+    cost: 3246, type: "Apartment", bed: 2, bath: 2, sqft: 1170,
+    lease: "12 mo", available: "Now", pool: true,
+    distMcP: 3.2, distChap: 2.4, distCur: 3.8, cats: "Yes",
+    status: "New", tags: ["cats-ok"],
+    contact: "(657) 275-8520",
+    notes: "CATS OK: 2 max, $75/mo per pet, NO deposit. Resort-style: 2 pools, hot tubs, sauna, 4,500sf gym, racquetball, gated pet run. In-unit W/D, stainless appliances, crown molding. 756-1170sf. Pricey but premium amenities.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/windsor-main-place-orange-ca/b621yh8/"
+  },
+  {
+    address: "Park City, 3825 Garden Grove Blvd, Orange 92868",
+    mapAddr: "3825 Garden Grove Blvd, Orange CA 92868",
+    cost: 2640, type: "Apartment", bed: 2, bath: 1, sqft: 963,
+    lease: "12 mo", available: "Now", pool: true,
+    distMcP: 3.5, distChap: 2.5, distCur: 4.0, cats: "Yes",
+    status: "New", tags: ["promo", "cats-ok"],
+    contact: "(657) 800-7429",
+    notes: "PROMO: $400 off move-in! Cats/dogs under 35lbs, 2 max. 2/1 from $2,640, 2/2 at $2,955. Built 1978, 104 units. Pool, BBQ. Bit far from McPherson/Chapman but solid value. Also has 3BR options.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/park-city-apartment-homes-orange-ca/r0pvy63/"
+  },
+  {
+    address: "The Georgian, 315 W Lincoln Ave, Orange 92865",
+    mapAddr: "315 W Lincoln Ave, Orange CA 92865",
+    cost: 2025, type: "Apartment", bed: 2, bath: 1, sqft: null,
+    lease: "TBD", available: "Now", pool: true,
+    distMcP: 4.5, distChap: 4.2, distCur: 3.0, cats: "Yes",
+    status: "New", tags: ["cats-ok"],
+    contact: "georgianapartmenthomes.com",
+    notes: "Cheapest find! $1,995-$2,025/mo. Cats/dogs welcome, 2 max. Pool, courtyards, gas BBQ. Near Old Towne Orange, Outlets at Orange. Near 5/22/57/91 freeways. No in-unit laundry. Far from McPherson/Chapman. Budget pick only.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/georgian-orange-ca/g24df9x/"
+  },
+
+  {
+    address: "Orange Meadows, 931 N Highland St, Orange 92867",
+    mapAddr: "931 N Highland St, Orange CA 92867",
+    cost: 2495, type: "Condo", bed: 2, bath: 1, sqft: 943,
+    lease: "TBD", available: "Now", pool: true,
+    distMcP: 2.5, distChap: 1.8, distCur: 2.5, cats: "Ask",
+    status: "New", tags: [],
+    contact: "(714) 639-5353",
+    notes: "Pet friendly complex. 2/1 at $2,495 - great value! 1 garage + 1 assigned spot. Water/trash/gas included. Pool, 2 BBQ pits, 3 laundry facilities. 10 min to Old Towne. Near 55/22/91 freeways. Confirm 2-cat policy.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/931-n-highland-st-orange-ca-unit-18/94rv3k7/"
+  },
+  {
+    address: "790 N Shattuck Pl, Orange 92867",
+    mapAddr: "790 N Shattuck Pl, Orange CA 92867",
+    cost: 3400, type: "House", bed: 2, bath: null, sqft: null,
+    lease: "3 mo", available: "Now", pool: false,
+    distMcP: 2.2, distChap: 1.5, distCur: 2.8, cats: "Yes",
+    status: "New", tags: ["cats-ok"],
+    contact: "FSBO via Apartments.com",
+    notes: "3-MONTH LEASE - perfect for short-term need! Pets allowed. For rent by owner. Patio, walk-in closets, hardwood floors, yard, fireplace, smoke free. Premium price but flexible lease is rare.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/condos/orange-ca/"
+  },
+  {
+    address: "640 S Fashion Park St #D, Orange 92866",
+    mapAddr: "640 S Fashion Park St, Orange CA 92866",
+    cost: 3400, type: "Condo", bed: 2, bath: 2, sqft: 1000,
+    lease: "TBD", available: "Now", pool: false,
+    distMcP: 1.5, distChap: 1.2, distCur: 3.5, cats: "Ask",
+    status: "New", tags: ["walkable"],
+    contact: "(714) 288-2010",
+    notes: "In-unit W/D, balcony, stainless appliances, fireplace, ceiling fans. Near CHOC Hospital. Close to Chapman & McPherson. PET POLICY CONFLICTING - Apt.com says yes, Zumper says no. MUST CALL to confirm cats.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/640-s-fashion-park-st-orange-ca/sc2w957/"
+  },
+
+  {
+    address: "622 N Cambridge St, Orange 92867",
+    mapAddr: "622 N Cambridge St, Orange CA 92867",
+    cost: 3395, type: "House", bed: 2, bath: 1, sqft: 1000,
+    lease: "12 mo", available: "Now", pool: false,
+    distMcP: 2.3, distChap: 1.2, distCur: 2.8, cats: "Yes",
+    status: "New", tags: ["cats-ok", "new-build"],
+    contact: "Via Rent.com",
+    notes: "Newly built, purpose-designed home. Open-concept, quartz kitchen, in-unit W/D, high-end flooring, recessed lighting, double-pane windows. Pets welcome. Near Chapman. Only 1 bath. Pricey at $3,395 for 2/1.",
+    source: "Rent.com", sourceUrl: "https://www.rent.com/r/622-n-cambridge-st-orange-ca-lv2823413122"
+  },
+
+  // === NEAR TOP OF BUDGET ===
+  {
+    address: "560 N Grand St, Orange 92867",
+    mapAddr: "560 N Grand St, Orange CA 92867",
+    cost: 3950, type: "House", bed: 3, bath: 2, sqft: null,
+    lease: "TBD", available: "TBD", pool: false,
+    distMcP: 2.5, distChap: 1.8, distCur: 3.0, cats: "Ask",
+    status: "New", tags: [],
+    contact: "(657) 282-5106",
+    notes: "3BR house, dogs allowed, fenced lot. Top of budget. Ask about 2 cats. Could work if 3BR needed.",
+    source: "Apartments.com", sourceUrl: "https://www.apartments.com/houses/orange-ca/"
+  }
+];
+
+// Render
+function renderTable(data) {
+  const tbody = document.getElementById('listings-body');
+  tbody.innerHTML = '';
+  data.forEach(l => {
+    const score = calcScore(l);
+    const tr = document.createElement('tr');
+    if (l.status === 'Eliminated') tr.classList.add('eliminated');
+    const addr = l.mapAddr || l.address;
+    const pinLink = mapsPin(addr);
+    const schoolLink = mapsDir(addr, MCPHERSON);
+    const chapLink = mapsDir(addr, CHAPMAN);
+    const catsCls = l.cats === 'Yes' ? 'cats-ok' : l.cats === 'No' ? 'cats-no' : 'cats-tbd';
+    const catsIcon = l.cats === 'Yes' ? '&#10003;' : l.cats === 'No' ? '&#10007;' : '?';
+    tr.innerHTML = `
+      <td class="score-cell ${score.cls}">${score.grade}</td>
+      <td>
+        <a class="source-link" href="${pinLink}" target="_blank" title="View on map" style="font-size:1em;">${l.address}</a><br>
+        <a class="source-link" href="${schoolLink}" target="_blank" title="Directions to McPherson">&#x1F3EB; to School</a>
+        &nbsp;
+        <a class="source-link" href="${chapLink}" target="_blank" title="Directions to Chapman">&#x1F393; to Chapman</a>
+      </td>
+      <td class="cost">${l.cost ? '$' + l.cost.toLocaleString() : '<span style="color:#666">TBD</span>'}</td>
+      <td><span class="tag tag-${l.type.toLowerCase()}">${l.type}</span></td>
+      <td class="dist">${l.bed || '-'}</td>
+      <td class="dist">${l.bath || '-'}</td>
+      <td class="dist">${l.sqft ? l.sqft.toLocaleString() : '-'}</td>
+      <td>${l.lease}</td>
+      <td>${l.available}</td>
+      <td class="dist">${l.distMcP != null ? l.distMcP : '-'}</td>
+      <td class="dist">${l.distChap != null ? l.distChap : '-'}</td>
+      <td class="dist">${l.distCur != null ? l.distCur : '-'}</td>
+      <td class="dist ${catsCls}">${catsIcon} ${l.cats}</td>
+      <td class="status-${l.status.toLowerCase()}">${l.status}</td>
+      <td style="font-size:0.8em; white-space:nowrap;">${l.contact || '-'}</td>
+      <td>${l.tags.map(t => `<span class="tag tag-${t}">${t}</span>`).join(' ')}</td>
+      <td class="notes-col">${l.notes}</td>
+      <td style="white-space:nowrap;">
+        <a class="source-link" href="${l.sourceUrl}" target="_blank">${l.source}</a><br>
+        <a class="source-link" href="${zillowUrl(addr)}" target="_blank">Zillow</a>
+        &middot; <a class="source-link" href="${aptComUrl(addr)}" target="_blank">Apt.com</a>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+  updateSummary(data);
+}
+
+function calcScore(l) {
+  let pts = 0;
+  // Price (25 pts) - lower is better within the $2,500-$4,000 range
+  if (l.cost) {
+    if (l.cost <= 2700) pts += 25;
+    else if (l.cost <= 3000) pts += 22;
+    else if (l.cost <= 3300) pts += 18;
+    else if (l.cost <= 3600) pts += 13;
+    else if (l.cost <= 4000) pts += 7;
+    else pts += 0;
+  } else { pts += 12; }
+
+  // Distance to McPherson / school (30 pts) - most important
+  if (l.distMcP != null) {
+    if (l.distMcP <= 2.0) pts += 30;
+    else if (l.distMcP <= 2.5) pts += 26;
+    else if (l.distMcP <= 3.0) pts += 22;
+    else if (l.distMcP <= 3.5) pts += 16;
+    else if (l.distMcP <= 4.5) pts += 10;
+    else pts += 4;
+  } else { pts += 10; }
+
+  // Distance to Chapman (25 pts)
+  if (l.distChap != null) {
+    if (l.distChap <= 1.5) pts += 25;
+    else if (l.distChap <= 2.0) pts += 22;
+    else if (l.distChap <= 2.5) pts += 18;
+    else if (l.distChap <= 3.5) pts += 12;
+    else if (l.distChap <= 4.5) pts += 7;
+    else pts += 3;
+  } else { pts += 8; }
+
+  // Lease flexibility (10 pts)
+  if (l.lease === 'Month-to-month') pts += 10;
+  else if (l.lease === 'Short-term' || l.lease === '3-6 mo') pts += 8;
+  else if (l.lease === '6 mo') pts += 7;
+  else if (l.lease === '12 mo') pts += 5;
+  else pts += 6; // TBD
+
+  // Availability (5 pts)
+  if (l.available === 'Now') pts += 5;
+  else if (l.available === 'Waitlist') pts += 1;
+  else pts += 3;
+
+  // Cat policy (bonus/penalty)
+  if (l.cats === 'No') pts = Math.min(pts, 20); // dealbreaker
+  if (l.cats === 'Yes') pts += 5; // confirmed bonus
+
+  let grade, cls;
+  if (pts >= 78) { grade = 'A'; cls = 'score-a'; }
+  else if (pts >= 65) { grade = 'B'; cls = 'score-b'; }
+  else if (pts >= 50) { grade = 'C'; cls = 'score-c'; }
+  else if (pts >= 35) { grade = 'D'; cls = 'score-d'; }
+  else { grade = 'F'; cls = 'score-f'; }
+
+  return { pts, grade, cls };
+}
+
+function updateSummary(data) {
+  document.getElementById('count-total').textContent = data.length;
+  document.getElementById('count-active').textContent = data.filter(l => l.status !== 'Eliminated').length;
+  document.getElementById('count-contacted').textContent = data.filter(l => ['Contacted','Toured','Applied'].includes(l.status)).length;
+  document.getElementById('count-eliminated').textContent = data.filter(l => l.status === 'Eliminated').length;
+}
+
+// Deadline countdown
+function updateDeadline() {
+  const start = new Date('2026-06-08');
+  const end = new Date('2026-07-08');
+  const now = new Date();
+  const total = (end - start) / (1000*60*60*24);
+  const elapsed = Math.max(0, (now - start) / (1000*60*60*24));
+  const remaining = Math.max(0, Math.ceil((end - now) / (1000*60*60*24)));
+  const pct = Math.min(100, (elapsed / total) * 100);
+  document.getElementById('deadline-fill').style.width = pct + '%';
+  document.getElementById('deadline-left').textContent = remaining + ' days remaining';
+}
+
+// Filters
+function applyFilters() {
+  const typeF = document.getElementById('filter-type').value;
+  const statusF = document.getElementById('filter-status').value;
+  const priceF = document.getElementById('filter-price').value;
+  const leaseF = document.getElementById('filter-lease').value;
+  let filtered = listings.filter(l => {
+    if (typeF !== 'all' && l.type !== typeF) return false;
+    if (statusF !== 'all' && l.status !== statusF) return false;
+    if (priceF === 'under2800' && (l.cost === null || l.cost >= 2800)) return false;
+    if (priceF === '2800-3200' && (l.cost === null || l.cost < 2800 || l.cost > 3200)) return false;
+    if (priceF === '3200-3600' && (l.cost === null || l.cost < 3200 || l.cost > 3600)) return false;
+    if (priceF === 'over3600' && (l.cost === null || l.cost <= 3600)) return false;
+    if (leaseF === 'mtm' && l.lease !== 'Month-to-month') return false;
+    if (leaseF === 'short' && !['Short-term','3-6 mo'].includes(l.lease)) return false;
+    if (leaseF === 'year' && l.lease !== '12 mo') return false;
+    return true;
+  });
+  filtered.sort((a, b) => calcScore(b).pts - calcScore(a).pts);
+  renderTable(filtered);
+}
+
+// Sorting
+let sortCol = null, sortDir = 'asc';
+document.querySelectorAll('th[data-sort]').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.sort;
+    if (sortCol === col) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+    else { sortCol = col; sortDir = 'asc'; }
+    document.querySelectorAll('th').forEach(h => h.classList.remove('sort-asc', 'sort-desc'));
+    th.classList.add(sortDir === 'asc' ? 'sort-asc' : 'sort-desc');
+    listings.sort((a, b) => {
+      let va = a[col], vb = b[col];
+      if (col === 'score') { va = calcScore(a).pts; vb = calcScore(b).pts; }
+      if (va == null) return 1;
+      if (vb == null) return -1;
+      if (typeof va === 'string') return sortDir === 'asc' ? va.localeCompare(vb) : vb.localeCompare(va);
+      return sortDir === 'asc' ? va - vb : vb - va;
+    });
+    applyFilters();
+  });
+});
+
+document.querySelectorAll('.filters select').forEach(s => s.addEventListener('change', applyFilters));
+
+// Init
+updateDeadline();
+listings.sort((a, b) => calcScore(b).pts - calcScore(a).pts);
+renderTable(listings);
+</script>
+
+</body>
+</html>
