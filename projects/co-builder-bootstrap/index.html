@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Co-Builder Bootstrap Prompt - Aught Hour</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .prompt-container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .intro { color: #94a3b8; font-size: 1.1rem; line-height: 1.7; margin-bottom: 2rem; }
+    .intro a { color: #2dd4bf; }
+    .copy-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      padding: 12px 20px;
+    }
+    .copy-bar span { color: #64748b; font-size: 0.85rem; }
+    .copy-btn {
+      background: rgba(45,212,191,0.1);
+      color: #2dd4bf;
+      border: 1px solid rgba(45,212,191,0.3);
+      border-radius: 6px;
+      padding: 6px 16px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(45,212,191,0.2); }
+    .copy-btn.copied { background: rgba(45,212,191,0.3); color: #fff; }
+    .prompt-block {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0 0 8px 8px;
+      padding: 24px;
+      overflow-x: auto;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .prompt-block pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      color: #cbd5e1;
+      margin: 0;
+      tab-size: 2;
+    }
+    .how-it-works { margin-top: 3rem; }
+    .how-it-works h3 { font-size: 1.3rem; margin-bottom: 1rem; }
+    .layers-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .layer-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    .layer-name {
+      font-weight: 600;
+      color: #2dd4bf;
+      font-size: 0.95rem;
+    }
+    .layer-file {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: #64748b;
+      display: block;
+      margin-top: 2px;
+    }
+    .layer-desc { color: #94a3b8; font-size: 0.9rem; margin: 0; }
+    .layer-life {
+      font-size: 0.75rem;
+      color: #475569;
+      display: inline-block;
+      background: rgba(255,255,255,0.05);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 4px;
+    }
+    .related { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08); }
+    .related a { color: #2dd4bf; text-decoration: none; border-bottom: 1px solid transparent; }
+    .related a:hover { border-bottom-color: #2dd4bf; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
+        <ul class="nav-links">
+          <li><a href="/#story">Story</a></li>
+          <li><a href="/#work">The Work</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/#proof">Experience</a></li>
+          <li><a href="/talks/">Talks</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-alt" style="padding-top: 120px; padding-bottom: 80px;">
+    <div class="container">
+      <div class="prompt-container">
+        <h2 class="heavy">Co-Builder Bootstrap</h2>
+        <div class="intro">
+          <p>A single prompt that sets up a persistent memory system for <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code</a>. Paste it into a fresh project and it creates everything - session protocols, task tracking, work logs, state management, and slash commands.</p>
+          <p>Built from 300+ sessions across 8 projects. The system gives a stateless LLM operational memory that compounds over time through five persistence layers, each with a different lifespan.</p>
+        </div>
+
+        <div class="how-it-works">
+          <h3>The Five Layers</h3>
+          <div class="layers-grid">
+            <div class="layer-card">
+              <div>
+                <div class="layer-name">Instructions</div>
+                <span class="layer-file">CLAUDE.md</span>
+                <span class="layer-life">Near-permanent</span>
+              </div>
+              <p class="layer-desc">How Claude should behave. Session protocols, task rules, directory conventions, safety guardrails. Set once, refine occasionally.</p>
+            </div>
+            <div class="layer-card">
+              <div>
+                <div class="layer-name">Memory</div>
+                <span class="layer-file">MEMORY.md</span>
+                <span class="layer-life">Medium-term</span>
+              </div>
+              <p class="layer-desc">Accumulated learnings - preferences, patterns, corrections. Grows session by session. Self-corrects when you correct Claude.</p>
+            </div>
+            <div class="layer-card">
+              <div>
+                <div class="layer-name">State</div>
+                <span class="layer-file">current.md</span>
+                <span class="layer-life">Active until resolved</span>
+              </div>
+              <p class="layer-desc">In-flight threads, open questions, pending decisions. High-churn. Threads persist until explicitly closed.</p>
+            </div>
+            <div class="layer-card">
+              <div>
+                <div class="layer-name">Log</div>
+                <span class="layer-file">LOG.md</span>
+                <span class="layer-life">Permanent</span>
+              </div>
+              <p class="layer-desc">What happened and when. Append-only, reverse-chronological. The audit trail you scan at session start.</p>
+            </div>
+            <div class="layer-card">
+              <div>
+                <div class="layer-name">Tasks</div>
+                <span class="layer-file">tasks/*.json</span>
+                <span class="layer-life">Lifecycle-managed</span>
+              </div>
+              <p class="layer-desc">What needs doing. Priorities, dependencies, triggers. Status flows from backlog to ready to in-progress to done.</p>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 3rem;">The Prompt</h3>
+        <p class="intro" style="margin-bottom: 1rem;">Copy this and paste it into Claude Code in any project directory.</p>
+
+        <div class="copy-bar">
+          <span>bootstrap-prompt.md</span>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy to clipboard</button>
+        </div>
+        <div class="prompt-block">
+          <pre id="prompt-text">
+I want you to help me build a &quot;co-builder&quot; memory system for Claude Code - a set of files and conventions that give you persistent context, strategic awareness, and operational memory across sessions. This is based on a proven system that&#x27;s been running for 300+ sessions across multiple projects.
+
+The core idea: Claude Code has no memory between sessions. This system gives it memory through layered files with different lifespans - permanent instructions, accumulated learnings, active state, append-only logs, and lifecycle-managed tasks. No single layer carries the whole picture. Together they compound.
+
+Read all of this first, then build it.
+
+---
+
+### 1. Project CLAUDE.md
+
+Create `CLAUDE.md` at the project root. This is the project-specific instruction file that Claude Code loads automatically every session. It should contain all of the following sections.
+
+**Session Start Protocol:**
+
+At the start of every new session, before doing anything else:
+1. Read `LOG.md` to see what happened last session
+2. Read `current.md` to see active threads, open questions, pending decisions
+3. Read all files in `tasks/` to check task status across projects
+4. Check tasks with non-null `trigger` fields - flag any whose conditions appear met
+5. Present to the user:
+   - **Last session**: what was worked on, key decisions, anything left unfinished
+   - **Active threads**: any non-closed threads from current.md
+   - **Up next**: in-progress tasks first, then ready tasks sorted by priority
+   - **Triggered**: any tasks whose trigger conditions appear met
+6. Ask what we&#x27;re working on today
+
+**Session End Protocol:**
+
+When the user signals they&#x27;re done (or runs `/end`):
+1. Update `LOG.md` with a summary of what happened this session
+2. Review `current.md` - flag completed threads, suggest closing them
+3. Set any in-progress tasks back to `ready` if work isn&#x27;t complete (clear owner)
+4. Mark completed tasks as `done`
+5. Brief closing summary: what got done, what&#x27;s next
+6. Commit all session changes with a descriptive message. Stage specific files - never use `git add -A`
+
+**Task System:**
+
+Tasks live in `tasks/*.json` - one file per project. Each file wraps tasks in a project object:
+```json
+{
+  &quot;project&quot;: &quot;my-project&quot;,
+  &quot;tasks&quot;: [
+    {
+      &quot;id&quot;: &quot;mp-001&quot;,
+      &quot;title&quot;: &quot;Short description of the task&quot;,
+      &quot;priority&quot;: &quot;P1&quot;,
+      &quot;size&quot;: &quot;M&quot;,
+      &quot;status&quot;: &quot;backlog&quot;,
+      &quot;owner&quot;: null,
+      &quot;added&quot;: &quot;YYYY-MM-DD&quot;,
+      &quot;dependencies&quot;: [],
+      &quot;trigger&quot;: null,
+      &quot;notes&quot;: &quot;&quot;
+    }
+  ]
+}
+```
+
+Fields:
+- **id**: Project prefix + incrementing number (e.g., `mp-001` for &quot;my-project&quot;)
+- **priority**: P0 (critical) &gt; P1 (high) &gt; P2 (medium) &gt; P3 (low)
+- **size**: XS (~15 min), S (~1 hr), M (~half day), L (~1-2 days), XL (~week)
+- **status**: `backlog` (not yet actionable) &gt; `ready` (can start now) &gt; `in-progress` &gt; `done`
+- **trigger**: Null or a string condition. When the condition is met, surface the task to the user for reprioritization. Examples: &quot;when mp-002 is done&quot;, &quot;after the investor meeting&quot;, &quot;when the API is deployed&quot;
+- **dependencies**: Array of task IDs that must be `done` before this task can start
+
+Rules:
+- Always re-read the task file before modifying it (prevents clobbering between sessions)
+- When picking up a task: set `status: &quot;in-progress&quot;` and `owner` before starting work
+- When finishing: set `status: &quot;done&quot;`, keep owner for attribution
+- Never move a task to `ready` without the user asking - that&#x27;s a PM decision
+- Never delete tasks - mark them `done` instead
+- When adding a task, auto-assign the next available ID for that project
+
+**Work Log:**
+- `LOG.md` at the root: reverse-chronological, one entry per meaningful action or decision
+- Format: date heading (`## YYYY-MM-DD`), then bullet points under it
+- Keep entries short - the log is for scanning, not reading
+- Don&#x27;t log trivial actions (file reads, minor formatting fixes)
+- If you have multiple projects, add project tags: `- **ProjectName**: did the thing`
+
+**Savestate (current.md):**
+- `current.md` at the root tracks active threads, open questions, and pending decisions
+- It&#x27;s a living document, not a log - threads persist until explicitly closed
+- Format for each thread:
+```markdown
+### [YYYY-MM-DD] Topic Name
+**Status**: Active / Paused / Blocked
+**Context**: What this is about, where we are
+**Key decisions**: Choices made so far
+**Next**: What&#x27;s left to do
+**Blocked**: External blockers (or &quot;Nothing&quot;)
+```
+- Newest threads on top
+- When context gets dense mid-session (you&#x27;ve been working for a while across multiple topics), suggest running `/savestate` to the user - this preserves state before Claude Code&#x27;s context compression can lose it
+
+**Directory Conventions:**
+
+Every directory has a defined purpose. Don&#x27;t create new top-level dirs without good reason.
+
+| Directory | Purpose | Rule |
+|-----------|---------|------|
+| `tasks/` | Task tracking | One JSON file per project |
+| `data/` | Runtime output | Drafts, generated files, caches. Gitignore anything sensitive |
+| `data/drafts/` | Email drafts, generated docs | Ephemeral - these get sent/used then forgotten |
+| `data/logs/` | Runtime logs | For cron jobs, scripts. Not for session logs (that&#x27;s LOG.md) |
+| `docs/` | Documentation | Plans, specs, reference material |
+| `projects/` | Project code | One subfolder per project (if multi-project repo) |
+
+Placement rules:
+- Project-specific code belongs in its project folder, not at the root
+- Config files stay next to the code they configure
+- No orphan files - every file should be referenced by something
+- Date-first filenames for generated output: `YYYY-MM-DD-description.ext`
+
+**Privacy and Safety:**
+- No irreversible actions (deleting files, force-push) without explicit confirmation
+- Don&#x27;t push to remote unless explicitly asked
+- Don&#x27;t commit files that contain secrets (.env, credentials, API keys)
+- If a pre-commit hook fails, fix the underlying issue - don&#x27;t bypass with --no-verify
+- When staging files, prefer adding specific files by name over `git add -A`
+
+**Git Conventions:**
+- Commit messages: descriptive, explain the &quot;why&quot; not just the &quot;what&quot;
+- Create new commits rather than amending (amending can lose work after hook failures)
+- Don&#x27;t push unless asked
+- Don&#x27;t force-push to main
+
+### 2. User-Level CLAUDE.md
+
+Create `~/.claude/CLAUDE.md`. This is portable - it carries across all projects on this machine. It should contain:
+
+**Communication Style:**
+- Direct, structured, no fluff - respect the operator&#x27;s time
+- Lead with the answer, then explain. Don&#x27;t build up to conclusions
+- Use bullet points and headers over prose for anything &gt; 2 sentences
+- If something is uncertain, label it: `[Inference]`, `[Unverified]`, or `[Speculation]`
+
+**Default Response Pattern** (for strategic or architectural questions):
+1. Problem restatement (1 sentence - prove you understand)
+2. Key assumptions
+3. Structured answer
+4. Tradeoffs
+5. Next 3 actions (concrete, specific, ordered)
+
+Skip steps that don&#x27;t apply. Don&#x27;t force the structure on simple questions.
+
+**Strategic Lenses** (run automatically when evaluating options):
+- **Wedge**: What&#x27;s the narrowest entry point that wins decisively?
+- **What scales**: Will this approach work at 10x? What breaks?
+- **Hidden dependencies**: What does this assume that could change?
+- **Simplest version**: What&#x27;s the minimum that delivers value today?
+
+Surface these as quick callouts, not full analyses (unless asked).
+
+**Interaction Modes** (user invokes by name, e.g. &quot;pressure-test this&quot;):
+- **Extract** - Help find words for an intuition. Ask sharpening questions, reflect back, propose framings until one clicks.
+- **Distill** - Raw inputs in, decision-ready output out. No commentary on the process.
+- **Translate** - Same insight reframed for a different audience. Preserve substance, change framing.
+- **Pressure-test** - Push back hard. Find the weakest point. Don&#x27;t agree.
+- **Sharpen** - Iterative tightening. The draft is close - make it better without changing substance.
+
+**Honesty Protocol:**
+- Never present inference as fact
+- If you don&#x27;t know, say so immediately - don&#x27;t hedge with qualifiers
+- Flag when you&#x27;re extrapolating beyond what&#x27;s in the codebase or memory
+- If a plan has a significant risk, lead with the risk, not the plan
+
+**Preferences** (customize these to match your own workflow):
+- No irreversible actions without explicit confirmation
+- Commit messages: descriptive, multi-line
+- Don&#x27;t push unless explicitly asked
+
+### 3. Auto-Memory
+
+Claude Code has a built-in auto-memory system at `~/.claude/projects/&lt;path&gt;/memory/MEMORY.md`. This file persists across conversations and is loaded automatically. Use it to accumulate learnings.
+
+Add this section to the **project CLAUDE.md** so Claude knows how to use it:
+
+**Memory Rules:**
+- Save stable patterns confirmed across multiple interactions (not one-off observations)
+- Save user preferences for workflow, tools, communication style
+- Save solutions to recurring problems and debugging insights
+- Save key architectural decisions, important file paths, project structure
+- When the user corrects you, update or remove the incorrect memory entry immediately
+- When the user explicitly asks to remember something, save it - no need to wait for confirmation
+- Don&#x27;t save session-specific context, in-progress work, or speculative conclusions
+- Check for existing entries before writing - update, don&#x27;t duplicate
+
+### 4. Slash Commands
+
+Create these files in `.claude/commands/`:
+
+**`.claude/commands/savestate.md`:**
+```
+Capture the current session&#x27;s in-flight state to `current.md` before context compression loses it.
+
+Review the full conversation and extract:
+1. Active threads - what we&#x27;re working on and where we are
+2. In-flight reasoning - why this approach, alternatives rejected, tradeoffs
+3. Open questions - unresolved things
+4. Decisions made this session
+5. Waiting on - external blockers
+
+Read current.md first. Merge, don&#x27;t overwrite: update existing threads if they&#x27;re the same topic, add new threads, append new decisions. Remove clearly-done threads. Keep entries concise - this is reference context, not a narrative.
+
+After saving, confirm what changed in 2-3 bullet points.
+```
+
+**`.claude/commands/end.md`:**
+```
+Follow the Session End protocol from CLAUDE.md now:
+1. Update LOG.md for every project touched this session
+2. Review current.md - flag completed threads, ask before closing them
+3. Set in-progress tasks back to ready if incomplete (clear owner)
+4. Mark completed tasks as done
+5. Check the session for repeatable patterns (preferences, conventions, corrections) - if anything would save time or prevent mistakes in future sessions, save to auto-memory
+6. Brief closing summary: what got done, what&#x27;s next
+7. Commit all session changes with a descriptive message. Stage specific files.
+```
+
+**`.claude/commands/recap.md`:**
+```
+Review everything that happened in this conversation and present a concise summary:
+- What was worked on (with specific artifacts/files produced)
+- Decisions made
+- What&#x27;s left / next steps
+- Any open questions or blockers
+```
+
+**`.claude/commands/todos.md`:**
+```
+Read all files in `tasks/` and present a clean task overview.
+- Group by project
+- Sort by priority (P0 &gt; P3), then by size (XS &gt; XL)
+- Show status groups in order: in-progress &gt; ready &gt; backlog
+- Show done count as a collapsed total at the bottom
+```
+
+**`.claude/commands/reply.md`:**
+```
+Draft an HTML email reply based on context from the current conversation.
+- If no direction given, ask what the reply should cover
+- Keep it concise - short and punchy by default
+- Bold, bullets, numbered lists, tables only. No decorative formatting.
+- Write as a full HTML file to `data/drafts/reply-&lt;slug&gt;.html` with basic styling (font-family, max-width 600px, line-height 1.5)
+- Open the file in the browser
+- Tell the user the file path
+```
+
+### 5. Initial Files
+
+Create these starter files:
+
+**`LOG.md`:**
+```markdown
+# Work Log
+```
+
+**`current.md`:**
+```markdown
+# Current
+
+## Active Threads
+
+&lt;!-- Newest on top. Each thread: ### [YYYY-MM-DD] Topic --&gt;
+
+## Waiting On
+```
+
+**`tasks/`** directory with an empty starter file. Name it after your first project.
+
+**`data/drafts/`** directory (for email drafts and generated output).
+
+**`docs/`** directory (for plans, specs, reference material).
+
+### 6. How It Works
+
+This section is for your reference. Don&#x27;t put it in any file - it&#x27;s the mental model.
+
+**The five persistence layers:**
+
+| Layer | File(s) | Lifespan | Purpose |
+|-------|---------|----------|---------|
+| Instructions | CLAUDE.md (project + user) | Near-permanent | How Claude should behave |
+| Memory | MEMORY.md (auto-memory) | Medium-term, self-correcting | Accumulated learnings, preferences, corrections |
+| State | current.md | Active until resolved | In-flight threads, open questions, pending decisions |
+| Log | LOG.md | Permanent, append-only | What happened and when |
+| Tasks | tasks/*.json | Lifecycle-managed | What needs doing, with priorities and dependencies |
+
+**Why this works:** Claude Code&#x27;s context window is a single conversation. When it gets long, older messages get compressed and detail is lost. This system externalizes the important state into files that persist on disk. Each layer captures a different kind of information at a different cadence:
+
+- **Instructions** rarely change. You set them once, refine occasionally.
+- **Memory** grows session by session as Claude learns your preferences and patterns. It self-corrects when you correct Claude.
+- **State** is high-churn - threads open and close as work progresses. `/savestate` captures complex reasoning before compression can eat it.
+- **Logs** are write-once. They&#x27;re the audit trail you scan at session start to remember what happened.
+- **Tasks** have a lifecycle (backlog &gt; ready &gt; in-progress &gt; done) with triggers and dependencies that automate prioritization.
+
+**Session lifecycle:**
+1. **Start**: Claude reads all layers, presents summary, asks what to work on
+2. **During**: Normal work. When conversation gets dense, run `/savestate`
+3. **End**: Run `/end`. Claude updates logs, tasks, state, commits changes
+
+**Growing the system:**
+Start with just the basics - CLAUDE.md, LOG.md, current.md, one task file. Use it for a few sessions. Then:
+- Add slash commands as you find yourself repeating instructions
+- Add memory entries as patterns stabilize
+- Add directory conventions as the project grows
+- Add new task files as you start new projects
+- Don&#x27;t over-engineer upfront. Let the system grow from actual usage.
+
+### Now build it
+
+Create all the files listed above. For the user-level `~/.claude/CLAUDE.md`, check if one already exists first - if it does, ask before overwriting. Use today&#x27;s date where needed.
+
+After creating everything, give me a summary of what was created and suggest what to customize first (task project name/prefix, personal preferences, etc.).
+</pre>
+        </div>
+
+        <div class="related">
+          <p style="color: #64748b; font-size: 0.9rem;">
+            Related: <a href="/talks/claude-code-co-builder-workshop.pdf">Co-Builder Workshop Deck</a> (PDF) -
+            the lesson and workshop that covers the progression from chat to co-builder to autonomous agents.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="#" class="footer-home">Back to Top</a>
+      <nav class="footer-links">
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </nav>
+      <div class="footer-meta">
+        &copy; <span id="year"></span> Aught Hour LLC. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    function copyPrompt(btn) {
+      const text = document.getElementById('prompt-text').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy to clipboard';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
