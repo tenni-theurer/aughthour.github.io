@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects - Aught Hour</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .projects-list { margin-top: 3rem; }
+    .project-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      transition: border-color 0.2s;
+    }
+    .project-card:hover { border-color: rgba(255,255,255,0.2); }
+    .project-card h3 { margin: 0 0 0.5rem; font-size: 1.4rem; }
+    .project-card h3 a { color: #f1f5f9; text-decoration: none; border-bottom: 1px solid transparent; }
+    .project-card h3 a:hover { border-bottom-color: #2dd4bf; }
+    .project-meta { font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem; }
+    .project-meta span + span::before { content: " · "; }
+    .project-desc { color: #94a3b8; margin: 0; }
+    .project-format { display: inline-block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 4px; background: rgba(45,212,191,0.1); color: #2dd4bf; margin-left: 8px; vertical-align: middle; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
+        <ul class="nav-links">
+          <li><a href="/#story">Story</a></li>
+          <li><a href="/#work">The Work</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/#proof">Experience</a></li>
+          <li><a href="/talks/">Talks</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-alt" style="padding-top: 120px;">
+    <div class="container">
+      <div class="offset-left">
+        <div class="vertical-label">Build</div>
+        <h2>Projects</h2>
+        <p class="large-text">Open tools, prompts, and experiments in building with AI. Copy, paste, and make them your own.</p>
+      </div>
+
+      <div class="projects-list">
+
+        <div class="project-card">
+          <h3><a href="/projects/co-builder-bootstrap/">Co-Builder Bootstrap</a><span class="project-format">Prompt</span></h3>
+          <div class="project-meta">
+            <span>June 2026</span>
+            <span>Claude Code</span>
+            <span>Open Source</span>
+          </div>
+          <p class="project-desc">A single prompt that sets up a persistent memory system for Claude Code. Five persistence layers, session protocols, task tracking, and slash commands - built from 300+ sessions across multiple projects. Paste it into a fresh project and it builds everything.</p>
+        </div>
+
+        <div class="project-card">
+          <h3><a href="/projects/cursor-tab-status/">Cursor Tab Status</a><span class="project-format">Prompt</span></h3>
+          <div class="project-meta">
+            <span>June 2026</span>
+            <span>Claude Code + Cursor</span>
+            <span>Open Source</span>
+          </div>
+          <p class="project-desc">A companion to the Co-Builder Bootstrap for anyone running Claude Code inside Cursor. One prompt gives every terminal tab a status dot plus a short auto-generated name - so you can tell at a glance which sessions are working, finished, or already read.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="#" class="footer-home">Back to Top</a>
+      <nav class="footer-links">
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </nav>
+      <div class="footer-meta">
+        &copy; <span id="year"></span> Aught Hour LLC. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
