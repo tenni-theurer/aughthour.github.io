@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cursor Tab Status - Aught Hour</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .prompt-container { max-width: 800px; margin: 0 auto; }
+    .intro { color: #94a3b8; font-size: 1.1rem; line-height: 1.7; margin-bottom: 2rem; }
+    .intro a { color: #2dd4bf; }
+    .copy-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-bottom: none; border-radius: 8px 8px 0 0; padding: 12px 20px;
+    }
+    .copy-bar span { color: #64748b; font-size: 0.85rem; }
+    .copy-btn {
+      background: rgba(45,212,191,0.1); color: #2dd4bf;
+      border: 1px solid rgba(45,212,191,0.3); border-radius: 6px;
+      padding: 6px 16px; font-size: 0.85rem; cursor: pointer;
+      font-family: inherit; transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(45,212,191,0.2); }
+    .copy-btn.copied { background: rgba(45,212,191,0.3); color: #fff; }
+    .prompt-block {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0 0 8px 8px; padding: 24px; overflow-x: auto;
+      max-height: 70vh; overflow-y: auto;
+    }
+    .prompt-block pre {
+      white-space: pre-wrap; word-wrap: break-word;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.85rem; line-height: 1.6; color: #cbd5e1; margin: 0; tab-size: 2;
+    }
+    .how-it-works { margin-top: 3rem; }
+    .how-it-works h3 { font-size: 1.3rem; margin-bottom: 1rem; }
+    .states-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .state-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px; padding: 1.1rem 1.5rem;
+      display: grid; grid-template-columns: 56px 1fr; gap: 1rem; align-items: center;
+    }
+    .state-dot { font-size: 1.6rem; text-align: center; }
+    .state-name { font-weight: 600; color: #2dd4bf; font-size: 0.95rem; }
+    .state-desc { color: #94a3b8; font-size: 0.9rem; margin: 2px 0 0; }
+    .related { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08); }
+    .related a { color: #2dd4bf; text-decoration: none; border-bottom: 1px solid transparent; }
+    .related a:hover { border-bottom-color: #2dd4bf; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
+        <ul class="nav-links">
+          <li><a href="/#story">Story</a></li>
+          <li><a href="/#work">The Work</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/#proof">Experience</a></li>
+          <li><a href="/talks/">Talks</a></li>
+          <li><a href="/build/">Build</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-alt" style="padding-top: 120px; padding-bottom: 80px;">
+    <div class="container">
+      <div class="prompt-container">
+        <h2 class="heavy">Cursor Tab Status</h2>
+        <div class="intro">
+          <p>A companion to the <a href="/build/co-builder-bootstrap/">Co-Builder Bootstrap</a> for anyone running <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code</a> inside <a href="https://cursor.com" target="_blank">Cursor</a> as their IDE. Paste this one prompt and every terminal tab gets a status dot plus a short auto-generated name - so you can tell at a glance which sessions are working, finished, or already read.</p>
+          <p>macOS only. It wires up a rename skill, two status hooks, and a small Cursor extension that coordinate through the tab's pty.</p>
+        </div>
+
+        <div class="how-it-works">
+          <h3>The Four States</h3>
+          <div class="states-grid">
+            <div class="state-card">
+              <div class="state-dot">&#9203;</div>
+              <div><div class="state-name">Working</div><p class="state-desc">Claude is mid-turn on this tab.</p></div>
+            </div>
+            <div class="state-card">
+              <div class="state-dot">&#128309;</div>
+              <div><div class="state-name">Done, unread</div><p class="state-desc">Finished, with output you have not looked at yet.</p></div>
+            </div>
+            <div class="state-card">
+              <div class="state-dot">&#9989;</div>
+              <div><div class="state-name">Done, read</div><p class="state-desc">Finished and you have opened the tab - caught up.</p></div>
+            </div>
+            <div class="state-card">
+              <div class="state-dot">&#9899;</div>
+              <div><div class="state-name">Ended</div><p class="state-desc">Session wrapped via /end - safe to kill or clear.</p></div>
+            </div>
+          </div>
+        </div>
+
+        <h3 style="margin-top: 3rem;">The Prompt</h3>
+        <p class="intro" style="margin-bottom: 1rem;">Copy this and paste it into Claude Code running in a Cursor terminal.</p>
+
+        <div class="copy-bar">
+          <span>cursor-tab-status-setup.md</span>
+          <button class="copy-btn" onclick="copyPrompt(this)">Copy to clipboard</button>
+        </div>
+        <div class="prompt-block">
+          <pre id="prompt-text">
+Set up the Cursor terminal-tab status + auto-naming system on this machine. I&#x27;m on macOS running Claude Code inside Cursor&#x27;s integrated terminal. The goal: each terminal tab shows a status dot plus a short auto-generated name. Dots mean: ⏳ Claude is working, 🔵 done with unread output, ✅ done and I&#x27;ve already opened the tab. Do all of the steps below. Create parent folders as needed. MERGE into existing files (especially the JSON ones) instead of overwriting them, and preserve any hooks/settings already there.
+
+### STEP 1 - Cursor setting
+
+In `~/Library/Application Support/Cursor/User/settings.json`, set:
+
+```
+&quot;terminal.integrated.tabs.title&quot;: &quot;${sequence}&quot;
+```
+
+Merge into the existing JSON.
+
+### STEP 2 - Claude env
+
+In `~/.claude/settings.json`, under `&quot;env&quot;`, add:
+
+```
+&quot;CLAUDE_CODE_DISABLE_TERMINAL_TITLE&quot;: &quot;1&quot;
+```
+
+This stops Claude Code&#x27;s built-in auto-title from clobbering our custom names. Merge, don&#x27;t overwrite.
+
+### STEP 3 - Create `~/.claude/skills/rename/set-title.sh` and chmod +x it. Exact contents:
+
+```bash
+#!/bin/bash
+#h &lt;title&gt; - set the BASE name for THIS Cursor terminal tab and render it.
+# Stores the base name (keyed by the pty device) so the status hooks (tab-state.sh) can
+# re-prefix it with working/done markers, then writes the title to the pty. This runs
+# while Claude is mid-turn, so it renders with the &quot;working&quot; prefix.
+
+title=&quot;$*&quot;
+if [ -z &quot;$title&quot; ]; then
+  echo &quot;usage: set-title.sh &lt;title&gt;&quot; &gt;&amp;2
+  exit 1
+fi
+
+# resolve the owning pty by walking the parent process tree for the first ttysNNN
+pid=$$; dev=&quot;&quot;
+while [ -n &quot;$pid&quot; ] &amp;&amp; [ &quot;$pid&quot; != &quot;1&quot; ] &amp;&amp; [ &quot;$pid&quot; != &quot;0&quot; ]; do
+  t=$(ps -o tty= -p &quot;$pid&quot; 2&gt;/dev/null | tr -d &#x27; &#x27;)
+  case &quot;$t&quot; in ttys*) dev=&quot;/dev/$t&quot;; break;; esac
+  pid=$(ps -o ppid= -p &quot;$pid&quot; 2&gt;/dev/null | tr -d &#x27; &#x27;)
+done
+if [ -z &quot;$dev&quot; ] || [ ! -w &quot;$dev&quot; ]; then
+  echo &quot;could not find a writable pty for this session (found: ${dev:-none})&quot; &gt;&amp;2
+  exit 1
+fi
+
+# persist the base name keyed by the pty device so the status hooks can read it
+key=$(printf &#x27;%s&#x27; &quot;$dev&quot; | tr -c &#x27;A-Za-z0-9&#x27; &#x27;_&#x27;)
+printf &#x27;%s&#x27; &quot;$title&quot; &gt; &quot;/tmp/.claudetab.$key.name&quot;
+printf &#x27;working&#x27; &gt; &quot;/tmp/.claudetab.$key.state&quot;
+
+# render now with the working prefix (set-title runs while Claude is working)
+printf &#x27;\033]0;%s %s\007&#x27; &quot;⏳&quot; &quot;$title&quot; &gt; &quot;$dev&quot;
+echo &quot;tab renamed to: $title  (via $dev)&quot;
+```
+
+### STEP 4 - Create `~/.claude/skills/rename/tab-state.sh` and chmod +x it. Exact contents:
+
+```bash
+#!/bin/bash
+# tab-state.sh &lt;working|done&gt; - repaint THIS Cursor tab&#x27;s title with a status prefix,
+# keeping the base name set by set-title.sh. Called by the UserPromptSubmit (working)
+# and Stop (done) hooks. Silent and best-effort: any problem just exits 0.
+
+state=&quot;$1&quot;
+
+# resolve the owning pty by walking the parent process tree for the first ttysNNN
+pid=$$; dev=&quot;&quot;
+while [ -n &quot;$pid&quot; ] &amp;&amp; [ &quot;$pid&quot; != &quot;1&quot; ] &amp;&amp; [ &quot;$pid&quot; != &quot;0&quot; ]; do
+  t=$(ps -o tty= -p &quot;$pid&quot; 2&gt;/dev/null | tr -d &#x27; &#x27;)
+  case &quot;$t&quot; in ttys*) dev=&quot;/dev/$t&quot;; break;; esac
+  pid=$(ps -o ppid= -p &quot;$pid&quot; 2&gt;/dev/null | tr -d &#x27; &#x27;)
+done
+[ -z &quot;$dev&quot; ] &amp;&amp; exit 0
+[ -w &quot;$dev&quot; ] || exit 0
+
+key=$(printf &#x27;%s&#x27; &quot;$dev&quot; | tr -c &#x27;A-Za-z0-9&#x27; &#x27;_&#x27;)
+namefile=&quot;/tmp/.claudetab.$key.name&quot;
+[ -f &quot;$namefile&quot; ] || exit 0          # no base name yet -&gt; nothing to prefix
+base=$(cat &quot;$namefile&quot;)
+[ -z &quot;$base&quot; ] &amp;&amp; exit 0
+
+case &quot;$state&quot; in
+  working) prefix=&quot;⏳&quot;; printf &#x27;working&#x27; &gt; &quot;/tmp/.claudetab.$key.state&quot;;;
+  done)    prefix=&quot;🔵&quot;; printf &#x27;done&#x27;    &gt; &quot;/tmp/.claudetab.$key.state&quot;;;
+  end)     prefix=&quot;⚫&quot;; printf &#x27;end&#x27;     &gt; &quot;/tmp/.claudetab.$key.state&quot;;;
+  *) exit 0;;
+esac
+
+printf &#x27;\033]0;%s %s\007&#x27; &quot;$prefix&quot; &quot;$base&quot; &gt; &quot;$dev&quot;
+exit 0
+```
+
+### STEP 5 - Create `~/.claude/skills/rename/SKILL.md` with exact contents:
+
+```markdown
+---
+name: rename
+description: Rename the current Cursor terminal tab. Invoked when the user types /rename [name] to set this chat&#x27;s tab title. With a name, use it verbatim; with no name, generate a short (~3-word) summary of the conversation and use that.
+---
+
+# rename
+
+Sets the title of the Cursor terminal tab for THIS Claude session by writing an OSC
+escape sequence to the pty device the claude process owns. (The generic /dev/tty is
+unreachable from a tool subprocess, so the helper script walks the parent process tree
+to the real ttysNNN device.)
+
+## Steps
+
+1. Decide the title:
+   - If the user typed text after /rename, use that text verbatim.
+   - If nothing was provided, write your own concise title (~3 words max) that captures
+     what this conversation is about.
+2. Run the helper, passing the title as one quoted argument:
+   bash ~/.claude/skills/rename/set-title.sh &quot;&lt;title&gt;&quot;
+3. Tell the user what the tab is now named (one short line).
+
+## Rules
+
+- Keep titles short - aim for 1 to 4 words. Long titles get truncated in the tab column.
+- No quotes or emoji unless the user asked for them.
+
+## If the title reverts after a few seconds
+
+That means Claude Code&#x27;s own auto-title feature is still re-stamping over it. Confirm
+CLAUDE_CODE_DISABLE_TERMINAL_TITLE=1 is set in ~/.claude/settings.json under &quot;env&quot;, and
+note that env changes only take effect after the claude session is restarted.
+```
+
+### STEP 6 - Hooks
+
+In `~/.claude/settings.json`, merge in these hooks (keep any existing ones intact). The UserPromptSubmit hook repaints the tab to ⏳ working and injects a one-time-per-session reminder to auto-name the tab; the Stop hook repaints it to 🔵 done:
+
+```json
+&quot;hooks&quot;: {
+  &quot;UserPromptSubmit&quot;: [
+    {
+      &quot;hooks&quot;: [
+        {
+          &quot;type&quot;: &quot;command&quot;,
+          &quot;command&quot;: &quot;SID=$(jq -r &#x27;.session_id // \&quot;nosession\&quot;&#x27;); M=\&quot;/tmp/.claude-tab-named-$SID\&quot;; if [ ! -f \&quot;$M\&quot; ]; then touch \&quot;$M\&quot;; printf &#x27;%s&#x27; &#x27;{\&quot;hookSpecificOutput\&quot;:{\&quot;hookEventName\&quot;:\&quot;UserPromptSubmit\&quot;,\&quot;additionalContext\&quot;:\&quot;TAB TITLE REMINDER: if you have not yet named this Cursor terminal tab this session, do it now silently by running bash ~/.claude/skills/rename/set-title.sh with your best concise 1-4 word title for this chat. Refine over the next few messages, then settle. Do not announce it.\&quot;}}&#x27;; fi&quot;
+        },
+        {
+          &quot;type&quot;: &quot;command&quot;,
+          &quot;command&quot;: &quot;bash \&quot;$HOME/.claude/skills/rename/tab-state.sh\&quot; working&quot;
+        }
+      ]
+    }
+  ],
+  &quot;Stop&quot;: [
+    {
+      &quot;hooks&quot;: [
+        {
+          &quot;type&quot;: &quot;command&quot;,
+          &quot;command&quot;: &quot;bash \&quot;$HOME/.claude/skills/rename/tab-state.sh\&quot; done&quot;
+        }
+      ]
+    }
+  ]
+}
+```
+
+### STEP 7 - Read-state Cursor extension (gives the ✅ &quot;I&#x27;ve opened it&quot; dot)
+
+Create `~/.cursor/extensions/justin.cursor-tab-status-0.0.1/package.json` with exact contents:
+
+```json
+{
+  &quot;name&quot;: &quot;cursor-tab-status&quot;,
+  &quot;displayName&quot;: &quot;Cursor Tab Status (Claude)&quot;,
+  &quot;description&quot;: &quot;Clears the Claude &#x27;unread output&#x27; marker on a terminal tab when you focus/open it.&quot;,
+  &quot;version&quot;: &quot;0.0.1&quot;,
+  &quot;publisher&quot;: &quot;justin&quot;,
+  &quot;engines&quot;: {
+    &quot;vscode&quot;: &quot;^1.75.0&quot;
+  },
+  &quot;main&quot;: &quot;./extension.js&quot;,
+  &quot;activationEvents&quot;: [
+    &quot;onStartupFinished&quot;
+  ],
+  &quot;contributes&quot;: {}
+}
+```
+
+And create `~/.cursor/extensions/justin.cursor-tab-status-0.0.1/extension.js` with exact contents:
+
+```javascript
+// Cursor Tab Status (Claude)
+// When you focus/open a terminal tab whose Claude output is &quot;done/unread&quot; (blue dot),
+// mark it read with a checkmark prefix to mean &quot;you&#x27;ve seen it&quot;.
+// Coordinates with ~/.claude/skills/rename/*.sh via /tmp/.claudetab.&lt;dev&gt;.{name,state}.
+
+const vscode = require(&#x27;vscode&#x27;);
+const fs = require(&#x27;fs&#x27;);
+const cp = require(&#x27;child_process&#x27;);
+
+// macOS: /tmp is a symlink to /private/tmp. fs.watch on the symlink is flaky,
+// so resolve the real path for both watching and file paths.
+let TMP = &#x27;/tmp&#x27;;
+try { TMP = fs.realpathSync(&#x27;/tmp&#x27;); } catch (e) { /* keep /tmp */ }
+
+function devKey(dev) {
+  // must match the bash:  tr -c &#x27;A-Za-z0-9&#x27; &#x27;_&#x27;
+  return dev.replace(/[^A-Za-z0-9]/g, &#x27;_&#x27;);
+}
+
+function ttyForPid(pid) {
+  try {
+    const out = cp.execSync(`ps -o tty= -p ${pid}`, { encoding: &#x27;utf8&#x27; }).trim();
+    if (out.startsWith(&#x27;ttys&#x27;)) return &#x27;/dev/&#x27; + out;
+  } catch (e) { /* ignore */ }
+  return null;
+}
+
+function markRead(dev) {
+  const key = devKey(dev);
+  const statefile = `${TMP}/.claudetab.${key}.state`;
+  const namefile = `${TMP}/.claudetab.${key}.name`;
+  let state;
+  try { state = fs.readFileSync(statefile, &#x27;utf8&#x27;).trim(); } catch (e) { return; }
+  if (state !== &#x27;done&#x27;) return;            // only clear an unread/done tab
+  let name = &#x27;&#x27;;
+  try { name = fs.readFileSync(namefile, &#x27;utf8&#x27;); } catch (e) { /* ignore */ }
+  try {
+    fs.writeFileSync(statefile, &#x27;read&#x27;);
+    fs.writeFileSync(dev, `\x1b]0;✅ ${name}\x07`);  // checkmark = read/caught up
+  } catch (e) { /* ignore */ }
+}
+
+async function checkActive(terminal) {
+  if (!terminal) return;
+  try {
+    const pid = await terminal.processId;
+    if (!pid) return;
+    const dev = ttyForPid(pid);
+    if (dev) markRead(dev);
+  } catch (e) { /* ignore */ }
+}
+
+function activate(context) {
+  // activation heartbeat so we can confirm the extension actually loaded
+  try { fs.writeFileSync(`${TMP}/.claudetab-ext.alive`, String(Date.now())); } catch (e) { /* ignore */ }
+
+  // you clicked into / switched to a terminal tab
+  context.subscriptions.push(
+    vscode.window.onDidChangeActiveTerminal((t) =&gt; checkActive(t))
+  );
+  // the Cursor window regained focus -&gt; re-check whatever terminal is active
+  context.subscriptions.push(
+    vscode.window.onDidChangeWindowState((st) =&gt; {
+      if (st.focused) checkActive(vscode.window.activeTerminal);
+    })
+  );
+  // &quot;finished while you were already looking at it&quot;: watch the state files; if one
+  // flips to done while this window is focused, clear the active terminal&#x27;s marker
+  try {
+    const watcher = fs.watch(TMP, (event, filename) =&gt; {
+      if (!filename) return;
+      if (!filename.startsWith(&#x27;.claudetab.&#x27;) || !filename.endsWith(&#x27;.state&#x27;)) return;
+      if (!vscode.window.state.focused) return;
+      checkActive(vscode.window.activeTerminal);
+    });
+    context.subscriptions.push({ dispose: () =&gt; watcher.close() });
+  } catch (e) { /* ignore */ }
+  // polling fallback: fs.watch can miss file modifies on macOS, so every 1.5s,
+  // if this window is focused, re-check the active terminal. Cheap (one ps + 2 reads).
+  const poll = setInterval(() =&gt; {
+    if (vscode.window.state.focused) checkActive(vscode.window.activeTerminal);
+  }, 1500);
+  context.subscriptions.push({ dispose: () =&gt; clearInterval(poll) });
+  // initial sweep on activation
+  checkActive(vscode.window.activeTerminal);
+}
+
+function deactivate() {}
+
+module.exports = { activate, deactivate };
+```
+
+Cursor auto-registers an extension folder on the next window reload, so just creating that folder is usually enough. If the ✅ dot never appears after reloading, add an entry for it to `~/.cursor/extensions/extensions.json` (an array of extension entries) keyed by `identifier.id` &quot;justin.cursor-tab-status&quot;, and dedupe so it appears only once.
+
+### STEP 8 - Auto-naming rule
+
+Append this rule to `~/.claude/CLAUDE.md` so tabs name themselves with no /rename needed:
+
+&gt; After the very first user message, silently run `bash ~/.claude/skills/rename/set-title.sh &quot;&lt;title&gt;&quot;` with a concise 1-4 word title for the chat, even if it&#x27;s a rough guess. Refine it over the next few messages as the topic becomes clear, then settle and stop renaming. Keep titles 1-4 words, no quotes or emoji. Do it silently, don&#x27;t announce it. Leave manually-renamed tabs alone.
+
+### STEP 9 - End-state marker (optional, pairs with a session-end command)
+
+If you have a session-end command (for example the `/end` command from the Co-Builder
+Bootstrap), add this as its final action so the tab flips to ⚫ once a session is wrapped
+and ready to kill/clear:
+
+```
+bash ~/.claude/skills/rename/tab-state.sh end
+```
+
+The read-state extension only repaints `done` tabs, so ⚫ persists until your next message
+flips it back to ⏳. Skip this step if you don&#x27;t use a session-end command.
+
+### FINALLY - tell me to do these two activation steps, because the changes don&#x27;t load live:
+
+1. Quit and relaunch `claude` in each terminal tab (loads the env var and the hooks).
+2. In Cursor, open the command palette (Cmd+Shift+P) and run &quot;Developer: Reload Window&quot; (loads the `${sequence}` setting and the read-state extension).
+
+Quick test after that: send any message in a tab. While Claude works the tab shows the ⏳ working dot then the name; when it finishes it shows the 🔵 done dot then the name; click into the tab and it should flip to the ✅ read dot then the name.
+</pre>
+        </div>
+
+        <div class="related">
+          <p style="color: #64748b; font-size: 0.9rem;">
+            Related: <a href="/build/co-builder-bootstrap/">Co-Builder Bootstrap</a> -
+            the persistent-memory system this companion plugs into. Set that up first, then add tab status if you work in Cursor.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="#" class="footer-home">Back to Top</a>
+      <nav class="footer-links">
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </nav>
+      <div class="footer-meta">
+        &copy; <span id="year"></span> Aught Hour LLC. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    function copyPrompt(btn) {
+      const text = document.getElementById('prompt-text').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy to clipboard'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
