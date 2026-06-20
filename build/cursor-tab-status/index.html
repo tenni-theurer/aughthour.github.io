@@ -112,15 +112,16 @@
           <pre id="prompt-text">
 Set up the Cursor terminal-tab status + auto-naming system on this machine. I&#x27;m on macOS running Claude Code inside Cursor&#x27;s integrated terminal. The goal: each terminal tab shows a status dot plus a short auto-generated name. Dots mean: ⏳ Claude is working, 🔵 done with unread output, ✅ done and I&#x27;ve already opened the tab. Do all of the steps below. Create parent folders as needed. MERGE into existing files (especially the JSON ones) instead of overwriting them, and preserve any hooks/settings already there.
 
-### STEP 1 - Cursor setting
+### STEP 1 - Cursor settings
 
 In `~/Library/Application Support/Cursor/User/settings.json`, set:
 
 ```
-&quot;terminal.integrated.tabs.title&quot;: &quot;${sequence}&quot;
+&quot;terminal.integrated.tabs.title&quot;: &quot;${sequence}&quot;,
+&quot;explorer.compactFolders&quot;: false
 ```
 
-Merge into the existing JSON.
+The first key drives the tab titles. The second disables Cursor&#x27;s compact-folder behavior so nested single-child folders (e.g. `a/b/c`) show as a full expandable tree instead of being collapsed onto one row. Merge into the existing JSON.
 
 ### STEP 2 - Claude env
 
