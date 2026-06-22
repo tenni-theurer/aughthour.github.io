@@ -199,17 +199,15 @@ Create `CLAUDE.md` at the project root. This is the project-specific instruction
 
 **Session Start Protocol:**
 
-At the start of every new session, before doing anything else:
+At the start of every new session, before doing anything else. Keep this open light and fast - do the cheap, high-signal reads, surface anything time-sensitive, then ask. Don&#x27;t front-load an exhaustive task dump; a full task review can wait for `/todos` or when the user asks for it.
 1. Read `LOG.md` to see what happened last session
 2. Read `current.md` to see active threads, open questions, pending decisions
-3. Read all files in `tasks/` to check task status across projects
-4. Check tasks with non-null `trigger` fields - flag any whose conditions appear met
-5. Present to the user:
+3. Glance at `tasks/` for anything with a met `trigger` or a near-term deadline - the one calendar-driven thing worth catching eagerly (this is not a full priority-queue scan)
+4. Present to the user:
    - **Last session**: what was worked on, key decisions, anything left unfinished
    - **Active threads**: any non-closed threads from current.md
-   - **Up next**: in-progress tasks first, then ready tasks sorted by priority
-   - **Triggered**: any tasks whose trigger conditions appear met
-6. Ask what we&#x27;re working on today
+   - **Heads up**: any triggered task or near-term deadline - only if something actually fires
+5. Ask what we&#x27;re working on today
 
 **Session End Protocol:**
 
@@ -259,6 +257,7 @@ Rules:
 - Never move a task to `ready` without the user asking - that&#x27;s a PM decision
 - Never delete tasks - mark them `done` instead
 - When adding a task, auto-assign the next available ID for that project
+- The backlog is a memory aid, not a top-down plan to execute in priority order. Surface what&#x27;s relevant - stale, triggered, or genuinely high-priority - but follow the operator&#x27;s lead on what to actually work on. Real sessions are often driven by what&#x27;s live, relational, or urgent, not strict queue order. Don&#x27;t assume the top-priority `ready` task is what happens next, and don&#x27;t treat a long-ignored high-priority task as a failure or nag about it.
 
 **Work Log:**
 - `LOG.md` at the root: reverse-chronological, one entry per meaningful action or decision
