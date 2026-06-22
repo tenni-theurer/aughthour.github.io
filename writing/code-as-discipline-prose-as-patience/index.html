@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code as Discipline, Prose as Patience &ndash; Aught Hour</title>
+  <meta name="description" content="Match the enforcement mechanism to the failure mode: encode the irreversible in code, write down the reversible in prose, and never confuse the two.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .article-head { padding-top: calc(var(--nav-height) + 56px); padding-bottom: 0; }
+    .article-kicker { font-size: .8rem; text-transform: uppercase; letter-spacing: .16em; color: var(--accent); font-weight: 700; margin-bottom: 1rem; }
+    .article-title { font-size: clamp(2.2rem, 5.5vw, 3.4rem); font-weight: 900; line-height: 1.1; letter-spacing: -.02em; }
+    .article-deck { font-size: clamp(1.2rem, 2.6vw, 1.5rem); font-weight: 600; color: var(--accent); margin-top: .6rem; letter-spacing: -.01em; }
+    .article-meta { font-size: .9rem; color: var(--text-secondary); margin-top: 1.25rem; }
+    .article-meta span + span::before { content: " \00b7 "; color: #475569; }
+    .article-meta b { color: #e2e8f0; font-weight: 600; }
+    .article-wrap { max-width: 720px; margin: 0 auto; padding-bottom: 40px; }
+    .article-body { font-size: 1.16rem; line-height: 1.78; color: #c7ccd6; }
+    .article-body p { font-size: 1.16rem; color: #c7ccd6; margin-bottom: 1.5rem; }
+    .article-body .lede { font-size: 1.45rem; line-height: 1.5; color: #e2e8f0; font-weight: 300; margin-bottom: 1.75rem; }
+    .article-body .lede em { font-style: italic; color: #fff; }
+    .article-body h2 { font-size: clamp(1.5rem, 3vw, 1.85rem); font-weight: 700; color: #fff; letter-spacing: -.01em; line-height: 1.25; margin: 2.75rem 0 1rem; }
+    .article-body strong { color: #f1f5f9; font-weight: 700; }
+    .article-body em { font-style: italic; color: #e2e8f0; }
+    .article-body .article-next { color: #94a3b8; font-style: italic; }
+    .article-rule { border: none; border-top: 1px solid rgba(255,255,255,.1); margin: 3rem 0 1.5rem; }
+    .article-disclaimer { font-size: .9rem; line-height: 1.6; color: #64748b; font-style: italic; }
+    .article-back { display:inline-block; margin-top: 1rem; font-size: .9rem; color: var(--accent); text-decoration: none; font-weight: 600; }
+    .article-back:hover { text-decoration: underline; text-underline-offset: .14em; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
+        <ul class="nav-links">
+          <li><a href="/#story">Story</a></li>
+          <li><a href="/#work">The Work</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/#proof">Experience</a></li>
+          <li><a href="/talks/">Talks</a></li>
+          <li><a href="/writing/">Writing</a></li>
+          <li><a href="/build/">Build</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-alt article-head">
+    <div class="container">
+      <div class="article-wrap">
+        <div class="article-kicker">Field Notes from the Agentic Operator &middot; Issue 15</div>
+        <h1 class="article-title">Code as Discipline, Prose as Patience</h1>
+        <div class="article-deck">The rules that fail you are the ones written in words.</div>
+        <div class="article-meta">
+          <span><b>Tenni Theurer</b></span>
+          <span>June 19, 2026</span>
+          <span>5 min read</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top: 48px;">
+    <div class="container">
+      <article class="article-wrap article-body">
+<p class="lede">After a couple of committed passwords and a deploy that came within one command of wiping live data, I went back and read my own rules. Every one of those mistakes already had a rule telling me not to make it. The rules existed. They failed anyway.</p>
+
+<p>That stopped me. I am not a careless operator. I had written, in plain English, the exact warnings I needed: do not commit secrets, be careful with destructive syncs, check before you push over history. The discipline was documented. And it still let three near-catastrophes through.</p>
+
+<p>So I asked the obvious question. If the rule was there, why didn't it work?</p>
+
+<p>The answer is that the rule lived in prose. And prose depends on a human being disciplined at the precise moment they are least capable of it: rushed, tired, certain, three commands deep into a flow they have done a hundred times. Prose asks you to remember the rule exactly when remembering is hardest. That is not a safety system. That is a hope.</p>
+
+<h2>The spine had the right words and the wrong teeth</h2>
+
+<p>I run my work off a single operator OS: a spine that holds my memory, my decisions, and my rules, with project orbits hanging off it. The spine is good. It is where I keep the accumulated judgment of years, and it makes every project smarter than it would be alone.</p>
+
+<p>But I had been treating the spine as if all rules were the same kind of thing. A rule about tone and a rule about leaking a secret sat side by side in the same document, in the same format, enforced by the same mechanism: me, reading words, deciding to obey them.</p>
+
+<p>That is the mistake. Not the content of the rules. The enforcement.</p>
+
+<p>Because the two rules fail completely differently. If I forget the tone rule, I send a slightly stiff message and fix it next time. If I forget the secret rule, the secret is on a remote, in history, possibly scraped within minutes, and the cost is permanent. Same format, wildly different blast radius. And I had given them the same teeth: none that bite when it counts.</p>
+
+<h2>Match the mechanism to the failure mode</h2>
+
+<p>Here is the principle I should have had from the start. <strong>Match the enforcement mechanism to the failure mode.</strong></p>
+
+<p>For irreversible, high-stakes risk - leaking a secret, wiping production, force-pushing over history - a written rule is not enough. It fails exactly when you most need it. Those belong in code. A pre-commit hook that refuses to commit a secret. A deploy guard that refuses a dangerous sync. A deny rule that makes the catastrophic action impossible rather than merely discouraged. Code does not get tired. Code does not feel certain at 11pm. It does not care how many times you have done this safely before. It just refuses.</p>
+
+<p>For reversible judgment calls - tone, formatting, a default choice, which option to reach for first - prose is exactly right. A memory note or a guideline is cheap to write, easy to change, and forgiving when wrong. You do not want a hook policing your comma style. The flexibility is the feature, and the downside of getting it wrong is a shrug.</p>
+
+<p>The error is using prose for both. Prose degrades gracefully on the small things and fails catastrophically on the big ones. It is the perfect tool for half your rules and a dangerous one for the other half, and it looks identical in the document either way. That is what makes it sneaky. The dangerous rule and the harmless rule are the same shape on the page.</p>
+
+<p>So now I sort every rule by one question before I write it down: if this fails at the worst possible moment, can I undo it? If yes, prose is fine. Write the note, move on. If no, prose is malpractice. It goes in code, or it does not count as a control at all.</p>
+
+<h2>Discipline is a terrible safety system</h2>
+
+<p>The hard part is admitting what this says about discipline. I have spent a career being good at discipline. I take pride in it. And the lesson here is that discipline is precisely the wrong thing to lean on where safety actually matters.</p>
+
+<p>Discipline is the muscle that fails under load. It is strongest when the stakes are low and weakest when they spike, which is the exact inverse of what you want from a safety system. The committed passwords did not happen on a calm afternoon. They happened in a rush. The near-wipe did not happen because I did not know better. It happened because knowing better lives in the same fragile place that gets overwritten by speed.</p>
+
+<p>Code has none of that fragility. A hook is just as strict on your worst day as your best. It removes the dependency on you being sharp at the exact moment you are guaranteed not to be. That is not a constraint on good operators. It is what lets good operators move fast without betting the company on a moment of attention.</p>
+
+<p>So the spine got rebuilt with that distinction baked in. Encode the irreversible. Write down the reversible. The catastrophic actions are now blocked by machines that do not negotiate. The judgment calls still live in prose, where they belong, flexible and cheap.</p>
+
+<p>Prose is for patience - the slow accumulation of taste and judgment you refine over years. Code is for the moments that do not give you a second chance. Know which rule you are writing, and never, ever ask discipline to guard the door where the cost of one bad night is forever.</p>
+        <hr class="article-rule">
+        <p class="article-disclaimer">Field Notes from the Agentic Operator is a personal series. These are my own views, not those of my employer or any organization I work with, and nothing here relies on non-public information.</p>
+        <a href="/writing/" class="article-back">&larr; All writing</a>
+      </article>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="/" class="footer-home">Back to Top</a>
+      <nav class="footer-links">
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </nav>
+      <div class="footer-meta">
+        &copy; <span id="year"></span> Aught Hour LLC. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

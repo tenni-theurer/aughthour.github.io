@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opportunistic Is Not Lazy &ndash; Aught Hour</title>
+  <meta name="description" content="My own tooling kept flagging untouched high-priority tasks as a failure; it had the facts right and the judgment exactly wrong.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .article-head { padding-top: calc(var(--nav-height) + 56px); padding-bottom: 0; }
+    .article-kicker { font-size: .8rem; text-transform: uppercase; letter-spacing: .16em; color: var(--accent); font-weight: 700; margin-bottom: 1rem; }
+    .article-title { font-size: clamp(2.2rem, 5.5vw, 3.4rem); font-weight: 900; line-height: 1.1; letter-spacing: -.02em; }
+    .article-deck { font-size: clamp(1.2rem, 2.6vw, 1.5rem); font-weight: 600; color: var(--accent); margin-top: .6rem; letter-spacing: -.01em; }
+    .article-meta { font-size: .9rem; color: var(--text-secondary); margin-top: 1.25rem; }
+    .article-meta span + span::before { content: " \00b7 "; color: #475569; }
+    .article-meta b { color: #e2e8f0; font-weight: 600; }
+    .article-wrap { max-width: 720px; margin: 0 auto; padding-bottom: 40px; }
+    .article-body { font-size: 1.16rem; line-height: 1.78; color: #c7ccd6; }
+    .article-body p { font-size: 1.16rem; color: #c7ccd6; margin-bottom: 1.5rem; }
+    .article-body .lede { font-size: 1.45rem; line-height: 1.5; color: #e2e8f0; font-weight: 300; margin-bottom: 1.75rem; }
+    .article-body .lede em { font-style: italic; color: #fff; }
+    .article-body h2 { font-size: clamp(1.5rem, 3vw, 1.85rem); font-weight: 700; color: #fff; letter-spacing: -.01em; line-height: 1.25; margin: 2.75rem 0 1rem; }
+    .article-body strong { color: #f1f5f9; font-weight: 700; }
+    .article-body em { font-style: italic; color: #e2e8f0; }
+    .article-body .article-next { color: #94a3b8; font-style: italic; }
+    .article-rule { border: none; border-top: 1px solid rgba(255,255,255,.1); margin: 3rem 0 1.5rem; }
+    .article-disclaimer { font-size: .9rem; line-height: 1.6; color: #64748b; font-style: italic; }
+    .article-back { display:inline-block; margin-top: 1rem; font-size: .9rem; color: var(--accent); text-decoration: none; font-weight: 600; }
+    .article-back:hover { text-decoration: underline; text-underline-offset: .14em; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
+        <ul class="nav-links">
+          <li><a href="/#story">Story</a></li>
+          <li><a href="/#work">The Work</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/#proof">Experience</a></li>
+          <li><a href="/talks/">Talks</a></li>
+          <li><a href="/writing/">Writing</a></li>
+          <li><a href="/build/">Build</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-alt article-head">
+    <div class="container">
+      <div class="article-wrap">
+        <div class="article-kicker">Field Notes from the Agentic Operator &middot; Issue 03</div>
+        <h1 class="article-title">Opportunistic Is Not Lazy</h1>
+        <div class="article-deck">Why a long-ignored P1 is usually good triage, not a discipline failure.</div>
+        <div class="article-meta">
+          <span><b>Tenni Theurer</b></span>
+          <span>March 13, 2026</span>
+          <span>4 min read</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top: 48px;">
+    <div class="container">
+      <article class="article-wrap article-body">
+<p class="lede">My own tooling kept flagging me. High-priority tasks sitting untouched for weeks, surfaced at the top of every status check, quietly marked as a discipline problem. The facts were exact. The judgment was exactly wrong.</p>
+
+<p>I built the thing that was scolding me. The system I run my own work on tracks tasks across every venture I touch, with priority and size and age on each one. It is good at noticing when a P1 has gone cold. It assumed, the way most tools assume, that a cold P1 is a debt I am failing to pay down.</p>
+
+<p>It took me an embarrassingly long time to defend myself against my own software. But here is the defense: those tasks were not neglected. They were correctly deprioritized, over and over, by a process the tool could not see. The list had the data. I had the context. Those are not the same thing, and the gap between them is the whole job.</p>
+
+<h2>The queue is not the plan</h2>
+
+<p>If you run a single project, a priority-sorted queue is close to a plan. You start at the top, you work down, the order roughly holds. That is the world most task tools are designed for, and it is a fine world.</p>
+
+<p>It is not my world. I run several ventures as orbits around one operating spine, I advise a couple more, and I hold a demanding day job on top of all of it. At any given hour, the highest-leverage thing I can do is almost never the top item on a static list. It is whatever is live. A partner just replied and the deal is warm for exactly today. A customer hit a wall and the fix is cheap if I do it now and expensive if I do it Thursday. Someone with leverage over an outcome I care about has thirty minutes, and that window does not reopen on my schedule.</p>
+
+<p>None of that shows up as priority in a backlog. It shows up as signal in the world. The backlog ranks importance in the abstract. The world tells you what is actionable right now. When those two disagree, and they disagree constantly, the world wins. It should.</p>
+
+<h2>A cold P1 is usually correct</h2>
+
+<p>This is the part that took me years to say without flinching. A high-priority task that has sat for weeks is, more often than not, evidence that my triage is working, not that it is broken.</p>
+
+<p>Think about what kept it cold. Every day it stayed at the top, I looked at it and chose something else. Not once, accidentally. Dozens of times, deliberately, against full awareness that it was marked important. That is not avoidance. That is a standing judgment that the relational, the urgent, and the live kept beating it on the merits. A task that loses that contest twenty days running is not being ignored. It is being assessed, and it keeps coming up short for now.</p>
+
+<p>Sometimes the cold task is genuinely stuck and the staleness is a real flag. But you can tell the difference in about ten seconds, and the tool cannot tell it at all. The tool sees age and importance and infers guilt. I see age and importance and ask one question: has anything in the world made this live yet? Usually the honest answer is no. So it waits, correctly, for one more day.</p>
+
+<p>The skill here is reading signal, not obeying a list. Obeying a list is easy, which is exactly why it feels virtuous and exactly why it is the wrong instinct for a portfolio. Marching down a priority-sorted queue feels like discipline. Across this many surfaces it is usually just a refusal to read the room.</p>
+
+<h2>What the backlog is actually for</h2>
+
+<p>So I stopped treating the list as a set of marching orders and started treating it as what it really is: a memory aid. Its job is not to dictate my day. Its job is to make sure that when something does become live, the relevant work is already captured, framed, and ready, so I am acting on a warm window instead of reconstructing context from scratch.</p>
+
+<p>That reframing changed what I optimize the spine for. I stopped building it to nag and started building it to catch. A good backlog is not a conscience. It is a net. It exists to hold the things I would otherwise forget, so that opportunism does not curdle into chaos. The net and the improvisation are partners. Working what is live without a backlog is just thrashing. A backlog without the freedom to work what is live is just a slower, tidier way to miss every real window.</p>
+
+<p>I changed the tooling, eventually. It still tracks age, because age is real information. But it no longer renders a cold P1 in the color of failure. It asks, quietly, whether anything has made the task live, and if the answer is no, it lets the task wait without the editorial.</p>
+
+<p>If you operate across more than one thing, I would offer you the same permission I had to grant myself. Opportunistic is not lazy. It is a strategy, and on a portfolio it is the only one that actually scales. The disciplined-looking operator grinding top to bottom through a fixed list is not more serious than you. They are just running a smaller surface, or running yours badly. Let the queue remember for you. Then go work whatever the day made real.</p>
+        <hr class="article-rule">
+        <p class="article-disclaimer">Field Notes from the Agentic Operator is a personal series. These are my own views, not those of my employer or any organization I work with, and nothing here relies on non-public information.</p>
+        <a href="/writing/" class="article-back">&larr; All writing</a>
+      </article>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="/" class="footer-home">Back to Top</a>
+      <nav class="footer-links">
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </nav>
+      <div class="footer-meta">
+        &copy; <span id="year"></span> Aught Hour LLC. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

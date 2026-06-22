@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Own All Your Addresses &ndash; Aught Hour</title>
+  <meta name="description" content="Why a scatter of email addresses across a small team quietly erodes trust, and why consolidating early is a coherence feature, not a cleanup chore.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .article-head { padding-top: calc(var(--nav-height) + 56px); padding-bottom: 0; }
+    .article-kicker { font-size: .8rem; text-transform: uppercase; letter-spacing: .16em; color: var(--accent); font-weight: 700; margin-bottom: 1rem; }
+    .article-title { font-size: clamp(2.2rem, 5.5vw, 3.4rem); font-weight: 900; line-height: 1.1; letter-spacing: -.02em; }
+    .article-deck { font-size: clamp(1.2rem, 2.6vw, 1.5rem); font-weight: 600; color: var(--accent); margin-top: .6rem; letter-spacing: -.01em; }
+    .article-meta { font-size: .9rem; color: var(--text-secondary); margin-top: 1.25rem; }
+    .article-meta span + span::before { content: " \00b7 "; color: #475569; }
+    .article-meta b { color: #e2e8f0; font-weight: 600; }
+    .article-wrap { max-width: 720px; margin: 0 auto; padding-bottom: 40px; }
+    .article-body { font-size: 1.16rem; line-height: 1.78; color: #c7ccd6; }
+    .article-body p { font-size: 1.16rem; color: #c7ccd6; margin-bottom: 1.5rem; }
+    .article-body .lede { font-size: 1.45rem; line-height: 1.5; color: #e2e8f0; font-weight: 300; margin-bottom: 1.75rem; }
+    .article-body .lede em { font-style: italic; color: #fff; }
+    .article-body h2 { font-size: clamp(1.5rem, 3vw, 1.85rem); font-weight: 700; color: #fff; letter-spacing: -.01em; line-height: 1.25; margin: 2.75rem 0 1rem; }
+    .article-body strong { color: #f1f5f9; font-weight: 700; }
+    .article-body em { font-style: italic; color: #e2e8f0; }
+    .article-body .article-next { color: #94a3b8; font-style: italic; }
+    .article-rule { border: none; border-top: 1px solid rgba(255,255,255,.1); margin: 3rem 0 1.5rem; }
+    .article-disclaimer { font-size: .9rem; line-height: 1.6; color: #64748b; font-style: italic; }
+    .article-back { display:inline-block; margin-top: 1rem; font-size: .9rem; color: var(--accent); text-decoration: none; font-weight: 600; }
+    .article-back:hover { text-decoration: underline; text-underline-offset: .14em; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
+        <ul class="nav-links">
+          <li><a href="/#story">Story</a></li>
+          <li><a href="/#work">The Work</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/#proof">Experience</a></li>
+          <li><a href="/talks/">Talks</a></li>
+          <li><a href="/writing/">Writing</a></li>
+          <li><a href="/build/">Build</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-alt article-head">
+    <div class="container">
+      <div class="article-wrap">
+        <div class="article-kicker">Field Notes from the Agentic Operator &middot; Issue 10</div>
+        <h1 class="article-title">Own All Your Addresses</h1>
+        <div class="article-deck">Email fragmentation looks like a logistics problem. It is a coherence problem.</div>
+        <div class="article-meta">
+          <span><b>Tenni Theurer</b></span>
+          <span>May 15, 2026</span>
+          <span>4 min read</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top: 48px;">
+    <div class="container">
+      <article class="article-wrap article-body">
+<p class="lede">A small team I run was operating out of a scatter of email addresses. A few different ones for the same handful of people. I had wired up a pipeline to triage incoming mail, and it kept tripping over itself - de-duplicating the same person across two and three identities, guessing which thread belonged to which version of us.</p>
+
+<p>The fix was tiny. An afternoon, mostly. What it taught me was not.</p>
+
+<p>Because I went in thinking I was solving a routing problem. I came out understanding I had been leaking credibility for months.</p>
+
+<h2>The problem you think you have</h2>
+
+<p>If you run a small team, you know the shape of this. Someone signed up for a tool with a personal account. Someone else used a company alias that got set up in a hurry. A founder still answers important threads from the address they have had since college. Mail arrives in three places. You build little bridges between them - forwarding rules, a pipeline, a habit of checking everything twice.</p>
+
+<p>It feels like a logistics tax. Annoying, manageable, the kind of thing you will clean up when there is time.</p>
+
+<p>So I treated it like logistics. My operator OS - the spine that holds all my ventures together - already had a triage layer, and I just kept widening it to absorb the mess. More addresses in, more de-duplication logic to reconcile them. I was getting better and better at managing fragmentation instead of removing it. That is the trap. A pipeline can make a structural problem feel solved when it has only been hidden.</p>
+
+<p>The tell was the de-duplication itself. If my own system could not tell which identity belonged to which person without extra logic, neither could the people we were emailing.</p>
+
+<h2>The problem you actually have</h2>
+
+<p>Here is what fragmentation does that nobody puts on the cost sheet.</p>
+
+<p>Every partner, every investor, every customer is quietly assembling a picture of who you are. Each address is a different brushstroke. One thread comes from a personal account, the next from a company alias, the next from a founder's old handle. None of it is wrong, exactly. But none of it lines up either.</p>
+
+<p>The reader does the reconciling you offloaded. They wonder, half-consciously, <em>which you am I dealing with today?</em> Is this the company, or a person using the company's name? Is this the operation, or a side conversation? They do not file a complaint. They just trust you a notch less, and they could not tell you why.</p>
+
+<p>That is the real cost. Not wasted cycles in a pipeline. A slow, invisible discount on your credibility, applied by everyone you most need to take you seriously.</p>
+
+<p>Coherence is a trust feature. A single, predictable identity tells the reader they are dealing with one entity that has its act together. Scatter tells them the opposite, and it tells them before you have said a word.</p>
+
+<h2>Own all your addresses</h2>
+
+<p>The rule I came away with is simple. Consolidate early, and own all your addresses.</p>
+
+<p>You can have a split. One address for operations, one for the company, whatever the structure demands. That is fine. The two requirements are that the addresses are <strong>coherent</strong> - a reader can look at any one of them and know exactly which function they are talking to - and that they are <strong>yours</strong>. You at the company, not a personal account wearing the company's clothes. Not an alias someone spun up that you do not really control.</p>
+
+<p>Owning them matters as much as consolidating them. A personal account doing company work is a single point of failure dressed up as a convenience. When that person leaves, or changes their handle, or just stops checking it, the company's history walks out the door. Ownership is the difference between an identity the company has and an identity it borrows.</p>
+
+<p>The technical payoff was real. My pipeline got simpler the moment the inputs got coherent. The de-duplication logic disappeared because there was nothing left to de-duplicate. Fewer wasted cycles, fewer edge cases, a triage layer I could actually reason about.</p>
+
+<p>But that was the secondary win, and I want to be clear about the order. The primary win is that nobody we work with ever has to wonder which version of us they have reached. Every thread looks like it came from the same outfit because it did. The picture they are assembling finally matches the one we want them to have.</p>
+
+<p>That is the lesson I keep returning to as I run these orbits off one spine. The things that present as cleanup - reconciling identities, merging accounts, picking one canonical address - are rarely just cleanup. They are coherence work. And coherence, for a small team that wants to be taken seriously by people much larger than it, is not housekeeping. It is the product.</p>
+        <hr class="article-rule">
+        <p class="article-disclaimer">Field Notes from the Agentic Operator is a personal series. These are my own views, not those of my employer or any organization I work with, and nothing here relies on non-public information.</p>
+        <a href="/writing/" class="article-back">&larr; All writing</a>
+      </article>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="/" class="footer-home">Back to Top</a>
+      <nav class="footer-links">
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </nav>
+      <div class="footer-meta">
+        &copy; <span id="year"></span> Aught Hour LLC. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

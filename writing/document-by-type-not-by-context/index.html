@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document by Type, Not by Context &ndash; Aught Hour</title>
+  <meta name="description" content="A knowledge base broke past sixty documents because it was organized by where things got used instead of what they actually were.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .article-head { padding-top: calc(var(--nav-height) + 56px); padding-bottom: 0; }
+    .article-kicker { font-size: .8rem; text-transform: uppercase; letter-spacing: .16em; color: var(--accent); font-weight: 700; margin-bottom: 1rem; }
+    .article-title { font-size: clamp(2.2rem, 5.5vw, 3.4rem); font-weight: 900; line-height: 1.1; letter-spacing: -.02em; }
+    .article-deck { font-size: clamp(1.2rem, 2.6vw, 1.5rem); font-weight: 600; color: var(--accent); margin-top: .6rem; letter-spacing: -.01em; }
+    .article-meta { font-size: .9rem; color: var(--text-secondary); margin-top: 1.25rem; }
+    .article-meta span + span::before { content: " \00b7 "; color: #475569; }
+    .article-meta b { color: #e2e8f0; font-weight: 600; }
+    .article-wrap { max-width: 720px; margin: 0 auto; padding-bottom: 40px; }
+    .article-body { font-size: 1.16rem; line-height: 1.78; color: #c7ccd6; }
+    .article-body p { font-size: 1.16rem; color: #c7ccd6; margin-bottom: 1.5rem; }
+    .article-body .lede { font-size: 1.45rem; line-height: 1.5; color: #e2e8f0; font-weight: 300; margin-bottom: 1.75rem; }
+    .article-body .lede em { font-style: italic; color: #fff; }
+    .article-body h2 { font-size: clamp(1.5rem, 3vw, 1.85rem); font-weight: 700; color: #fff; letter-spacing: -.01em; line-height: 1.25; margin: 2.75rem 0 1rem; }
+    .article-body strong { color: #f1f5f9; font-weight: 700; }
+    .article-body em { font-style: italic; color: #e2e8f0; }
+    .article-body .article-next { color: #94a3b8; font-style: italic; }
+    .article-rule { border: none; border-top: 1px solid rgba(255,255,255,.1); margin: 3rem 0 1.5rem; }
+    .article-disclaimer { font-size: .9rem; line-height: 1.6; color: #64748b; font-style: italic; }
+    .article-back { display:inline-block; margin-top: 1rem; font-size: .9rem; color: var(--accent); text-decoration: none; font-weight: 600; }
+    .article-back:hover { text-decoration: underline; text-underline-offset: .14em; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
+        <ul class="nav-links">
+          <li><a href="/#story">Story</a></li>
+          <li><a href="/#work">The Work</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/#proof">Experience</a></li>
+          <li><a href="/talks/">Talks</a></li>
+          <li><a href="/writing/">Writing</a></li>
+          <li><a href="/build/">Build</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-alt article-head">
+    <div class="container">
+      <div class="article-wrap">
+        <div class="article-kicker">Field Notes from the Agentic Operator &middot; Issue 04</div>
+        <h1 class="article-title">Document by Type, Not by Context</h1>
+        <div class="article-deck">The folder named after a meeting is a copy machine. The one named after a type is a single source of truth.</div>
+        <div class="article-meta">
+          <span><b>Tenni Theurer</b></span>
+          <span>March 24, 2026</span>
+          <span>4 min read</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding-top: 48px;">
+    <div class="container">
+      <article class="article-wrap article-body">
+<p class="lede">A knowledge base I run grew past sixty documents and turned into chaos. Two folders both effectively held "financial models." One document had been copied into three places because it got used in three meetings. The mess was not volume. It was the wrong organizing axis.</p>
+
+<p>Sixty documents is not a lot. I have built and dissolved knowledge bases ten times that size without breaking a sweat. So when this one started to rot, I knew the problem was not scale. It was the question I had asked when I created each folder.</p>
+
+<p>I had been asking: where was this used? The investor meeting. The board prep. The partner sync. Each occasion got a folder, and into each folder went whatever showed up that day. It felt natural. It maps to how the week actually unfolds. It is also how you guarantee duplication and version drift, because the same document belongs to many occasions, and an occasion-based structure has no way to say "there is only one of these."</p>
+
+<h2>Context is a copy machine</h2>
+
+<p>Here is the failure in slow motion. A financial model gets built for an investor meeting, so it lands in the investor folder. Two weeks later the same model gets pulled into board prep, so a copy lands in the board folder. Someone tweaks the board copy. Now there are two models, both live, both slightly wrong, and no marker anywhere telling you which one is real.</p>
+
+<p>Multiply that by every document that ever crossed more than one meeting. That is what sixty documents looked like. Not sixty things. Maybe forty things, wearing twenty disguises, drifting apart from their originals one small edit at a time.</p>
+
+<p>The deeper issue is that context is not a property of the document. It is a property of an event. A model does not become a different object because you opened it in a different room. But a context-based folder structure insists that it does, and it punishes you with a copy every time you cross a boundary.</p>
+
+<h2>Type is a single source of truth</h2>
+
+<p>The fix was to organize by what each document <em>is</em>, never by where it got used. One folder per type. All financial models in one place. All investor materials in one place. All legal documents in one place. The occasion that pulled a document into a meeting becomes a fact about that meeting, not a location on disk.</p>
+
+<p>This forces the thing context can never give you: one canonical copy per document. When every model lives in the same folder, you cannot quietly fork one into another room, because there is no other room. If genuine variants need to coexist, they live together, side by side, with an explicit marker naming which one is canonical. An archive subfolder holds the history so nothing is lost, but nothing stale pretends to be current either.</p>
+
+<p>The rule I now run on the knowledge layer of my spine is one line. <strong>A document lives in exactly one place, chosen by what it is. Where it was used is metadata, not a folder.</strong></p>
+
+<h2>The second-order payoff</h2>
+
+<p>The part I did not expect was what type-based structure did to my discipline.</p>
+
+<p>When you place the same type of document over and over into the same folder, consistency stops being a thing you remember to do and becomes a thing the structure does for you. I open the financial models folder and I see eleven files that all follow the same date-first naming. The next model I drop in wants to match them. The folder itself is teaching me the convention. Date-first filenames, clear ownership, a visible canonical marker - none of it requires a checklist anymore, because the neighbors enforce the standard.</p>
+
+<p>Compare that to context folders, where each occasion holds a random assortment of types and no convention can take hold. You cannot build a habit on top of variety. You can only build one on top of repetition, and type-based structure is repetition by design.</p>
+
+<p>The team payoff is the one I care about most. We are a small team running a venture together. A teammate or a partner never has to ask which version is live, because there is only ever one, and it sits where its type says it should. Nobody rebuilds a model from scratch because they could not find last quarter's, because last quarter's is in the archive subfolder one click away, clearly marked as old.</p>
+
+<p>That is what coherence looks like for a small team. Not a heroic act of communication. Not a weekly sync where someone reads out the current state of every file. Just a structure where the right answer is the only answer the filesystem will let you give.</p>
+
+<p>So when you build the knowledge layer of your own system, ask one question of every folder you create: does this name describe what the documents are, or where they happened to be used? If it is the second, you have built a copy machine. Rename it after the type, move the duplicates into one place, mark the canonical one, archive the rest. Then watch how much of the coordination you used to do by hand the structure starts doing for you.</p>
+        <hr class="article-rule">
+        <p class="article-disclaimer">Field Notes from the Agentic Operator is a personal series. These are my own views, not those of my employer or any organization I work with, and nothing here relies on non-public information.</p>
+        <a href="/writing/" class="article-back">&larr; All writing</a>
+      </article>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="/" class="footer-home">Back to Top</a>
+      <nav class="footer-links">
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </nav>
+      <div class="footer-meta">
+        &copy; <span id="year"></span> Aught Hour LLC. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
