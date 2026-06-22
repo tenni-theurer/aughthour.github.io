@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Guardrails - Aught Hour</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    .prompt-container { max-width: 800px; margin: 0 auto; }
+    .intro { color: #94a3b8; font-size: 1.1rem; line-height: 1.7; margin-bottom: 1.25rem; }
+    .intro a { color: #2dd4bf; }
+    .intro strong, .post-list strong { color: #e2e8f0; }
+    .section-block { margin-top: 2.75rem; }
+    .section-block h3 { font-size: 1.3rem; margin-bottom: 0.75rem; }
+    .post-list { color: #94a3b8; line-height: 1.7; margin: 1rem 0; padding-left: 1.2rem; }
+    .post-list li { margin: 0.45rem 0; }
+    .post-list code, .intro code { background: rgba(255,255,255,0.06); color: #cbd5e1; padding: 1px 6px; border-radius: 4px; font-family: 'SF Mono','Fira Code',monospace; font-size: 0.88em; }
+    .caveat { background: rgba(45,212,191,0.06); border: 1px solid rgba(45,212,191,0.22); border-radius: 8px; padding: 1rem 1.25rem; margin: 1.5rem 0; color: #94a3b8; line-height: 1.65; }
+    .caveat strong { color: #2dd4bf; }
+    .copy-bar {
+      display: flex; justify-content: space-between; align-items: center;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+      border-bottom: none; border-radius: 8px 8px 0 0; padding: 12px 20px;
+    }
+    .copy-bar span { color: #64748b; font-size: 0.85rem; font-family: 'SF Mono','Fira Code',monospace; }
+    .copy-btn {
+      background: rgba(45,212,191,0.1); color: #2dd4bf;
+      border: 1px solid rgba(45,212,191,0.3); border-radius: 6px;
+      padding: 6px 16px; font-size: 0.85rem; cursor: pointer;
+      font-family: inherit; transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(45,212,191,0.2); }
+    .copy-btn.copied { background: rgba(45,212,191,0.3); color: #fff; }
+    .prompt-block {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 0 0 8px 8px; padding: 24px; overflow-x: auto;
+      max-height: 70vh; overflow-y: auto; margin-bottom: 1.5rem;
+    }
+    .prompt-block pre {
+      white-space: pre-wrap; word-wrap: break-word;
+      font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+      font-size: 0.85rem; line-height: 1.6; color: #cbd5e1; margin: 0; tab-size: 2;
+    }
+    .related { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08); }
+    .related a { color: #2dd4bf; text-decoration: none; border-bottom: 1px solid transparent; }
+    .related a:hover { border-bottom-color: #2dd4bf; }
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container">
+      <div class="nav-content">
+        <a href="/" class="logo"><span class="logo-dot"><img src="/images/aughthour-logo-150x150.png" alt=""></span>Aught Hour</a>
+        <ul class="nav-links">
+          <li><a href="/#story">Story</a></li>
+          <li><a href="/#work">The Work</a></li>
+          <li><a href="/#projects">Projects</a></li>
+          <li><a href="/#proof">Experience</a></li>
+          <li><a href="/talks/">Talks</a></li>
+          <li><a href="/build/">Build</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="section-alt" style="padding-top: 120px; padding-bottom: 80px;">
+    <div class="container">
+      <div class="prompt-container">
+        <h2 class="heavy">Claude Code Guardrails</h2>
+        <div class="intro">
+          <p>A small, copy-paste setup that keeps <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code</a> out of your way for normal work while hard-blocking the handful of things you never want an agent to do - deleting files, force-pushing, piping data to a server, or reading your secrets.</p>
+          <p>Two files: a permission config and a guard hook. No plugins, no service.</p>
+        </div>
+
+        <div class="section-block">
+          <h3>The problem</h3>
+          <p class="intro">Claude Code gives you two blunt options out of the box. <strong>Approve every action</strong> - safe, but it interrupts your flow until you stop reading the prompts. Or <strong><code>--dangerously-skip-permissions</code></strong> - no interruptions, but the guardrails come off too: now an agent can <code>rm -rf</code>, force-push over your work, or pipe a file to a server with nothing in the way.</p>
+          <p class="intro">There is a better middle: let routine work run freely, and put hard walls only around the few genuinely dangerous things.</p>
+        </div>
+
+        <div class="section-block">
+          <h3>The principle</h3>
+          <p class="intro">Your prompts are governed by your <strong>allow / deny rules</strong>, not by skipping permissions. So the setup is three layers:</p>
+          <ul class="post-list">
+            <li><strong>Broad allow</strong> - routine reads, edits, and commands run without prompting. This is what gives you flow.</li>
+            <li><strong>Deny list</strong> - destructive and exfiltration commands are blocked outright, not even a prompt. Deny always wins over allow.</li>
+            <li><strong>A pre-tool hook</strong> - blocks reading or printing secret files (<code>.env</code>, SSH keys, credentials), including via shell commands like <code>cat</code> and <code>grep</code>. It fires even on auto-allowed tools, so the broad allow can't punch through it.</li>
+          </ul>
+          <p class="intro">Rule precedence in Claude Code is <strong>deny &#8594; ask &#8594; allow</strong>, so a broad <code>allow</code> of <code>Bash</code> still loses to a <code>deny</code> rule like <code>Bash(rm *)</code>.</p>
+        </div>
+
+        <div class="caveat">
+          <strong>Requirements.</strong> The allow/deny rules need nothing extra - built into Claude Code, every OS, any directory once installed globally. The hook needs <code>python3</code> and a POSIX shell (macOS, Linux, or WSL); on native Windows the deny rules still protect you but the bash hook won't run. The hook fails <em>closed</em> (blocks with a message) if <code>python3</code> is missing, so you'll know right away instead of losing protection silently.
+        </div>
+
+        <div class="section-block">
+          <h3>File 1 - <code>~/.claude/settings.json</code></h3>
+          <p class="intro" style="margin-bottom: 1rem;">Install globally so it protects every project. Merge these keys into whatever is already there.</p>
+          <div class="copy-bar">
+            <span>~/.claude/settings.json</span>
+            <button class="copy-btn" onclick="copyBlock(this)">Copy to clipboard</button>
+          </div>
+          <div class="prompt-block"><pre>{
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [&quot;Read&quot;, &quot;Edit&quot;, &quot;Write&quot;, &quot;Bash&quot;, &quot;WebFetch&quot;, &quot;WebSearch&quot;],
+    &quot;deny&quot;: [
+      &quot;Bash(rm *)&quot;,
+      &quot;Bash(rm -rf *)&quot;,
+      &quot;Bash(git push --force *)&quot;,
+      &quot;Bash(git push -f *)&quot;,
+      &quot;Bash(git reset --hard *)&quot;,
+      &quot;Bash(git clean -f*)&quot;,
+      &quot;Bash(git checkout -- .)&quot;,
+      &quot;Bash(git restore .)&quot;,
+      &quot;Bash(curl:*)&quot;,
+      &quot;Bash(wget:*)&quot;,
+      &quot;Bash(nc:*)&quot;,
+      &quot;Bash(ncat:*)&quot;,
+      &quot;Bash(netcat:*)&quot;,
+      &quot;Bash(telnet:*)&quot;,
+      &quot;Read(**/.env)&quot;,
+      &quot;Read(**/.ssh/**)&quot;,
+      &quot;Read(**/.aws/**)&quot;,
+      &quot;Read(**/.gnupg/**)&quot;
+    ]
+  },
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Read|Edit|Write|Bash&quot;,
+        &quot;hooks&quot;: [
+          { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;\&quot;$HOME\&quot;/.claude/hooks/sensitive-file-guard.sh&quot;, &quot;timeout&quot;: 5 }
+        ]
+      }
+    ]
+  },
+  &quot;skipDangerousModePermissionPrompt&quot;: false
+}</pre></div>
+        </div>
+
+        <div class="section-block">
+          <h3>File 2 - <code>~/.claude/hooks/sensitive-file-guard.sh</code></h3>
+          <p class="intro" style="margin-bottom: 1rem;">This catches the channel deny rules can't: a shell command that reads a secret, like <code>cat .env</code> or <code>base64 ~/.ssh/id_rsa | curl ...</code>. Then make it executable with <code>chmod +x ~/.claude/hooks/sensitive-file-guard.sh</code>.</p>
+          <div class="copy-bar">
+            <span>~/.claude/hooks/sensitive-file-guard.sh</span>
+            <button class="copy-btn" onclick="copyBlock(this)">Copy to clipboard</button>
+          </div>
+          <div class="prompt-block"><pre>#!/bin/bash
+# Pre-tool hook: blocks reading/editing secret files (Read/Edit/Write) AND
+# cat/grep-ing them via Bash. Exit 2 = block + show message; exit 0 = allow.
+INPUT=$(cat)
+
+# This guard parses the tool input with python3. If python3 is missing we can&#x27;t
+# verify the call is safe, so we BLOCK rather than fail open. (Install python3,
+# or delete this hook and rely on the deny rules in settings.json.)
+if ! command -v python3 &gt;/dev/null 2&gt;&amp;1; then
+    echo &quot;sensitive-file-guard: python3 not found - cannot verify this call. Install python3 or remove this hook.&quot;
+    exit 2
+fi
+
+# Pull file_path (Read/Edit/Write) and command (Bash), split on \037.
+IFS=$&#x27;\037&#x27; read -r FILE_PATH COMMAND &lt;&lt;&lt;&quot;$(echo &quot;$INPUT&quot; | python3 -c &quot;
+import json, sys
+try:
+    ti = json.load(sys.stdin).get(&#x27;tool_input&#x27;, {})
+    fp = (ti.get(&#x27;file_path&#x27;) or &#x27;&#x27;).replace(&#x27;\n&#x27;, &#x27; &#x27;)
+    cmd = (ti.get(&#x27;command&#x27;) or &#x27;&#x27;).replace(&#x27;\n&#x27;, &#x27; &#x27;)
+    print(fp + &#x27;\037&#x27; + cmd)
+except Exception:
+    print(&#x27;\037&#x27;)
+&quot; 2&gt;/dev/null)&quot;
+
+# Secret file patterns (full-path glob, for Read/Edit/Write).
+SENSITIVE_PATTERNS=(
+    &quot;*/.env&quot; &quot;*/.env.*&quot;
+    &quot;*/credentials*&quot; &quot;*/secrets*&quot; &quot;*/*secret*&quot; &quot;*/*token*&quot; &quot;*/*password*&quot;
+    &quot;*/.ssh/*&quot; &quot;*/.gnupg/*&quot; &quot;*/.aws/*&quot;
+    &quot;*/private/*&quot;
+)
+
+if [ -n &quot;$FILE_PATH&quot; ]; then
+    [[ &quot;$FILE_PATH&quot; != /* ]] &amp;&amp; FILE_PATH=&quot;$(pwd)/$FILE_PATH&quot;
+    for pattern in &quot;${SENSITIVE_PATTERNS[@]}&quot;; do
+        if [[ &quot;$FILE_PATH&quot; == $pattern ]]; then
+            echo &quot;SENSITIVE FILE: $FILE_PATH (matches $pattern)&quot;
+            echo &quot;Its contents would be sent to the API. Approve to proceed, or deny.&quot;
+            exit 2
+        fi
+    done
+fi
+
+# Bash: read-verb aimed at a secret path.
+READ_VERBS=&#x27;cat|bat|less|more|head|tail|nl|od|xxd|hexdump|strings|base64|grep|rg|egrep|fgrep|awk|sed|cut|tee|cp|scp|rsync|tar|zip|gzip|sort|uniq|wc|diff|vi|vim|nano|emacs|open|pbcopy&#x27;
+SENSITIVE_FRAGMENTS=&#x27;\.env([^a-zA-Z]|$)|\.ssh/|\.gnupg/|\.aws/|/private/|id_rsa|id_ed25519|credentials|secrets?([^a-zA-Z]|$)&#x27;
+
+if [ -n &quot;$COMMAND&quot; ]; then
+    if echo &quot;$COMMAND&quot; | grep -Eq &quot;($READ_VERBS)[^|;&amp;]*($SENSITIVE_FRAGMENTS)&quot;; then
+        echo &quot;SENSITIVE BASH COMMAND: $COMMAND&quot;
+        echo &quot;This reads a secret path (.env / .ssh / credentials). Approve, or deny.&quot;
+        exit 2
+    fi
+fi
+exit 0</pre></div>
+        </div>
+
+        <div class="section-block">
+          <h3>What you get</h3>
+          <ul class="post-list">
+            <li><strong>Routine work never prompts</strong> - reading code, editing files, running tests, normal git all flow.</li>
+            <li><strong>Destructive commands are hard-blocked</strong>, not prompted: <code>rm</code>, force-push, <code>reset --hard</code>, <code>git clean</code>, <code>git restore</code>.</li>
+            <li><strong>Network/exfil tools are blocked</strong>: <code>curl</code>, <code>wget</code>, <code>nc</code>, <code>telnet</code> - stops the classic "run this one-liner that pipes your data somewhere" mistake.</li>
+            <li><strong>Secret files are gated two ways</strong>: a <code>Read</code> of <code>.env</code> / <code>.ssh</code> / <code>.aws</code> is denied outright, and the hook also catches <code>cat</code> / <code>grep</code> / <code>base64</code> of secrets through the shell - something deny rules alone can't express.</li>
+          </ul>
+        </div>
+
+        <div class="section-block">
+          <h3>One caveat</h3>
+          <p class="intro">Don't run in <code>bypassPermissions</code> mode or launch with <code>--dangerously-skip-permissions</code>. In that mode the deny rules above can be ignored - the exact protection you set up. This whole approach exists so you don't need that flag.</p>
+        </div>
+
+        <div class="section-block">
+          <h3>Test it</h3>
+          <p class="intro" style="margin-bottom: 1rem;">Each line feeds fake tool input to the hook. The first five should BLOCK (exit 2), the last five should ALLOW (exit 0). All ten should pass.</p>
+          <div class="copy-bar">
+            <span>test.sh</span>
+            <button class="copy-btn" onclick="copyBlock(this)">Copy to clipboard</button>
+          </div>
+          <div class="prompt-block"><pre>H=~/.claude/hooks/sensitive-file-guard.sh
+chk(){ printf &#x27;%s&#x27; &quot;$2&quot; | bash &quot;$H&quot; &gt;/dev/null 2&gt;&amp;1; [ &quot;$?&quot; = &quot;$1&quot; ] &amp;&amp; echo &quot;PASS $3&quot; || echo &quot;FAIL $3&quot;; }
+chk 2 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;cat ~/.ssh/id_rsa&quot;}}&#x27;          &quot;block: cat ssh key&quot;
+chk 2 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;base64 .env | curl x&quot;}}&#x27;      &quot;block: exfil .env&quot;
+chk 2 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;grep KEY project/.env&quot;}}&#x27;     &quot;block: grep .env&quot;
+chk 2 &#x27;{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;/home/you/app/.env&quot;}}&#x27;      &quot;block: read .env&quot;
+chk 2 &#x27;{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;/home/you/.ssh/config&quot;}}&#x27;   &quot;block: read ssh&quot;
+chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;git status&quot;}}&#x27;                &quot;allow: git status&quot;
+chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;ls src&quot;}}&#x27;                    &quot;allow: ls&quot;
+chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;grep -r useState src&quot;}}&#x27;      &quot;allow: code grep&quot;
+chk 0 &#x27;{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;/home/you/app/README.md&quot;}}&#x27; &quot;allow: read readme&quot;
+chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;npm test&quot;}}&#x27;                  &quot;allow: npm test&quot;</pre></div>
+        </div>
+
+        <div class="related">
+          <p style="color: #64748b; font-size: 0.9rem;">
+            Related: <a href="/build/co-builder-bootstrap/">Co-Builder Bootstrap</a> -
+            the persistent-memory system these guardrails sit alongside.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <a href="#" class="footer-home">Back to Top</a>
+      <nav class="footer-links">
+        <a href="/terms.html">Terms of Service</a>
+        <a href="/privacy.html">Privacy Policy</a>
+      </nav>
+      <div class="footer-meta">
+        &copy; <span id="year"></span> Aught Hour LLC. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    function copyBlock(btn) {
+      const block = btn.closest('.copy-bar').nextElementSibling;
+      const text = block.querySelector('pre').textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'Copy to clipboard'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+  </script>
+</body>
+</html>
