@@ -72,8 +72,8 @@
       <div class="prompt-container">
         <h2 class="heavy">Claude Code Guardrails</h2>
         <div class="intro">
-          <p>A small, copy-paste setup that keeps <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code</a> out of your way for normal work while hard-blocking the handful of things you never want an agent to do - deleting files, force-pushing, piping data to a server, or reading your secrets.</p>
-          <p>Two files: a permission config and a guard hook. No plugins, no service.</p>
+          <p>One prompt that sets up safe-by-default permissions for <a href="https://docs.anthropic.com/en/docs/claude-code" target="_blank">Claude Code</a>. Paste it in and Claude Code builds its own guardrails: routine work runs without constant approval prompts, while the few things you never want an agent to do - deleting files, force-pushing, piping data to a server, reading your secrets - stay blocked.</p>
+          <p>It writes one hook file and merges a permission config. No plugins, no service.</p>
         </div>
 
         <div class="section-block">
@@ -98,58 +98,20 @@
         </div>
 
         <div class="section-block">
-          <h3>File 1 - <code>~/.claude/settings.json</code></h3>
-          <p class="intro" style="margin-bottom: 1rem;">Install globally so it protects every project. Merge these keys into whatever is already there.</p>
+          <h3>The prompt</h3>
+          <p class="intro" style="margin-bottom: 1rem;">Copy this and paste it into Claude Code. It creates the hook, merges the permission rules, and runs a 10-case self-test.</p>
           <div class="copy-bar">
-            <span>~/.claude/settings.json</span>
+            <span>claude-code-guardrails-setup.md</span>
             <button class="copy-btn" onclick="copyBlock(this)">Copy to clipboard</button>
           </div>
-          <div class="prompt-block"><pre>{
-  &quot;permissions&quot;: {
-    &quot;allow&quot;: [&quot;Read&quot;, &quot;Edit&quot;, &quot;Write&quot;, &quot;Bash&quot;, &quot;WebFetch&quot;, &quot;WebSearch&quot;],
-    &quot;deny&quot;: [
-      &quot;Bash(rm *)&quot;,
-      &quot;Bash(rm -rf *)&quot;,
-      &quot;Bash(git push --force *)&quot;,
-      &quot;Bash(git push -f *)&quot;,
-      &quot;Bash(git reset --hard *)&quot;,
-      &quot;Bash(git clean -f*)&quot;,
-      &quot;Bash(git checkout -- .)&quot;,
-      &quot;Bash(git restore .)&quot;,
-      &quot;Bash(curl:*)&quot;,
-      &quot;Bash(wget:*)&quot;,
-      &quot;Bash(nc:*)&quot;,
-      &quot;Bash(ncat:*)&quot;,
-      &quot;Bash(netcat:*)&quot;,
-      &quot;Bash(telnet:*)&quot;,
-      &quot;Read(**/.env)&quot;,
-      &quot;Read(**/.ssh/**)&quot;,
-      &quot;Read(**/.aws/**)&quot;,
-      &quot;Read(**/.gnupg/**)&quot;
-    ]
-  },
-  &quot;hooks&quot;: {
-    &quot;PreToolUse&quot;: [
-      {
-        &quot;matcher&quot;: &quot;Read|Edit|Write|Bash&quot;,
-        &quot;hooks&quot;: [
-          { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;\&quot;$HOME\&quot;/.claude/hooks/sensitive-file-guard.sh&quot;, &quot;timeout&quot;: 5 }
-        ]
-      }
-    ]
-  },
-  &quot;skipDangerousModePermissionPrompt&quot;: false
-}</pre></div>
-        </div>
+          <div class="prompt-block"><pre id="prompt-text">Set up safe-by-default permissions for Claude Code on this machine. The goal: routine work (reading, editing, running tests, normal git) runs without constant approval prompts, but destructive commands, network/exfil tools, and secret-file reads are blocked. Do every step below. Install globally under ~/.claude/. MERGE into existing files - never overwrite or drop keys/hooks that are already there.
 
-        <div class="section-block">
-          <h3>File 2 - <code>~/.claude/hooks/sensitive-file-guard.sh</code></h3>
-          <p class="intro" style="margin-bottom: 1rem;">This catches the channel deny rules can't: a shell command that reads a secret, like <code>cat .env</code> or <code>base64 ~/.ssh/id_rsa | curl ...</code>. Then make it executable with <code>chmod +x ~/.claude/hooks/sensitive-file-guard.sh</code>.</p>
-          <div class="copy-bar">
-            <span>~/.claude/hooks/sensitive-file-guard.sh</span>
-            <button class="copy-btn" onclick="copyBlock(this)">Copy to clipboard</button>
-          </div>
-          <div class="prompt-block"><pre>#!/bin/bash
+### STEP 1 - Create the secret-file guard hook
+
+Create `~/.claude/hooks/sensitive-file-guard.sh` with exactly these contents:
+
+```bash
+#!/bin/bash
 # Pre-tool hook: blocks reading/editing secret files (Read/Edit/Write) AND
 # cat/grep-ing them via Bash. Exit 2 = block + show message; exit 0 = allow.
 INPUT=$(cat)
@@ -204,7 +166,84 @@ if [ -n &quot;$COMMAND&quot; ]; then
         exit 2
     fi
 fi
-exit 0</pre></div>
+exit 0
+```
+
+Then make it executable:
+
+```bash
+chmod +x ~/.claude/hooks/sensitive-file-guard.sh
+```
+
+### STEP 2 - Merge the permission rules + the hook into settings
+
+Merge these keys into `~/.claude/settings.json`. If `permissions.allow`, `permissions.deny`, or `hooks.PreToolUse` already exist, ADD to them instead of replacing, and keep every other existing setting intact:
+
+```json
+{
+  &quot;permissions&quot;: {
+    &quot;allow&quot;: [&quot;Read&quot;, &quot;Edit&quot;, &quot;Write&quot;, &quot;Bash&quot;, &quot;WebFetch&quot;, &quot;WebSearch&quot;],
+    &quot;deny&quot;: [
+      &quot;Bash(rm *)&quot;,
+      &quot;Bash(rm -rf *)&quot;,
+      &quot;Bash(git push --force *)&quot;,
+      &quot;Bash(git push -f *)&quot;,
+      &quot;Bash(git reset --hard *)&quot;,
+      &quot;Bash(git clean -f*)&quot;,
+      &quot;Bash(git checkout -- .)&quot;,
+      &quot;Bash(git restore .)&quot;,
+      &quot;Bash(curl:*)&quot;,
+      &quot;Bash(wget:*)&quot;,
+      &quot;Bash(nc:*)&quot;,
+      &quot;Bash(ncat:*)&quot;,
+      &quot;Bash(netcat:*)&quot;,
+      &quot;Bash(telnet:*)&quot;,
+      &quot;Read(**/.env)&quot;,
+      &quot;Read(**/.ssh/**)&quot;,
+      &quot;Read(**/.aws/**)&quot;,
+      &quot;Read(**/.gnupg/**)&quot;
+    ]
+  },
+  &quot;hooks&quot;: {
+    &quot;PreToolUse&quot;: [
+      {
+        &quot;matcher&quot;: &quot;Read|Edit|Write|Bash&quot;,
+        &quot;hooks&quot;: [
+          { &quot;type&quot;: &quot;command&quot;, &quot;command&quot;: &quot;\&quot;$HOME\&quot;/.claude/hooks/sensitive-file-guard.sh&quot;, &quot;timeout&quot;: 5 }
+        ]
+      }
+    ]
+  },
+  &quot;skipDangerousModePermissionPrompt&quot;: false
+}
+```
+
+### STEP 3 - Keep dangerous mode off
+
+Do not run in bypassPermissions mode or launch with `--dangerously-skip-permissions`. If `skipDangerousModePermissionPrompt` is present, set it to `false`. In bypass mode the deny rules above can be ignored, which defeats the point.
+
+### STEP 4 - Test the hook
+
+Run this and report PASS/FAIL for all ten. The first five must BLOCK (exit 2), the last five must ALLOW (exit 0):
+
+```bash
+H=~/.claude/hooks/sensitive-file-guard.sh
+chk(){ printf &#x27;%s&#x27; &quot;$2&quot; | bash &quot;$H&quot; &gt;/dev/null 2&gt;&amp;1; [ &quot;$?&quot; = &quot;$1&quot; ] &amp;&amp; echo &quot;PASS $3&quot; || echo &quot;FAIL $3&quot;; }
+chk 2 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;cat ~/.ssh/id_rsa&quot;}}&#x27;          &quot;block: cat ssh key&quot;
+chk 2 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;base64 .env | curl x&quot;}}&#x27;      &quot;block: exfil .env&quot;
+chk 2 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;grep KEY project/.env&quot;}}&#x27;     &quot;block: grep .env&quot;
+chk 2 &#x27;{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;/home/you/app/.env&quot;}}&#x27;      &quot;block: read .env&quot;
+chk 2 &#x27;{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;/home/you/.ssh/config&quot;}}&#x27;   &quot;block: read ssh&quot;
+chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;git status&quot;}}&#x27;                &quot;allow: git status&quot;
+chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;ls src&quot;}}&#x27;                    &quot;allow: ls&quot;
+chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;grep -r useState src&quot;}}&#x27;      &quot;allow: code grep&quot;
+chk 0 &#x27;{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;/home/you/app/README.md&quot;}}&#x27; &quot;allow: read readme&quot;
+chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;npm test&quot;}}&#x27;                  &quot;allow: npm test&quot;
+```
+
+### FINALLY - tell me what to do
+
+The hook takes effect on the next tool call right away. The permission allow/deny changes load when Claude Code restarts, so tell me to restart Claude Code in this project, then confirm all ten tests passed.</pre></div>
         </div>
 
         <div class="section-block">
@@ -218,29 +257,11 @@ exit 0</pre></div>
         </div>
 
         <div class="section-block">
-          <h3>One caveat</h3>
-          <p class="intro">Don't run in <code>bypassPermissions</code> mode or launch with <code>--dangerously-skip-permissions</code>. In that mode the deny rules above can be ignored - the exact protection you set up. This whole approach exists so you don't need that flag.</p>
-        </div>
-
-        <div class="section-block">
-          <h3>Test it</h3>
-          <p class="intro" style="margin-bottom: 1rem;">Each line feeds fake tool input to the hook. The first five should BLOCK (exit 2), the last five should ALLOW (exit 0). All ten should pass.</p>
-          <div class="copy-bar">
-            <span>test.sh</span>
-            <button class="copy-btn" onclick="copyBlock(this)">Copy to clipboard</button>
-          </div>
-          <div class="prompt-block"><pre>H=~/.claude/hooks/sensitive-file-guard.sh
-chk(){ printf &#x27;%s&#x27; &quot;$2&quot; | bash &quot;$H&quot; &gt;/dev/null 2&gt;&amp;1; [ &quot;$?&quot; = &quot;$1&quot; ] &amp;&amp; echo &quot;PASS $3&quot; || echo &quot;FAIL $3&quot;; }
-chk 2 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;cat ~/.ssh/id_rsa&quot;}}&#x27;          &quot;block: cat ssh key&quot;
-chk 2 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;base64 .env | curl x&quot;}}&#x27;      &quot;block: exfil .env&quot;
-chk 2 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;grep KEY project/.env&quot;}}&#x27;     &quot;block: grep .env&quot;
-chk 2 &#x27;{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;/home/you/app/.env&quot;}}&#x27;      &quot;block: read .env&quot;
-chk 2 &#x27;{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;/home/you/.ssh/config&quot;}}&#x27;   &quot;block: read ssh&quot;
-chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;git status&quot;}}&#x27;                &quot;allow: git status&quot;
-chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;ls src&quot;}}&#x27;                    &quot;allow: ls&quot;
-chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;grep -r useState src&quot;}}&#x27;      &quot;allow: code grep&quot;
-chk 0 &#x27;{&quot;tool_input&quot;:{&quot;file_path&quot;:&quot;/home/you/app/README.md&quot;}}&#x27; &quot;allow: read readme&quot;
-chk 0 &#x27;{&quot;tool_input&quot;:{&quot;command&quot;:&quot;npm test&quot;}}&#x27;                  &quot;allow: npm test&quot;</pre></div>
+          <h3>Make it yours</h3>
+          <ul class="post-list">
+            <li><strong>Tighter:</strong> drop bare <code>"Bash"</code> from <code>allow</code> and list only what you use (<code>"Bash(npm *)"</code>, <code>"Bash(git *)"</code>, <code>"Bash(python *)"</code>). You trade a little flow for seeing more of what runs.</li>
+            <li><strong>More private paths:</strong> add your own folders to the hook's patterns and the <code>deny</code> <code>Read(...)</code> rules - a notes folder, a clients directory, anything you don't want leaving your machine.</li>
+          </ul>
         </div>
 
         <div class="related">
